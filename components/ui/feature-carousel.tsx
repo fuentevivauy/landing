@@ -110,6 +110,19 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                                         'flex items-center justify-center',
                                         isCenter ? 'cursor-pointer' : 'cursor-default'
                                     )}
+                                    drag={isMobileView && isCenter ? "x" : false}
+                                    dragConstraints={{ left: 0, right: 0 }}
+                                    dragElastic={0.2}
+                                    onDragEnd={(_, info) => {
+                                        if (isMobileView && isCenter) {
+                                            const threshold = 50;
+                                            if (info.offset.x < -threshold) {
+                                                handleNext();
+                                            } else if (info.offset.x > threshold) {
+                                                handlePrev();
+                                            }
+                                        }
+                                    }}
                                     animate={{
                                         transform: `
                                             translateX(${pos * (isMobileView ? 65 : 75)}%) 
@@ -147,15 +160,15 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                         })}
                     </div>
 
-                    {/* Navigation Buttons */}
+                    {/* Navigation Buttons - Hidden on Mobile */}
                     <button
-                        className="absolute left-2 sm:left-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-blue/80 hover:bg-slate-blue text-white backdrop-blur-sm z-50 transition-all shadow-lg"
+                        className="absolute left-2 sm:left-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-blue/80 hover:bg-slate-blue text-white backdrop-blur-sm z-50 transition-all shadow-lg hidden md:flex"
                         onClick={handlePrev}
                     >
                         <ChevronLeft className="h-6 w-6" />
                     </button>
                     <button
-                        className="absolute right-2 sm:right-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-blue/80 hover:bg-slate-blue text-white backdrop-blur-sm z-50 transition-all shadow-lg"
+                        className="absolute right-2 sm:right-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-blue/80 hover:bg-slate-blue text-white backdrop-blur-sm z-50 transition-all shadow-lg hidden md:flex"
                         onClick={handleNext}
                     >
                         <ChevronRight className="h-6 w-6" />
