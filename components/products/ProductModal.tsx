@@ -71,7 +71,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     alt={product.name}
                                     fill
                                     className="object-contain p-4"
-                                    sizes="100vw"
+                                    sizes="(max-width: 768px) 100vw, 800px"
+                                    quality={90}
                                     priority
                                 />
                                 {/* Close Button Mobile */}
@@ -240,7 +241,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     alt={product.name}
                                     fill
                                     className="object-contain p-8"
-                                    sizes="50vw"
+                                    sizes="(max-width: 1024px) 50vw, 800px"
+                                    quality={95}
                                     priority
                                 />
                                 {/* Category Badge */}

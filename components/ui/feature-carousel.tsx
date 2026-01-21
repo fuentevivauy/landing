@@ -31,7 +31,8 @@ const CarouselCard = ({
                 alt={item.product.name}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
-                sizes="(max-width: 768px) 320px, 400px"
+                sizes="(max-width: 768px) 80vw, 400px"
+                quality={90}
                 priority={item.index < 5}
             />
 

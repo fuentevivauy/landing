@@ -6,8 +6,8 @@ const CLOUDINARY_BASE = `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/up
 
 // Helper para generar URLs de Cloudinary con optimización automática
 const getCloudinaryImage = (publicId: string) => ({
-    thumbnail: `${CLOUDINARY_BASE}/w_400,f_auto,q_auto/${publicId}`,
-    gallery: [`${CLOUDINARY_BASE}/w_1200,f_auto,q_auto/${publicId}`],
+    thumbnail: `${CLOUDINARY_BASE}/f_auto,q_auto/${publicId}`,
+    gallery: [`${CLOUDINARY_BASE}/f_auto,q_auto/${publicId}`],
 });
 
 // Mapeo de productos a public IDs de Cloudinary (con sufijos únicos)
