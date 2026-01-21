@@ -303,8 +303,17 @@ export function ScrollExpandHero({
 
                             {/* Spacer Content */}
                             <motion.section
-                                className="flex flex-col w-full"
-                                style={{ display: (mediaFullyExpanded || isMobile) ? 'flex' : 'none' }}
+                                className="flex flex-col w-full md:hidden"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.7 }}
+                            >
+                                {/* Contenido visible solo en móvil inicialmente si el video no se expande */}
+                            </motion.section>
+
+                            <motion.section
+                                className="hidden md:flex flex-col w-full"
+                                style={{ display: mediaFullyExpanded ? 'flex' : 'none' }}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.7 }}
