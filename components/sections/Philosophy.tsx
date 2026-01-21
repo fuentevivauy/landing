@@ -78,7 +78,7 @@ export function Philosophy() {
                             variants={lineVariants}
                             className="block italic text-sage-green"
                         >
-                            obra de arte única
+                            obra de arte
                         </motion.span>
                         <motion.span variants={lineVariants} className="block">
                             creada con
@@ -101,7 +101,7 @@ export function Philosophy() {
                     >
                         <motion.span variants={lineVariants} className="block">
                             Cada fuente es una{' '}
-                            <span className="italic text-sage-green whitespace-nowrap">obra de arte única</span>
+                            <span className="italic text-sage-green whitespace-nowrap">obra de arte</span>
                         </motion.span>
                         <motion.span variants={lineVariants} className="block">
                             creada con detalle y pasión.
