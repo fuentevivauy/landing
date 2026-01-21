@@ -254,9 +254,14 @@ export function ScrollExpandHero({
                                 <div className="flex items-center justify-center text-center gap-2 md:gap-4 w-full relative z-10 transition-none flex-col pointer-events-none">
                                     {isMobile ? (
                                         <>
-                                            <h1 className="font-serif text-5xl font-bold text-off-white italic mb-2 mix-blend-difference">
-                                                Fuente Viva
-                                            </h1>
+                                            <div className="flex flex-col items-center mb-2">
+                                                <h1 className="font-serif text-5xl font-bold text-off-white italic mix-blend-difference leading-tight">
+                                                    Fuente
+                                                </h1>
+                                                <h1 className="font-sans text-6xl font-black text-sage-green mix-blend-normal -mt-2">
+                                                    Viva
+                                                </h1>
+                                            </div>
                                             <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4">
                                                 Un rincón de calma donde <br />
                                                 la naturaleza se detiene a beber
@@ -264,15 +269,15 @@ export function ScrollExpandHero({
                                         </>
                                     ) : (
                                         <>
-                                            <div className="flex gap-4 mix-blend-difference">
+                                            <div className="flex items-center gap-6">
                                                 <motion.h1
-                                                    className="font-serif text-5xl lg:text-8xl font-bold text-off-white transition-none italic"
+                                                    className="font-serif text-6xl lg:text-9xl font-bold text-off-white transition-none italic mix-blend-difference"
                                                     style={{ transform: `translateX(-${textTranslateX}px)` }}
                                                 >
                                                     Fuente
                                                 </motion.h1>
                                                 <motion.h1
-                                                    className="font-serif text-5xl lg:text-8xl font-bold text-center text-off-white transition-none italic"
+                                                    className="font-sans text-7xl lg:text-[10rem] font-black text-center text-sage-green transition-none mix-blend-normal uppercase tracking-tighter"
                                                     style={{ transform: `translateX(${textTranslateX}px)` }}
                                                 >
                                                     Viva
