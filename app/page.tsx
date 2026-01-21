@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <ScrollExpandHero
-      videoSrc="https://res.cloudinary.com/dj1wscyom/video/upload/v1768915137/IMG_3426_ixgfyl.mov"
+      videoSrc="https://res.cloudinary.com/dj1wscyom/image/upload/v1769032717/Leve_zoom_in_202601211857_fx6480.gif"
       bgImageSrc="/images/hero-fountain-new.jpg"
     >
       <Philosophy />
