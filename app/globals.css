@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+:root {
+  --stone-gray: #8E8E8E;
+  --slate-blue: #2F3E46;
+  --off-white: #F8F9FA;
+  --sage-green: #73a58b;
+  --sage-light: #E8F5EE;
+  --warm-cream: #F5F5F0;
+}
+
+@theme inline {
+  --color-stone-gray: var(--stone-gray);
+  --color-slate-blue: var(--slate-blue);
+  --color-off-white: var(--off-white);
+  --color-sage-green: var(--sage-green);
+  --color-sage-light: var(--sage-light);
+  --color-warm-cream: var(--warm-cream);
+
+  --font-serif: var(--font-playfair), serif;
+  --font-sans: var(--font-montserrat), sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--off-white);
+  color: var(--slate-blue);
+  font-family: var(--font-sans);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--off-white);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--stone-gray);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--slate-blue);
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Hide scrollbar for carousels */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
