@@ -946,7 +946,7 @@ export const products: Product[] = [
             material: 'Hormigón y madera tratada',
             maxLoad: '290 kg',
         },
-        images: getImages('banco-madera-grande'),
+        images: getImages('banco-madera-jardin-grande'),
         inStock: true,
     },
     {

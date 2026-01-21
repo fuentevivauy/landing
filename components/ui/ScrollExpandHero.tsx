@@ -157,17 +157,25 @@ export function ScrollExpandHero({
                         </motion.div>
 
 
-                        {/* MOBILE HERO: Full Loop Video (Muted) */}
+                        {/* MOBILE HERO: Full Loop Video or GIF */}
                         {isMobile && (
                             <div className="absolute inset-0 z-0 bg-black">
-                                <video
-                                    src={videoSrc}
-                                    autoPlay
-                                    muted
-                                    loop
-                                    playsInline
-                                    className="w-full h-full object-cover object-center opacity-80"
-                                />
+                                {videoSrc.toLowerCase().endsWith('.gif') ? (
+                                    <img
+                                        src={videoSrc}
+                                        alt="Hero Background"
+                                        className="w-full h-full object-cover object-center opacity-80"
+                                    />
+                                ) : (
+                                    <video
+                                        src={videoSrc}
+                                        autoPlay
+                                        muted
+                                        loop
+                                        playsInline
+                                        className="w-full h-full object-cover object-center opacity-80"
+                                    />
+                                )}
                                 <div className="absolute inset-0 bg-black/40" />
                             </div>
                         )}
@@ -189,17 +197,25 @@ export function ScrollExpandHero({
                                         }}
                                     >
                                         <div className="relative w-full h-full">
-                                            <video
-                                                ref={videoRef}
-                                                src={videoSrc}
-                                                autoPlay
-                                                muted
-                                                loop
-                                                playsInline
-                                                preload="auto"
-                                                className="w-full h-full object-cover object-center"
-                                                controls={false}
-                                            />
+                                            {videoSrc.toLowerCase().endsWith('.gif') ? (
+                                                <img
+                                                    src={videoSrc}
+                                                    alt="Hero Media"
+                                                    className="w-full h-full object-cover object-center"
+                                                />
+                                            ) : (
+                                                <video
+                                                    ref={videoRef}
+                                                    src={videoSrc}
+                                                    autoPlay
+                                                    muted
+                                                    loop
+                                                    playsInline
+                                                    preload="auto"
+                                                    className="w-full h-full object-cover object-center"
+                                                    controls={false}
+                                                />
+                                            )}
 
                                             <motion.div
                                                 className="absolute inset-0 bg-black/30 pointer-events-none"
@@ -207,15 +223,17 @@ export function ScrollExpandHero({
                                                 animate={{ opacity: 0.5 - scrollProgress * 0.5 }}
                                             />
 
-                                            {/* Mute Button */}
-                                            <motion.button
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: scrollProgress > 0.5 ? 1 : 0 }}
-                                                onClick={toggleMute}
-                                                className="absolute bottom-6 right-6 z-50 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all"
-                                            >
-                                                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-                                            </motion.button>
+                                            {/* Mute Button - Only show if it's a video */}
+                                            {!videoSrc.toLowerCase().endsWith('.gif') && (
+                                                <motion.button
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: scrollProgress > 0.5 ? 1 : 0 }}
+                                                    onClick={toggleMute}
+                                                    className="absolute bottom-6 right-6 z-50 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all"
+                                                >
+                                                    {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+                                                </motion.button>
+                                            )}
                                         </div>
 
                                         {!mediaFullyExpanded && (
