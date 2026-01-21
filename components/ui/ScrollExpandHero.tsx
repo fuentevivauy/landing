@@ -151,11 +151,11 @@ export function ScrollExpandHero({
                             />
                         </div>
 
-                        {/* Background Image - fades as scroll progresses on Desktop */}
+                        {/* Background Image - Desktop Version (hidden on mobile via CSS) */}
                         <motion.div
-                            className="absolute inset-0 z-0 h-full"
+                            className="absolute inset-0 z-0 h-full hidden md:block"
                             initial={{ opacity: 0 }}
-                            animate={{ opacity: isMobile ? 0 : 1 - scrollProgress }}
+                            animate={{ opacity: 1 - scrollProgress }}
                             transition={{ duration: 0.1 }}
                         >
                             <Image
@@ -170,141 +170,134 @@ export function ScrollExpandHero({
                         </motion.div>
 
 
-                        {/* MOBILE HERO: Full Loop Video or GIF */}
-                        {isMobile && (
-                            <div className="absolute inset-0 z-0 bg-black">
-                                {videoSrc.toLowerCase().endsWith('.gif') ? (
-                                    <img
-                                        src={videoSrc}
-                                        alt="Hero Background"
-                                        className="w-full h-full object-cover object-center opacity-80"
-                                    />
-                                ) : (
-                                    <video
-                                        src={videoSrc}
-                                        autoPlay
-                                        muted
-                                        loop
-                                        playsInline
-                                        className="w-full h-full object-cover object-center opacity-80"
-                                    />
-                                )}
-                                <div className="absolute inset-0 bg-black/40" />
-                            </div>
-                        )}
+                        {/* MOBILE HERO: Full Loop Video or GIF (hidden on desktop via CSS) */}
+                        <div className="absolute inset-0 z-0 bg-black md:hidden">
+                            {videoSrc.toLowerCase().endsWith('.gif') ? (
+                                <img
+                                    src={videoSrc}
+                                    alt="Hero Background"
+                                    className="w-full h-full object-cover object-center opacity-80"
+                                />
+                            ) : (
+                                <video
+                                    src={videoSrc}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    className="w-full h-full object-cover object-center opacity-80"
+                                />
+                            )}
+                            <div className="absolute inset-0 bg-black/40" />
+                        </div>
+
 
 
                         <div className="container mx-auto flex flex-col items-center justify-start relative z-10">
                             <div className="flex flex-col items-center justify-center w-full h-[100svh] relative">
 
                                 {/* DESKTOP HERO: Expandable Video (Audio) */}
-                                {isMounted && !isMobile && (
-                                    <div
-                                        className="absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none rounded-2xl overflow-hidden group"
-                                        style={{
-                                            width: `${mediaWidth}px`,
-                                            height: `${mediaHeight}px`,
-                                            maxWidth: '95vw',
-                                            maxHeight: '85vh',
-                                            boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
-                                        }}
-                                    >
-                                        <div className="relative w-full h-full">
-                                            {videoSrc.toLowerCase().endsWith('.gif') ? (
-                                                <img
-                                                    src={videoSrc}
-                                                    alt="Hero Media"
-                                                    className="w-full h-full object-cover object-center"
-                                                />
-                                            ) : (
-                                                <video
-                                                    ref={videoRef}
-                                                    src={videoSrc}
-                                                    autoPlay
-                                                    muted
-                                                    loop
-                                                    playsInline
-                                                    preload="auto"
-                                                    className="w-full h-full object-cover object-center"
-                                                    controls={false}
-                                                />
-                                            )}
-
-                                            <motion.div
-                                                className="absolute inset-0 bg-black/30 pointer-events-none"
-                                                initial={{ opacity: 0.7 }}
-                                                animate={{ opacity: 0.5 - scrollProgress * 0.5 }}
+                                <div
+                                    className="absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none rounded-2xl overflow-hidden group hidden md:block"
+                                    style={{
+                                        width: `${mediaWidth}px`,
+                                        height: `${mediaHeight}px`,
+                                        maxWidth: '95vw',
+                                        maxHeight: '85vh',
+                                        boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
+                                    }}
+                                >
+                                    <div className="relative w-full h-full">
+                                        {videoSrc.toLowerCase().endsWith('.gif') ? (
+                                            <img
+                                                src={videoSrc}
+                                                alt="Hero Media"
+                                                className="w-full h-full object-cover object-center"
                                             />
+                                        ) : (
+                                            <video
+                                                ref={videoRef}
+                                                src={videoSrc}
+                                                autoPlay
+                                                muted
+                                                loop
+                                                playsInline
+                                                preload="auto"
+                                                className="w-full h-full object-cover object-center"
+                                                controls={false}
+                                            />
+                                        )}
 
-                                            {/* Mute Button - Only show if it's a video */}
-                                            {!videoSrc.toLowerCase().endsWith('.gif') && (
-                                                <motion.button
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: scrollProgress > 0.5 ? 1 : 0 }}
-                                                    onClick={toggleMute}
-                                                    className="absolute bottom-6 right-6 z-50 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all"
-                                                >
-                                                    {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-                                                </motion.button>
-                                            )}
-                                        </div>
+                                        <motion.div
+                                            className="absolute inset-0 bg-black/30 pointer-events-none"
+                                            initial={{ opacity: 0.7 }}
+                                            animate={{ opacity: 0.5 - scrollProgress * 0.5 }}
+                                        />
 
-                                        {!mediaFullyExpanded && (
-                                            <div className="absolute bottom-4 left-0 w-full flex justify-center text-center z-10">
-                                                <motion.p
-                                                    className="text-off-white/80 font-medium text-center text-sm"
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: scrollProgress < 0.3 ? 1 : 0 }}
-                                                >
-                                                    Desliza para explorar
-                                                </motion.p>
-                                            </div>
+                                        {/* Mute Button - Only show if it's a video */}
+                                        {!videoSrc.toLowerCase().endsWith('.gif') && (
+                                            <motion.button
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: scrollProgress > 0.5 ? 1 : 0 }}
+                                                onClick={toggleMute}
+                                                className="absolute bottom-6 right-6 z-50 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all"
+                                            >
+                                                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+                                            </motion.button>
                                         )}
                                     </div>
-                                )}
+
+                                    {!mediaFullyExpanded && (
+                                        <div className="absolute bottom-4 left-0 w-full flex justify-center text-center z-10">
+                                            <motion.p
+                                                className="text-off-white/80 font-medium text-center text-sm"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: scrollProgress < 0.3 ? 1 : 0 }}
+                                            >
+                                                Desliza para explorar
+                                            </motion.p>
+                                        </div>
+                                    )}
+                                </div>
 
                                 {/* Hero Titles */}
                                 <div className="flex items-center justify-center text-center gap-2 md:gap-4 w-full relative z-10 transition-none flex-col pointer-events-none">
-                                    {isMobile ? (
-                                        <>
-                                            <div className="flex flex-col items-center mb-2">
-                                                <h1 className="font-serif text-5xl font-bold text-off-white italic mix-blend-difference leading-tight">
-                                                    Fuente
-                                                </h1>
-                                                <h1 className="font-serif text-6xl font-black text-sage-green mix-blend-normal -mt-2">
-                                                    Viva
-                                                </h1>
-                                            </div>
-                                            <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4">
-                                                Un rincón de calma donde <br />
-                                                la naturaleza se detiene a beber
-                                            </p>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className="flex items-center gap-6">
-                                                <motion.h1
-                                                    className="font-serif text-6xl lg:text-9xl font-bold text-off-white transition-none italic mix-blend-difference"
-                                                    style={{ transform: `translateX(-${textTranslateX}px)` }}
-                                                >
-                                                    Fuente
-                                                </motion.h1>
-                                                <motion.h1
-                                                    className="font-serif text-7xl lg:text-[10rem] font-black text-center text-sage-green transition-none mix-blend-normal uppercase tracking-tighter"
-                                                    style={{ transform: `translateX(${textTranslateX}px)` }}
-                                                >
-                                                    Viva
-                                                </motion.h1>
-                                            </div>
-                                            <motion.p
-                                                className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-2xl"
-                                                style={{ opacity: 1 - scrollProgress * 2 }}
-                                            >
-                                                Un rincón de calma donde <br />
-                                                la naturaleza se detiene a beber
-                                            </motion.p>
-                                        </>
-                                    )}
+                                    {/* Mobile Titles */}
+                                    <div className="flex md:hidden flex-col items-center mb-2">
+                                        <h1 className="font-serif text-5xl font-bold text-off-white italic mix-blend-difference leading-tight">
+                                            Fuente
+                                        </h1>
+                                        <h1 className="font-cormorant text-7xl font-light text-sage-green mix-blend-normal -mt-2">
+                                            Viva
+                                        </h1>
+                                        <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4 mt-2">
+                                            Un rincón de calma donde <br />
+                                            la naturaleza se detiene a beber
+                                        </p>
+                                    </div>
+
+                                    {/* Desktop Titles */}
+                                    <div className="hidden md:flex items-center gap-6">
+                                        <motion.h1
+                                            className="font-serif text-6xl lg:text-9xl font-bold text-off-white transition-none italic mix-blend-difference"
+                                            style={{ transform: `translateX(-${textTranslateX}px)` }}
+                                        >
+                                            Fuente
+                                        </motion.h1>
+                                        <motion.h1
+                                            className="font-cormorant text-8xl lg:text-[11.5rem] font-light text-center text-sage-green transition-none mix-blend-normal uppercase tracking-tighter"
+                                            style={{ transform: `translateX(${textTranslateX}px)` }}
+                                        >
+                                            Viva
+                                        </motion.h1>
+                                    </div>
+                                    <motion.p
+                                        className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-2xl hidden md:block"
+                                        style={{ opacity: 1 - scrollProgress * 2 }}
+                                    >
+                                        Un rincón de calma donde <br />
+                                        la naturaleza se detiene a beber
+                                    </motion.p>
                                 </div>
                             </div>
 

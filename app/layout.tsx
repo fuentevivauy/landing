@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Montserrat } from "next/font/google";
+import { Playfair_Display, Montserrat, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,13 @@ const playfair = Playfair_Display({
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -48,7 +55,8 @@ export default function RootLayout({
         className={cn(
           "antialiased min-h-screen bg-off-white font-sans overflow-x-hidden",
           playfair.variable,
-          montserrat.variable
+          montserrat.variable,
+          cormorant.variable
         )}
       >
         {children}

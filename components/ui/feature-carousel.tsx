@@ -59,11 +59,7 @@ const CarouselCard = ({
 // --- FEATURE CAROUSEL COMPONENT ---
 export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
     ({ items, className, onCenterClick, ...props }, ref) => {
-        const [currentIndex, setCurrentIndex] = React.useState(() => {
-            // Si el catálogo está completo ("Todos"), forzamos el inicio en un producto icónico
-            // Por ejemplo, el índice 0 o uno específico.
-            return Math.floor(items.length / 2);
-        });
+        const [currentIndex, setCurrentIndex] = React.useState(0);
         const [isMobileView, setIsMobileView] = React.useState(false);
 
         React.useEffect(() => {
