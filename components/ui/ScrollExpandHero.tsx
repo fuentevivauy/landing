@@ -239,9 +239,9 @@ export function ScrollExpandHero({
                                             <h1 className="font-serif text-5xl font-bold text-off-white italic mb-2 mix-blend-difference">
                                                 Fuente Viva
                                             </h1>
-                                            <p className="text-off-white font-medium text-lg tracking-wide max-w-xs px-4">
-                                                Un rincón de calma donde la naturaleza <br />
-                                                se detiene a beber
+                                            <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4">
+                                                Un rincón de calma donde <br />
+                                                la naturaleza se detiene a beber
                                             </p>
                                         </>
                                     ) : (
@@ -261,11 +261,11 @@ export function ScrollExpandHero({
                                                 </motion.h1>
                                             </div>
                                             <motion.p
-                                                className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-lg"
+                                                className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-2xl"
                                                 style={{ opacity: 1 - scrollProgress * 2 }}
                                             >
-                                                Un rincón de calma donde la naturaleza <br />
-                                                se detiene a beber
+                                                Un rincón de calma donde <br />
+                                                la naturaleza se detiene a beber
                                             </motion.p>
                                         </>
                                     )}
