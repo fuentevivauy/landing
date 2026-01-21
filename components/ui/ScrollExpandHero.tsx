@@ -26,6 +26,7 @@ export function ScrollExpandHero({
     const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [isMuted, setIsMuted] = useState<boolean>(false);
+    const [isMounted, setIsMounted] = useState<boolean>(false);
 
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -58,6 +59,7 @@ export function ScrollExpandHero({
     }, [mediaFullyExpanded]);
 
     useEffect(() => {
+        setIsMounted(true);
         setScrollProgress(0);
         setShowContent(false);
         setMediaFullyExpanded(false);
@@ -185,7 +187,7 @@ export function ScrollExpandHero({
                             <div className="flex flex-col items-center justify-center w-full h-[100svh] relative">
 
                                 {/* DESKTOP HERO: Expandable Video (Audio) */}
-                                {!isMobile && (
+                                {isMounted && !isMobile && (
                                     <div
                                         className="absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none rounded-2xl overflow-hidden group"
                                         style={{

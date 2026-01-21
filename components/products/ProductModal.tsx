@@ -235,7 +235,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         {/* Desktop Layout - 2 columnas Grid */}
                         <div className="hidden md:grid md:grid-cols-2 flex-1 h-full w-full relative">
                             {/* Image Section Desktop */}
-                            <div className="relative h-full bg-stone-gray/10" onClick={() => setIsZoomed(true)}>
+                            <div className="relative h-full bg-stone-gray/10" onClick={() => isReadyForZoom && setIsZoomed(true)}>
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
                                     alt={product.name}

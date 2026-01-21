@@ -105,7 +105,7 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                             return (
                                 <motion.div
                                     key={item.product.id}
-                                    layoutId={isCenter ? `product-card-${item.product.id}` : undefined}
+                                    layoutId={`product-card-${item.product.id}`}
                                     className={cn(
                                         'absolute w-64 h-96 md:w-80 md:h-[450px]',
                                         'flex items-center justify-center',
@@ -125,24 +125,23 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                                         }
                                     }}
                                     animate={{
-                                        transform: `
-                                            translateX(${pos * (isMobileView ? 65 : 75)}%) 
-                                            scale(${isCenter ? 1 : isAdjacent ? 0.8 : 0.6})
-                                            rotateY(${pos * -20}deg)
-                                            translateZ(${isCenter ? 0 : -100}px)
-                                        `,
+                                        x: `${pos * (isMobileView ? 65 : 75)}%`,
+                                        scale: isCenter ? 1 : isAdjacent ? 0.8 : 0.6,
+                                        rotateY: pos * -20,
+                                        z: isCenter ? 0 : -100,
                                         opacity: Math.abs(pos) > 2 ? 0 : (isCenter ? 1 : 0.7),
                                     }}
                                     transition={{
                                         layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
                                         type: "spring",
                                         stiffness: 260,
-                                        damping: 20
+                                        damping: 25
                                     }}
                                     style={{
                                         zIndex: isCenter ? 50 : 40 - Math.abs(pos),
                                         filter: isCenter ? 'blur(0px)' : 'blur(2px)',
                                         pointerEvents: isCenter ? 'auto' : 'none',
+                                        transformStyle: 'preserve-3d',
                                     }}
                                 >
                                     <CarouselCard
