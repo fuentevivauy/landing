@@ -136,8 +136,8 @@ export function ScrollExpandHero({
                 ref={sectionRef}
                 className="transition-colors duration-700 ease-in-out overflow-x-hidden"
             >
-                <section className="relative flex flex-col items-center justify-start min-h-[100dvh]">
-                    <div className="relative w-full flex flex-col items-center min-h-[100dvh]">
+                <section className="relative flex flex-col items-center justify-start min-h-[100svh]">
+                    <div className="relative w-full flex flex-col items-center min-h-[100svh]">
                         {/* Background Image - fades as scroll progresses on Desktop */}
                         <motion.div
                             className="absolute inset-0 z-0 h-full"
@@ -182,7 +182,7 @@ export function ScrollExpandHero({
 
 
                         <div className="container mx-auto flex flex-col items-center justify-start relative z-10">
-                            <div className="flex flex-col items-center justify-center w-full h-[100dvh] relative">
+                            <div className="flex flex-col items-center justify-center w-full h-[100svh] relative">
 
                                 {/* DESKTOP HERO: Expandable Video (Audio) */}
                                 {!isMobile && (

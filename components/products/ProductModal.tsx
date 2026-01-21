@@ -1,7 +1,5 @@
-'use client';
-
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { X, MessageCircle, Check, Package } from 'lucide-react';
 import { Product } from '@/lib/types/product';
@@ -14,6 +12,8 @@ interface ProductModalProps {
 }
 
 export function ProductModal({ product, onClose }: ProductModalProps) {
+    const [isZoomed, setIsZoomed] = useState(false);
+
     // Scroll lock mejorado - bloquea scroll del body cuando el modal está abierto
     useEffect(() => {
         if (product) {
@@ -65,12 +65,12 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         {/* Mobile Layout - Flex vertical con scroll */}
                         <div className="md:hidden h-full overflow-y-auto overscroll-contain">
                             {/* Image Section Mobile - altura fija */}
-                            <div className="relative h-[40vh] bg-stone-gray/10">
+                            <div className="relative h-[40vh] bg-stone-gray/10" onClick={() => setIsZoomed(true)}>
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
                                     alt={product.name}
                                     fill
-                                    className="object-contain p-4"
+                                    className="object-contain p-4 cursor-zoom-in"
                                     sizes="(max-width: 768px) 100vw, 800px"
                                     quality={90}
                                     priority
@@ -235,12 +235,12 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         {/* Desktop Layout - 2 columnas Grid */}
                         <div className="hidden md:grid md:grid-cols-2 flex-1 h-full w-full relative">
                             {/* Image Section Desktop */}
-                            <div className="relative h-full bg-stone-gray/10">
+                            <div className="relative h-full bg-stone-gray/10" onClick={() => setIsZoomed(true)}>
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
                                     alt={product.name}
                                     fill
-                                    className="object-contain p-8"
+                                    className="object-contain p-8 cursor-zoom-in"
                                     sizes="(max-width: 1024px) 50vw, 800px"
                                     quality={95}
                                     priority
@@ -391,6 +391,45 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                             </div>
                         </div>
                     </motion.div>
+
+                    {/* Fullscreen Zoom Overlay */}
+                    <AnimatePresence>
+                        {isZoomed && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 z-[100] bg-black flex items-center justify-center p-4 md:p-10"
+                                onClick={() => setIsZoomed(false)}
+                            >
+                                <motion.div
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.9, opacity: 0 }}
+                                    className="relative w-full h-full flex items-center justify-center"
+                                >
+                                    <Image
+                                        src={product.images.gallery[0] || product.images.thumbnail}
+                                        alt={product.name}
+                                        fill
+                                        className="object-contain"
+                                        sizes="100vw"
+                                        quality={100}
+                                        priority
+                                    />
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setIsZoomed(false);
+                                        }}
+                                        className="absolute top-4 right-4 p-3 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-all border border-white/20"
+                                    >
+                                        <X className="w-8 h-8" />
+                                    </button>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </>
             )}
         </AnimatePresence>
