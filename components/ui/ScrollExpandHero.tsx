@@ -150,7 +150,7 @@ export function ScrollExpandHero({
                                 alt="Background"
                                 width={1920}
                                 height={1080}
-                                className="w-screen h-screen object-cover grayscale"
+                                className="w-full h-full object-cover grayscale"
                                 priority
                             />
                             <div className="absolute inset-0 bg-slate-blue/30" />

@@ -80,13 +80,13 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
             <div
                 ref={ref}
                 className={cn(
-                    'relative w-full flex flex-col items-center justify-center p-4',
+                    'relative w-full flex flex-col items-center justify-center p-4 overflow-hidden',
                     className
                 )}
                 {...props}
             >
                 {/* Main Showcase Section */}
-                <div className="relative w-full h-[400px] md:h-[500px] flex items-center justify-center">
+                <div className="relative w-full h-[400px] md:h-[500px] flex items-center justify-center overflow-hidden">
                     {/* Carousel Wrapper */}
                     <div className="relative w-full h-full flex items-center justify-center [perspective:1000px]">
                         {items.map((item, index) => {

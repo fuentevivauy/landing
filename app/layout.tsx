@@ -46,7 +46,7 @@ export default function RootLayout({
     <html lang="es">
       <body
         className={cn(
-          "antialiased min-h-screen bg-off-white font-sans",
+          "antialiased min-h-screen bg-off-white font-sans overflow-x-hidden",
           playfair.variable,
           montserrat.variable
         )}
