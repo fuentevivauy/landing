@@ -568,7 +568,7 @@ export const products: Product[] = [
     },
     {
         id: 'b-04',
-        slug: 'bebedero-aves-64cm',
+        slug: 'bebedero-aves-64',
         name: 'Bebedero Aves (64 cm)',
         category: 'Bebederos',
         price: 2900,
@@ -590,7 +590,7 @@ export const products: Product[] = [
     },
     {
         id: 'b-05',
-        slug: 'bebedero-aves-59cm',
+        slug: 'bebedero-aves-59',
         name: 'Bebedero Aves (59 cm)',
         category: 'Bebederos',
         price: null,

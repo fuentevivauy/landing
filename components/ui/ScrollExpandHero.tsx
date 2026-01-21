@@ -138,8 +138,19 @@ export function ScrollExpandHero({
                 ref={sectionRef}
                 className="transition-colors duration-700 ease-in-out overflow-x-hidden"
             >
-                <section className="relative flex flex-col items-center justify-start min-h-[100svh]">
+                <section className="relative flex flex-col items-center justify-start min-h-[100svh] bg-black">
                     <div className="relative w-full flex flex-col items-center min-h-[100svh]">
+                        {/* Persistent Background Image to prevent gray flicker */}
+                        <div className="absolute inset-0 z-0">
+                            <Image
+                                src={bgImageSrc}
+                                alt="Background Placeholder"
+                                fill
+                                className="object-cover grayscale opacity-20 blur-sm"
+                                priority
+                            />
+                        </div>
+
                         {/* Background Image - fades as scroll progresses on Desktop */}
                         <motion.div
                             className="absolute inset-0 z-0 h-full"
@@ -260,7 +271,7 @@ export function ScrollExpandHero({
                                                 <h1 className="font-serif text-5xl font-bold text-off-white italic mix-blend-difference leading-tight">
                                                     Fuente
                                                 </h1>
-                                                <h1 className="font-sans text-6xl font-black text-sage-green mix-blend-normal -mt-2">
+                                                <h1 className="font-serif text-6xl font-black text-sage-green mix-blend-normal -mt-2">
                                                     Viva
                                                 </h1>
                                             </div>
@@ -279,7 +290,7 @@ export function ScrollExpandHero({
                                                     Fuente
                                                 </motion.h1>
                                                 <motion.h1
-                                                    className="font-sans text-7xl lg:text-[10rem] font-black text-center text-sage-green transition-none mix-blend-normal uppercase tracking-tighter"
+                                                    className="font-serif text-7xl lg:text-[10rem] font-black text-center text-sage-green transition-none mix-blend-normal uppercase tracking-tighter"
                                                     style={{ transform: `translateX(${textTranslateX}px)` }}
                                                 >
                                                     Viva
