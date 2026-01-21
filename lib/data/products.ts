@@ -47,11 +47,11 @@ const IMAGE_MAP: Record<string, string> = {
     'buda-tibetano-medio': 'BUTA_TIBETANO_MEDIO_yi1jss',
     'enano-jardin-carro': 'Enano_de_Jardin_con_carro_ejwtvp',
     'buda-serenidad': 'BUDA_DE_LA_SERENIDAD_tq8wlo',
-    'buho-jardin': 'Buho_de_Jardin_sexafm',
+    'buho-jardin': 'Buho_de_Jardin_sik2rh',
     'buda-porta-vela': 'Estatua_buda_porta_vela_rkq6jt',
     'tortuga-porta-maceta': 'Tortuga_porta_maceta_cdjlrt',
     // Muebles y Accesorios
-    'juego-mesa-bancos-romano': 'Juego_completo_Mesa_y_bancos_Romano_cxtkaq',
+    'juego-mesa-bancos-romano': 'Juego_completo_Mesa_y_bancos_Romano_nw0ufy',
     'banco-madera-jardin-grande': 'Banco_con_asiento_y_Respaldo_en_madera_de_jardin_grande_fgaq5q',
     'farol-chino-grande': 'Farol_chino_grande_zppnhm',
     'farol-chino-chico': 'Farol_chino_chico_stlwug',
