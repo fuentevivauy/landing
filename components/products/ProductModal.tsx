@@ -5,6 +5,7 @@ import { X, MessageCircle, Check, Package } from 'lucide-react';
 import { Product } from '@/lib/types/product';
 import { getWhatsAppLink } from '@/lib/data/products';
 import { Button } from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
 
 interface ProductModalProps {
     product: Product | null;
@@ -30,7 +31,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
             // Pequeño delay para permitir el zoom, evitando clicks accidentales al abrir
             const timer = setTimeout(() => {
                 setCanZoom(true);
-            }, 300);
+            }, 600);
 
             return () => {
                 // Restaurar scroll
@@ -73,12 +74,21 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         {/* Mobile Layout - Flex vertical con scroll */}
                         <div className="md:hidden h-full overflow-y-auto overscroll-contain">
                             {/* Image Section Mobile - altura fija */}
-                            <div className="relative h-[40vh] bg-stone-gray/10" onClick={() => canZoom && setIsZoomed(true)}>
+                            <div
+                                className={cn(
+                                    "relative h-[40vh] bg-stone-gray/10",
+                                    canZoom ? "cursor-zoom-in" : ""
+                                )}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    canZoom && setIsZoomed(true);
+                                }}
+                            >
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
                                     alt={product.name}
                                     fill
-                                    className="object-contain p-4 cursor-zoom-in"
+                                    className="object-contain p-4"
                                     sizes="(max-width: 768px) 100vw, 800px"
                                     quality={90}
                                     priority
@@ -193,9 +203,34 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                                 <span className="font-medium text-slate-blue">{product.specs.maxLoad}</span>
                                             </div>
                                         )}
+                                        {(product.specs.diameter || product.specs.diameter_main) && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Diámetro</span>
+                                                <span className="font-medium text-slate-blue">
+                                                    {product.specs.diameter || product.specs.diameter_main}
+                                                </span>
+                                            </div>
+                                        )}
+                                        {product.specs.width && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Ancho</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.width}</span>
+                                            </div>
+                                        )}
+                                        {product.specs.base && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Base</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.base}</span>
+                                            </div>
+                                        )}
+                                        {product.specs.color && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Color</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.color}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </motion.div>
-
                                 {/* Benefits */}
                                 <motion.div
                                     initial={{ opacity: 0 }}
@@ -346,10 +381,36 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                                 <span className="font-medium text-slate-blue">{product.specs.diameter}</span>
                                             </div>
                                         )}
-                                        {product.specs.motor && (
+                                        {product.specs.maxLoad && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Motor</span>
-                                                <span className="font-medium text-slate-blue">{product.specs.motor}</span>
+                                                <span className="text-xs text-stone-gray block">Carga máxima</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.maxLoad}</span>
+                                            </div>
+                                        )}
+                                        {(product.specs.diameter || product.specs.diameter_main) && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Diámetro</span>
+                                                <span className="font-medium text-slate-blue">
+                                                    {product.specs.diameter || product.specs.diameter_main}
+                                                </span>
+                                            </div>
+                                        )}
+                                        {product.specs.width && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Ancho</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.width}</span>
+                                            </div>
+                                        )}
+                                        {product.specs.base && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Base</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.base}</span>
+                                            </div>
+                                        )}
+                                        {product.specs.color && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Color</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.color}</span>
                                             </div>
                                         )}
                                     </div>
