@@ -285,7 +285,7 @@ export function ScrollExpandHero({
                                             Fuente
                                         </motion.h1>
                                         <motion.h1
-                                            className="font-cormorant text-8xl lg:text-[11.5rem] font-light text-center text-sage-green transition-none mix-blend-normal uppercase tracking-tighter"
+                                            className="font-cormorant text-8xl lg:text-[11.5rem] font-light text-center text-sage-green transition-none mix-blend-normal tracking-tighter"
                                             style={{ transform: `translateX(${textTranslateX}px)` }}
                                         >
                                             Viva
