@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product, ProductCategory, PRODUCT_CATEGORIES } from '@/lib/types/product';
 import { products, getImages } from '@/lib/data/products';
@@ -101,8 +101,8 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                 <div className="w-full">
                     {filteredProducts.length > 0 ? (
                         <FeatureCarousel
-                            items={filteredProducts.map((product, index) => ({ product, index }))}
-                            onCenterClick={(product) => onProductClick(product)}
+                            items={useMemo(() => filteredProducts.map((product, index) => ({ product, index })), [filteredProducts])}
+                            onCenterClick={useCallback((product) => onProductClick(product), [onProductClick])}
                         />
                     ) : (
                         <motion.div

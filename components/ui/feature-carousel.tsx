@@ -57,7 +57,7 @@ const CarouselCard = ({
 };
 
 // --- FEATURE CAROUSEL COMPONENT ---
-export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
+export const FeatureCarousel = React.memo(React.forwardRef<HTMLDivElement, CarouselProps>(
     ({ items, className, onCenterClick, ...props }, ref) => {
         const [currentIndex, setCurrentIndex] = React.useState(0);
         const [isMobileView, setIsMobileView] = React.useState(false);
@@ -72,9 +72,12 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
         // Sync currentIndex when items change (e.g. filtering)
         React.useEffect(() => {
             if (currentIndex >= items.length) {
-                setCurrentIndex(Math.floor(items.length / 2));
+                // Si cambia la longitud (filtro), reiniciamos a un índice seguro (0 o centro)
+                // Para consistencia con la carga inicial, usamos 0 si es un reset total, o centro si es cambio de filtro.
+                // En este caso simple, mantenemos centro o 0.
+                setCurrentIndex(0);
             }
-        }, [items.length, currentIndex]);
+        }, [items.length]);
 
         const handleNext = React.useCallback(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
@@ -184,6 +187,6 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
             </div>
         );
     }
-);
+));
 
 FeatureCarousel.displayName = 'FeatureCarousel';

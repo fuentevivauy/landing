@@ -267,7 +267,7 @@ export function ScrollExpandHero({
                                         <h1 className="font-serif text-5xl font-bold text-off-white italic mix-blend-difference leading-tight">
                                             Fuente
                                         </h1>
-                                        <h1 className="font-cormorant text-7xl font-light text-sage-green mix-blend-normal -mt-2">
+                                        <h1 className="font-cormorant text-7xl font-light italic text-sage-green mix-blend-normal -mt-2">
                                             Viva
                                         </h1>
                                         <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4 mt-2">
@@ -285,7 +285,7 @@ export function ScrollExpandHero({
                                             Fuente
                                         </motion.h1>
                                         <motion.h1
-                                            className="font-cormorant text-8xl lg:text-[11.5rem] font-light text-center text-sage-green transition-none mix-blend-normal uppercase tracking-tighter"
+                                            className="font-cormorant text-8xl lg:text-[11.5rem] font-light italic text-center text-sage-green transition-none mix-blend-normal uppercase tracking-tighter"
                                             style={{ transform: `translateX(${textTranslateX}px)` }}
                                         >
                                             Viva
