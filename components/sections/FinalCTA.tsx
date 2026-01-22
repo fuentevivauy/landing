@@ -34,9 +34,10 @@ export function FinalCTA() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="font-cormorant text-4xl md:text-5xl lg:text-6xl font-light text-off-white mb-6"
+                        className="text-4xl md:text-5xl lg:text-6xl mb-6 flex items-center justify-center gap-3"
                     >
-                        Fuente Viva
+                        <span className="font-serif font-bold italic text-off-white">Fuente</span>
+                        <span className="font-cormorant font-light text-sage-green">Viva</span>
                     </motion.h2>
 
                     {/* Mission */}
