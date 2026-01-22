@@ -34,7 +34,7 @@ export function FinalCTA() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-off-white mb-6 italic"
+                        className="font-cormorant text-4xl md:text-5xl lg:text-6xl font-light text-off-white mb-6"
                     >
                         Fuente Viva
                     </motion.h2>
