@@ -9,19 +9,19 @@ const features = [
         icon: Leaf,
         title: 'Más de 6 Años',
         description:
-            'Experiencia diseñando e instalando fuentes en todo Uruguay con dedicación y profesionalismo.',
+            'Vendiendo e Instalando Fuentes. Experiencia, dedicación y atención personalizada en proyectos en todo Uruguay.',
     },
     {
         icon: Sun,
-        title: 'Detalle Artesanal',
+        title: 'Acabado Artesanal',
         description:
-            'Cada fuente es creada con cuidado especial. No hay dos trabajos iguales en Fuente Viva.',
+            'Trabajamos con piezas moldeadas y terminaciones artesanales, logrando un resultado cuidado y personalizado.',
     },
     {
         icon: Wrench,
-        title: 'Instalación Completa',
+        title: 'Instalación Profesional',
         description:
-            'Nos encargamos de todo: diseño, fabricación e instalación profesional en tu espacio.',
+            'Podemos encargarnos de la instalación de tu fuente. Este servicio es opcional y se cotiza aparte del precio del producto.',
     },
 ];
 

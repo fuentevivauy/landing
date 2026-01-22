@@ -13,6 +13,7 @@ interface ProductModalProps {
 
 export function ProductModal({ product, onClose }: ProductModalProps) {
     const [isZoomed, setIsZoomed] = useState(false);
+    const [canZoom, setCanZoom] = useState(false);
 
     // Scroll lock mejorado - bloquea scroll del body cuando el modal está abierto
     useEffect(() => {
@@ -26,10 +27,17 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
             // Atributo para que otros componentes sepan que hay un modal abierto
             document.body.setAttribute('data-modal-open', 'true');
 
+            // Pequeño delay para permitir el zoom, evitando clicks accidentales al abrir
+            const timer = setTimeout(() => {
+                setCanZoom(true);
+            }, 300);
+
             return () => {
                 // Restaurar scroll
                 document.body.style.overflow = originalStyle;
                 document.body.removeAttribute('data-modal-open');
+                setCanZoom(false);
+                clearTimeout(timer);
             };
         }
     }, [product]);
@@ -65,7 +73,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         {/* Mobile Layout - Flex vertical con scroll */}
                         <div className="md:hidden h-full overflow-y-auto overscroll-contain">
                             {/* Image Section Mobile - altura fija */}
-                            <div className="relative h-[40vh] bg-stone-gray/10" onClick={() => setIsZoomed(true)}>
+                            <div className="relative h-[40vh] bg-stone-gray/10" onClick={() => canZoom && setIsZoomed(true)}>
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
                                     alt={product.name}
