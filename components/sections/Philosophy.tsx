@@ -103,7 +103,7 @@ export function Philosophy() {
                             Cada fuente es una{' '}
                             <span className="italic text-sage-green whitespace-nowrap">obra de arte</span>
                         </motion.span>
-                        <motion.span variants={lineVariants} className="block">
+                        <motion.span variants={lineVariants} className="block text-slate-blue/90">
                             creada con detalle y pasión.
                         </motion.span>
                     </motion.h2>
