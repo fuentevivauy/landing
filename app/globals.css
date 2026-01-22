@@ -19,6 +19,7 @@
 
   --font-serif: var(--font-playfair), serif;
   --font-sans: var(--font-montserrat), sans-serif;
+  --font-cormorant: var(--font-cormorant), serif;
 }
 
 html {

@@ -139,7 +139,7 @@ export const FeatureCarousel = React.memo(React.forwardRef<HTMLDivElement, Carou
                                         scale: isCenter ? 1 : isAdjacent ? 0.8 : 0.6,
                                         rotateY: pos * -20,
                                         z: isCenter ? 0 : -100,
-                                        opacity: Math.abs(pos) > 2 ? 0 : (isCenter ? 1 : 0.7),
+                                        opacity: Math.abs(pos) > 3 ? 0 : (isCenter ? 1 : 0.7),
                                     }}
                                     transition={{
                                         layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
