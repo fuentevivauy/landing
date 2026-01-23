@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+﻿import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { X, MessageCircle, Check, Package } from 'lucide-react';
@@ -16,7 +16,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     const [isZoomed, setIsZoomed] = useState(false);
     const [canZoom, setCanZoom] = useState(false);
 
-    // Scroll lock mejorado - bloquea scroll del body cuando el modal está abierto
+    // Scroll lock mejorado - bloquea scroll del body cuando el modal estÃ¡ abierto
     useEffect(() => {
         if (product) {
             // Guardar el estilo original
@@ -95,11 +95,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                             <div
                                 className={cn(
                                     "relative h-[40vh] bg-stone-gray/10",
-                                    canZoom ? "cursor-zoom-in" : ""
-                                )}
-                                onClick={handleImageInteraction}
-                                onTouchEnd={handleImageInteraction}
-                            >
+                                )}>
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
                                     alt={product.name}
@@ -111,7 +107,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 />
                                 {/* Double click hint overlay */}
                                 {canZoom && !isZoomed && (
-                                    <div className="absolute inset-x-0 bottom-4 flex justify-center px-4 pointer-events-none">
+                                    <div className="hidden md:flex absolute inset-x-0 bottom-4 justify-center px-4 pointer-events-none">
                                         <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse z-20">
                                             Doble click para ampliar
                                         </div>
@@ -182,7 +178,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 >
                                     <h3 className="font-semibold text-slate-blue mb-3 flex items-center gap-2">
                                         <Package className="w-5 h-5" />
-                                        Características Técnicas
+                                        CaracterÃ­sticas TÃ©cnicas
                                     </h3>
                                     <div className="grid grid-cols-2 gap-3">
                                         {product.specs.weight && (
@@ -223,16 +219,28 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         )}
                                         {product.specs.maxLoad && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Carga máxima</span>
+                                                <span className="text-xs text-stone-gray block">Carga mÃ¡xima</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.maxLoad}</span>
                                             </div>
                                         )}
                                         {(product.specs.diameter || product.specs.diameter_main) && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Diámetro</span>
+                                                <span className="text-xs text-stone-gray block">DiÃ¡metro</span>
                                                 <span className="font-medium text-slate-blue">
                                                     {product.specs.diameter || product.specs.diameter_main}
                                                 </span>
+                                            </div>
+                                        )}
+                                        {product.specs.table_dim && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Medidas Mesa</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.table_dim}</span>
+                                            </div>
+                                        )}
+                                        {product.specs.bench_dim && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Medida Banco</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.bench_dim}</span>
                                             </div>
                                         )}
                                         {product.specs.width && (
@@ -282,8 +290,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 >
                                     {!product.inStock && (
                                         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800">
-                                            <p className="font-medium">⏱️ Fabricación bajo pedido</p>
-                                            <p className="text-sm">Tiempo de entrega: 10 días hábiles</p>
+                                            <p className="font-medium">â±ï¸ FabricaciÃ³n bajo pedido</p>
+                                            <p className="text-sm">Tiempo de entrega: 10 dÃ­as hÃ¡biles</p>
                                         </div>
                                     )}
 
@@ -332,7 +340,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 />
                                 {/* Double click hint overlay Desktop */}
                                 {canZoom && !isZoomed && (
-                                    <div className="absolute inset-x-0 bottom-4 flex justify-center px-4 pointer-events-none">
+                                    <div className="hidden md:flex absolute inset-x-0 bottom-4 justify-center px-4 pointer-events-none">
                                         <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse z-20">
                                             Doble click para ampliar
                                         </div>
@@ -398,7 +406,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 >
                                     <h3 className="font-semibold text-slate-blue mb-3 flex items-center gap-2">
                                         <Package className="w-5 h-5" />
-                                        Características Técnicas
+                                        CaracterÃ­sticas TÃ©cnicas
                                     </h3>
                                     <div className="grid grid-cols-2 gap-3">
                                         {product.specs.weight && (
@@ -427,22 +435,34 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         )}
                                         {product.specs.diameter && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Diámetro</span>
+                                                <span className="text-xs text-stone-gray block">DiÃ¡metro</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.diameter}</span>
                                             </div>
                                         )}
                                         {product.specs.maxLoad && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Carga máxima</span>
+                                                <span className="text-xs text-stone-gray block">Carga mÃ¡xima</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.maxLoad}</span>
                                             </div>
                                         )}
                                         {(product.specs.diameter || product.specs.diameter_main) && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Diámetro</span>
+                                                <span className="text-xs text-stone-gray block">DiÃ¡metro</span>
                                                 <span className="font-medium text-slate-blue">
                                                     {product.specs.diameter || product.specs.diameter_main}
                                                 </span>
+                                            </div>
+                                        )}
+                                        {product.specs.table_dim && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Medidas Mesa</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.table_dim}</span>
+                                            </div>
+                                        )}
+                                        {product.specs.bench_dim && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Medida Banco</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.bench_dim}</span>
                                             </div>
                                         )}
                                         {product.specs.width && (
@@ -493,8 +513,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 >
                                     {!product.inStock && (
                                         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800">
-                                            <p className="font-medium">⏱️ Fabricación bajo pedido</p>
-                                            <p className="text-sm">Tiempo de entrega: 10 días hábiles</p>
+                                            <p className="font-medium">â±ï¸ FabricaciÃ³n bajo pedido</p>
+                                            <p className="text-sm">Tiempo de entrega: 10 dÃ­as hÃ¡biles</p>
                                         </div>
                                     )}
 
@@ -550,7 +570,10 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         )}
                     </AnimatePresence>
                 </>
-            )}
-        </AnimatePresence>
+            )
+            }
+        </AnimatePresence >
     );
 }
+
+

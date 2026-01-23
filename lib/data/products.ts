@@ -635,29 +635,6 @@ export const products: Product[] = [
         images: getImages('bebedero-aves-64'),
         inStock: true,
     },
-    {
-        id: 'b-05',
-        slug: 'bebedero-aves-59',
-        name: 'Bebedero Aves (59 cm)',
-        category: 'Bebederos',
-        price: null,
-        priceFormatted: 'Consultar',
-        description: '✨ Pequeño y acogedor. Perfecto para balcones o rincones reducidos. Porque todos merecemos un toque de vida silvestre. 🐦🌱',
-        benefits: [
-            'Tamaño compacto',
-            'Ideal para balcones',
-            'Cero mantenimiento',
-            'Diseño discreto',
-        ],
-        specs: {
-            height: '59 cm',
-            diameter_main: '47 cm',
-            weight: '25 kg',
-            material: 'Hormigón vibrado inyectado',
-        },
-        images: getImages('bebedero-aves-59'),
-        inStock: true,
-    },
 
     // ============================================
     // ESTATUAS

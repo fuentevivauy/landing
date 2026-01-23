@@ -292,10 +292,7 @@ export const ProductCarouselCard = ({
                                     canZoom ? "cursor-zoom-in" : "cursor-wait pointer-events-none opacity-80"
                                 )}
                                 onClick={(e) => {
-                                    // Mobile Only: Manual double tap
-                                    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                                        handleImageInteraction(e);
-                                    }
+                                    // Mobile click does nothing (no zoom)
                                 }}
                                 onDoubleClick={(e) => {
                                     // Desktop Only: Native event
