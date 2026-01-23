@@ -184,16 +184,13 @@ export const ProductCarouselCard = ({
         setIsImageZoomed(false);
         onCardClose();
     };
-    // New state for image zoom within expanded modal
     const [isImageZoomed, setIsImageZoomed] = useState(false);
     const [canZoom, setCanZoom] = useState(false);
 
     useEffect(() => {
         if (isExpanded) {
-            // Reset zoom state when card opens
             setIsImageZoomed(false);
             setCanZoom(false);
-            // Delay before allowing zoom to prevent accidental triggers
             const timer = setTimeout(() => setCanZoom(true), 800);
             return () => clearTimeout(timer);
         } else {
@@ -202,12 +199,22 @@ export const ProductCarouselCard = ({
         }
     }, [isExpanded]);
 
-    const handleImageZoom = (e: React.MouseEvent | React.TouchEvent) => {
+    const lastTap = useRef<number>(0);
+
+    const handleImageInteraction = (e: React.MouseEvent | React.TouchEvent) => {
         e.stopPropagation();
-        e.preventDefault();
-        if (canZoom && !isImageZoomed) {
-            setIsImageZoomed(true);
+
+        const now = Date.now();
+        const DOUBLE_TAP_DELAY = 300;
+
+        if (now - lastTap.current < DOUBLE_TAP_DELAY) {
+            // Success: Double tap detected
+            if (canZoom && !isImageZoomed) {
+                setIsImageZoomed(true);
+            }
         }
+
+        lastTap.current = now;
     };
 
     const handleImageZoomClose = (e: React.MouseEvent | React.TouchEvent) => {
@@ -280,10 +287,11 @@ export const ProductCarouselCard = ({
                             {/* Expanded Content */}
                             <div
                                 className={cn(
-                                    "w-full md:w-1/2 h-1/3 md:h-full relative shrink-0 transition-opacity duration-300",
-                                    canZoom ? "cursor-zoom-in opacity-100" : "cursor-default pointer-events-none"
+                                    "w-full md:w-1/2 h-1/3 md:h-full relative shrink-0 transition-all duration-500",
+                                    canZoom ? "cursor-zoom-in" : "cursor-wait pointer-events-none opacity-80"
                                 )}
-                                onClick={handleImageZoom}
+                                onClick={handleImageInteraction}
+                                onTouchEnd={handleImageInteraction}
                             >
                                 <Image
                                     src={images.thumbnail}
@@ -292,7 +300,16 @@ export const ProductCarouselCard = ({
                                     objectFit="cover"
                                     className="object-center"
                                 />
+                                {/* Double click hint overlay */}
+                                {canZoom && !isImageZoomed && (
+                                    <div className="absolute inset-x-0 bottom-4 flex justify-center px-4 pointer-events-none">
+                                        <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse">
+                                            Doble click para ampliar
+                                        </div>
+                                    </div>
+                                )}
                             </div>
+
                             {/* Image Zoom Overlay */}
                             <AnimatePresence>
                                 {isImageZoomed && (
@@ -393,9 +410,9 @@ export const ProductCarouselCard = ({
                                 </div>
                             </div>
                         </motion.div>
-                    </div>
+                    </div >
                 )}
-            </AnimatePresence>
+            </AnimatePresence >
 
             <motion.button
                 layoutId={layout ? `card-${product.id}` : undefined}
