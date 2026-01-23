@@ -178,7 +178,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 >
                                     <h3 className="font-semibold text-slate-blue mb-3 flex items-center gap-2">
                                         <Package className="w-5 h-5" />
-                                        CaracterÃ­sticas TÃ©cnicas
+                                        Características Técnicas
                                     </h3>
                                     <div className="grid grid-cols-2 gap-3">
                                         {product.specs.weight && (
@@ -219,13 +219,13 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         )}
                                         {product.specs.maxLoad && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Carga mÃ¡xima</span>
+                                                <span className="text-xs text-stone-gray block">Carga máxima</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.maxLoad}</span>
                                             </div>
                                         )}
                                         {(product.specs.diameter || product.specs.diameter_main) && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">DiÃ¡metro</span>
+                                                <span className="text-xs text-stone-gray block">Diámetro</span>
                                                 <span className="font-medium text-slate-blue">
                                                     {product.specs.diameter || product.specs.diameter_main}
                                                 </span>
@@ -406,7 +406,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 >
                                     <h3 className="font-semibold text-slate-blue mb-3 flex items-center gap-2">
                                         <Package className="w-5 h-5" />
-                                        CaracterÃ­sticas TÃ©cnicas
+                                        Características Técnicas
                                     </h3>
                                     <div className="grid grid-cols-2 gap-3">
                                         {product.specs.weight && (
@@ -435,19 +435,19 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         )}
                                         {product.specs.diameter && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">DiÃ¡metro</span>
+                                                <span className="text-xs text-stone-gray block">Diámetro</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.diameter}</span>
                                             </div>
                                         )}
                                         {product.specs.maxLoad && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Carga mÃ¡xima</span>
+                                                <span className="text-xs text-stone-gray block">Carga máxima</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.maxLoad}</span>
                                             </div>
                                         )}
                                         {(product.specs.diameter || product.specs.diameter_main) && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">DiÃ¡metro</span>
+                                                <span className="text-xs text-stone-gray block">Diámetro</span>
                                                 <span className="font-medium text-slate-blue">
                                                     {product.specs.diameter || product.specs.diameter_main}
                                                 </span>
@@ -575,5 +575,6 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
         </AnimatePresence >
     );
 }
+
 
 

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
@@ -363,7 +363,7 @@ export const ProductCarouselCard = ({
                                 <div className="space-y-8 flex-grow">
                                     <div>
                                         <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                                            <Info className="w-5 h-5" /> Descripción
+                                            <Info className="w-5 h-5" /> DescripciÃ³n
                                         </h3>
                                         <p className="text-stone-gray leading-relaxed text-lg">
                                             {product.description}
@@ -468,7 +468,7 @@ export const ProductCarouselCard = ({
 
                         <div className="h-0 group-hover:h-8 overflow-hidden transition-all duration-300 opacity-0 group-hover:opacity-100">
                             <span className="text-white/90 text-sm mt-3 inline-block font-medium">
-                                Ver detalles →
+                                Ver detalles â†’
                             </span>
                         </div>
                     </div>
@@ -477,3 +477,4 @@ export const ProductCarouselCard = ({
         </>
     );
 };
+
