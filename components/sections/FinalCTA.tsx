@@ -13,13 +13,23 @@ export function FinalCTA() {
         <section className="relative py-24 bg-slate-blue overflow-hidden">
             {/* Background Video */}
             <div className="absolute inset-0 z-0">
+                {/* Mobile Video */}
                 <video
                     src="https://res.cloudinary.com/dj1wscyom/video/upload/v1768915137/IMG_3426_ixgfyl.mov"
                     autoPlay
                     muted
                     loop
                     playsInline
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full object-cover object-top md:hidden"
+                />
+                {/* Desktop Video */}
+                <video
+                    src="https://res.cloudinary.com/dj1wscyom/video/upload/v1768934599/video_fuentes_web_final_lokfit.mp4"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="hidden md:block w-full h-full object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-slate-blue/80 mix-blend-multiply" />
             </div>
