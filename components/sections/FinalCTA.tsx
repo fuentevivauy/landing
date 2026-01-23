@@ -14,7 +14,7 @@ export function FinalCTA() {
             {/* Background Video */}
             <div className="absolute inset-0 z-0">
                 <video
-                    src="https://res.cloudinary.com/dj1wscyom/video/upload/v1768934599/video_fuentes_web_final_lokfit.mp4"
+                    src="https://res.cloudinary.com/dj1wscyom/video/upload/v1768915137/IMG_3426_ixgfyl.mov"
                     autoPlay
                     muted
                     loop
