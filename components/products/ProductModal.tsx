@@ -94,7 +94,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                             {/* Image Section Mobile - altura fija */}
                             <div
                                 className={cn(
-                                    "relative h-[40vh] bg-stone-gray/10",
+                                    "relative h-[70vh] bg-stone-gray/10",
                                 )}>
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
@@ -575,6 +575,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
         </AnimatePresence >
     );
 }
+
 
 
 

@@ -288,8 +288,8 @@ export const ProductCarouselCard = ({
                             {/* Expanded Content */}
                             <div
                                 className={cn(
-                                    "w-full md:w-1/2 h-1/3 md:h-full relative shrink-0 transition-all duration-500",
-                                    canZoom ? "cursor-zoom-in" : "cursor-wait pointer-events-none opacity-80"
+                                    "w-full md:w-1/2 h-[70vh] md:h-full relative shrink-0 transition-all duration-500",
+                                    canZoom ? "md:cursor-zoom-in" : "md:cursor-wait md:pointer-events-none md:opacity-80"
                                 )}
                                 onClick={(e) => {
                                     // Mobile click does nothing (no zoom)
