@@ -43,9 +43,9 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
         }
     }, [product]);
 
-    if (!product) return null;
-
     const lastTap = useRef<number>(0);
+
+    if (!product) return null;
 
     const handleImageInteraction = (e: React.MouseEvent | React.TouchEvent) => {
         e.stopPropagation();
@@ -303,29 +303,18 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         <div className="hidden md:grid md:grid-cols-2 flex-1 h-full w-full relative">
                             {/* Image Section Desktop */}
                             <div
-                                className={cn(
-                                    "relative h-full bg-stone-gray/10 transition-all duration-500",
-                                    canZoom ? "cursor-zoom-in" : "cursor-wait opacity-80"
-                                )}
-                                onClick={handleImageInteraction}
+                                className="relative h-full bg-stone-gray/10"
+                                onClick={() => setIsZoomed(true)}
                             >
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
                                     alt={product.name}
                                     fill
-                                    className="object-contain p-8"
+                                    className="object-contain p-8 cursor-zoom-in"
                                     sizes="(max-width: 1024px) 50vw, 800px"
                                     quality={95}
                                     priority
                                 />
-                                {/* Double click hint overlay */}
-                                {canZoom && !isZoomed && (
-                                    <div className="absolute inset-x-0 bottom-6 flex justify-center px-4 pointer-events-none">
-                                        <div className="bg-black/40 backdrop-blur-md text-white text-sm py-2.5 px-6 rounded-full border border-white/20 animate-pulse z-20">
-                                            Doble click para ampliar
-                                        </div>
-                                    </div>
-                                )}
                                 {/* Category Badge */}
                                 <div className="absolute top-4 left-4 z-10">
                                     <span className="px-4 py-2 text-sm font-medium bg-slate-blue text-off-white rounded-full">

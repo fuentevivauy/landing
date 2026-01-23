@@ -290,8 +290,19 @@ export const ProductCarouselCard = ({
                                     "w-full md:w-1/2 h-1/3 md:h-full relative shrink-0 transition-all duration-500",
                                     canZoom ? "cursor-zoom-in" : "cursor-wait pointer-events-none opacity-80"
                                 )}
-                                onClick={handleImageInteraction}
-                                onTouchEnd={handleImageInteraction}
+                                onClick={(e) => {
+                                    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+                                        e.stopPropagation();
+                                        canZoom && setIsImageZoomed(true);
+                                    } else {
+                                        handleImageInteraction(e);
+                                    }
+                                }}
+                                onTouchEnd={(e) => {
+                                    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                                        handleImageInteraction(e);
+                                    }
+                                }}
                             >
                                 <Image
                                     src={images.thumbnail}
@@ -300,9 +311,9 @@ export const ProductCarouselCard = ({
                                     objectFit="cover"
                                     className="object-center"
                                 />
-                                {/* Double click hint overlay */}
+                                {/* Double click hint overlay - Only on mobile */}
                                 {canZoom && !isImageZoomed && (
-                                    <div className="absolute inset-x-0 bottom-4 flex justify-center px-4 pointer-events-none">
+                                    <div className="absolute inset-x-0 bottom-4 flex justify-center px-4 pointer-events-none md:hidden">
                                         <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse">
                                             Doble click para ampliar
                                         </div>
