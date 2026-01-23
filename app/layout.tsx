@@ -21,22 +21,32 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Fuente Viva | Serenidad en tu hogar",
-  description: "Fuentes, bebederos y estatuas artesanales de hormigón premium. Más de 6 años creando espacios zen en Uruguay. Envíos a todo el país.",
-  keywords: ["fuentes de jardín", "bebederos para aves", "estatuas de hormigón", "decoración exterior", "jardín zen", "Uruguay"],
+  metadataBase: new URL('https://fuenteviva.uy'),
+  title: "Fuente Viva | Arte y Naturaleza en Hormigón Premium",
+  description: "Descubre la serenidad de nuestras fuentes y bebederos artesanales. Más de 6 años creando piezas de hormigón premium para transformar tu jardín en un santuario de calma. Envíos a todo Uruguay.",
+  keywords: ["fuentes de jardín", "bebederos para aves", "estatuas de hormigón", "decoración exterior", "jardín zen", "hormigón premium", "Uruguay"],
   authors: [{ name: "Fuente Viva" }],
   openGraph: {
-    title: "Fuente Viva | Serenidad en tu hogar",
-    description: "Fuentes, bebederos y estatuas artesanales de hormigón premium. Más de 6 años creando espacios zen en Uruguay.",
+    title: "Fuente Viva | Arte y Naturaleza en Hormigón Premium",
+    description: "Fuentes, bebederos y estatuas artesanales para transformar tu jardín en un santuario de calma. Piezas únicas hechas a mano en Uruguay.",
     url: "https://fuenteviva.uy",
     siteName: "Fuente Viva",
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dj1wscyom/image/upload/f_auto,q_auto/Fuente_barroca_gdabi6',
+        width: 1200,
+        height: 630,
+        alt: 'Fuente Viva - Arte en Hormigón',
+      }
+    ],
     locale: "es_UY",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fuente Viva | Serenidad en tu hogar",
-    description: "Fuentes, bebederos y estatuas artesanales de hormigón premium.",
+    title: "Fuente Viva | Arte y Naturaleza en Hormigón Premium",
+    description: "Transforma tu jardín con nuestras fuentes y estatuas de hormigón premium.",
+    images: ['https://res.cloudinary.com/dj1wscyom/image/upload/f_auto,q_auto/Fuente_barroca_gdabi6'],
   },
   robots: {
     index: true,
