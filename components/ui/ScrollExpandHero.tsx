@@ -172,22 +172,14 @@ export function ScrollExpandHero({
 
                         {/* MOBILE HERO: Full Loop Video or GIF (hidden on desktop via CSS) */}
                         <div className="absolute inset-0 z-0 bg-black md:hidden">
-                            {videoSrc.toLowerCase().endsWith('.gif') ? (
-                                <img
-                                    src={videoSrc}
-                                    alt="Hero Background"
-                                    className="w-full h-full object-cover object-center opacity-80"
-                                />
-                            ) : (
-                                <video
-                                    src={videoSrc}
-                                    autoPlay
-                                    muted
-                                    loop
-                                    playsInline
-                                    className="w-full h-full object-cover object-center opacity-80"
-                                />
-                            )}
+                            <video
+                                src="https://res.cloudinary.com/dj1wscyom/video/upload/v1768915137/IMG_3426_ixgfyl.mov"
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
+                                className="w-full h-full object-cover object-center opacity-80"
+                            />
                             <div className="absolute inset-0 bg-black/40" />
                         </div>
 
