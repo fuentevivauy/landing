@@ -174,7 +174,11 @@ export const ProductCarouselCard = ({
     const [isExpanded, setIsExpanded] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const handleExpand = () => setIsExpanded(true);
+    const handleExpand = (e: React.MouseEvent | React.TouchEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsExpanded(true);
+    };
     const handleCollapse = () => {
         setIsExpanded(false);
         setIsImageZoomed(false);
@@ -274,7 +278,13 @@ export const ProductCarouselCard = ({
                             </button>
 
                             {/* Expanded Content */}
-                            <div className="w-full md:w-1/2 h-1/3 md:h-full relative shrink-0 cursor-pointer" onClick={handleImageZoom}>
+                            <div
+                                className={cn(
+                                    "w-full md:w-1/2 h-1/3 md:h-full relative shrink-0 transition-opacity duration-300",
+                                    canZoom ? "cursor-zoom-in opacity-100" : "cursor-default pointer-events-none"
+                                )}
+                                onClick={handleImageZoom}
+                            >
                                 <Image
                                     src={images.thumbnail}
                                     alt={product.name}
