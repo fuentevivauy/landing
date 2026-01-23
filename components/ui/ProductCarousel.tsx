@@ -177,6 +177,7 @@ export const ProductCarouselCard = ({
     const handleExpand = () => setIsExpanded(true);
     const handleCollapse = () => {
         setIsExpanded(false);
+        setIsImageZoomed(false);
         onCardClose();
     };
     // New state for image zoom within expanded modal
