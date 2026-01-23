@@ -28,10 +28,10 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
             // Atributo para que otros componentes sepan que hay un modal abierto
             document.body.setAttribute('data-modal-open', 'true');
 
-            // Pequeño delay para permitir el zoom, evitando clicks accidentales al abrir
+            // Delay para permitir el zoom, evitando clicks accidentales al abrir
             const timer = setTimeout(() => {
                 setCanZoom(true);
-            }, 600);
+            }, 1500);
 
             return () => {
                 // Restaurar scroll
