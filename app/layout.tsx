@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://fuenteviva.uy'),
   title: "Fuente Viva | Arte y Naturaleza en Hormigón Premium",
   description: "Descubre la serenidad de nuestras fuentes y bebederos artesanales. Más de 6 años creando piezas de hormigón premium para transformar tu jardín en un santuario de calma. Envíos a todo Uruguay.",
+  alternates: {
+    canonical: 'https://fuenteviva.uy',
+  },
   keywords: ["fuentes de jardín", "bebederos para aves", "estatuas de hormigón", "decoración exterior", "jardín zen", "hormigón premium", "Uruguay"],
   authors: [{ name: "Fuente Viva" }],
   openGraph: {

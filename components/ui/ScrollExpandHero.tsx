@@ -144,7 +144,7 @@ export function ScrollExpandHero({
                         <div className="absolute inset-0 z-0">
                             <Image
                                 src={bgImageSrc}
-                                alt="Background Placeholder"
+                                alt="Paisaje con fuente de agua de artesanal - Fuente Viva"
                                 fill
                                 className="object-cover grayscale opacity-20 blur-sm"
                                 priority
@@ -160,7 +160,7 @@ export function ScrollExpandHero({
                         >
                             <Image
                                 src={bgImageSrc}
-                                alt="Background"
+                                alt="Diseño exterior con fuentes de hormigón premium"
                                 width={1920}
                                 height={1080}
                                 className="w-full h-full object-cover grayscale"
@@ -211,7 +211,7 @@ export function ScrollExpandHero({
                                         {videoSrc.toLowerCase().endsWith('.gif') ? (
                                             <img
                                                 src={videoSrc}
-                                                alt="Hero Media"
+                                                alt="Video demostrativo de fuente de agua fluyendo - Fuente Viva"
                                                 className="w-full h-full object-cover object-center"
                                             />
                                         ) : (
@@ -261,44 +261,46 @@ export function ScrollExpandHero({
                                 </div>
 
                                 {/* Hero Titles */}
-                                <div className="flex items-center justify-center text-center gap-2 md:gap-4 w-full relative z-10 transition-none flex-col pointer-events-none">
-                                    {/* Mobile Titles */}
-                                    <div className="flex md:hidden flex-col items-center mb-2">
-                                        <h1 className="font-serif text-5xl font-bold text-off-white italic mix-blend-difference leading-tight">
-                                            Fuente
-                                        </h1>
-                                        <h1 className="font-cormorant text-7xl font-light text-sage-green mix-blend-normal -mt-2">
-                                            Viva
-                                        </h1>
-                                        <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4 mt-2">
-                                            Un rincón de calma donde <br />
-                                            la naturaleza se detiene a beber
-                                        </p>
-                                    </div>
+                                {/* SEO Hidden H1 */}
+                                <h1 className="sr-only">Fuente Viva | Fuentes, Bebederos y Estatuas de Hormigón Premium en Uruguay</h1>
 
-                                    {/* Desktop Titles */}
-                                    <div className="hidden md:flex items-center gap-6">
-                                        <motion.h1
-                                            className="font-serif text-6xl lg:text-9xl font-bold text-off-white transition-none italic mix-blend-difference"
-                                            style={{ transform: `translateX(-${textTranslateX}px)` }}
-                                        >
-                                            Fuente
-                                        </motion.h1>
-                                        <motion.h1
-                                            className="font-cormorant text-8xl lg:text-[11.5rem] font-light text-center text-sage-green transition-none mix-blend-normal tracking-tighter"
-                                            style={{ transform: `translateX(${textTranslateX}px)` }}
-                                        >
-                                            Viva
-                                        </motion.h1>
+                                {/* Mobile Titles - Visual Only */}
+                                <div className="flex md:hidden flex-col items-center mb-2" aria-hidden="true">
+                                    <div className="font-serif text-5xl font-bold text-off-white italic mix-blend-difference leading-tight">
+                                        Fuente
                                     </div>
-                                    <motion.p
-                                        className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-2xl hidden md:block"
-                                        style={{ opacity: 1 - scrollProgress * 2 }}
-                                    >
+                                    <div className="font-cormorant text-7xl font-light text-sage-green mix-blend-normal -mt-2">
+                                        Viva
+                                    </div>
+                                    <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4 mt-2">
                                         Un rincón de calma donde <br />
                                         la naturaleza se detiene a beber
-                                    </motion.p>
+                                    </p>
                                 </div>
+
+                                {/* Desktop Titles - Visual Only */}
+                                <div className="hidden md:flex items-center gap-6" aria-hidden="true">
+                                    <motion.div
+                                        className="font-serif text-6xl lg:text-9xl font-bold text-off-white transition-none italic mix-blend-difference"
+                                        style={{ transform: `translateX(-${textTranslateX}px)` }}
+                                    >
+                                        Fuente
+                                    </motion.div>
+                                    <motion.div
+                                        className="font-cormorant text-8xl lg:text-[11.5rem] font-light text-center text-sage-green transition-none mix-blend-normal tracking-tighter"
+                                        style={{ transform: `translateX(${textTranslateX}px)` }}
+                                    >
+                                        Viva
+                                    </motion.div>
+                                </div>
+                                <motion.p
+                                    className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-2xl hidden md:block"
+                                    style={{ opacity: 1 - scrollProgress * 2 }}
+                                    aria-hidden="true"
+                                >
+                                    Un rincón de calma donde <br />
+                                    la naturaleza se detiene a beber
+                                </motion.p>
                             </div>
 
                             {/* Spacer Content */}
