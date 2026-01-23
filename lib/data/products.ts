@@ -54,7 +54,7 @@ const IMAGE_MAP: Record<string, string> = {
     'juego-mesa-bancos-romano': 'Juego_completo_Mesa_y_bancos_Romano_nw0ufy',
     'banco-madera-jardin-grande': 'Banco_con_asiento_y_Respaldo_en_madera_de_jardin_grande_rwprcj',
     'farol-chino-grande': 'Farol_chino_grande_vxd78a',
-    'farol-chino-chico': 'Farol_chino_chico_stlwug',
+    'farol-chino-chico': 'Farol_chino_chico_ko58ob',
 };
 
 // Helper que usa el mapeo para obtener imágenes

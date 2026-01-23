@@ -180,8 +180,23 @@ export const ProductCarouselCard = ({
         onCardClose();
     };
     // New state for image zoom within expanded modal
+    // New state for image zoom within expanded modal
     const [isImageZoomed, setIsImageZoomed] = useState(false);
-    const handleImageZoom = () => setIsImageZoomed(true);
+    const [canZoom, setCanZoom] = useState(false);
+
+    useEffect(() => {
+        if (isExpanded) {
+            const timer = setTimeout(() => setCanZoom(true), 500);
+            return () => clearTimeout(timer);
+        } else {
+            setCanZoom(false);
+        }
+    }, [isExpanded]);
+
+    const handleImageZoom = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (canZoom) setIsImageZoomed(true);
+    };
     const handleImageZoomClose = () => setIsImageZoomed(false);
 
     // Helper to format price
