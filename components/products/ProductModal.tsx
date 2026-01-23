@@ -303,18 +303,41 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         <div className="hidden md:grid md:grid-cols-2 flex-1 h-full w-full relative">
                             {/* Image Section Desktop */}
                             <div
-                                className="relative h-full bg-stone-gray/10"
-                                onClick={() => setIsZoomed(true)}
+                                className={cn(
+                                    "relative h-full bg-stone-gray/10",
+                                    canZoom ? "cursor-zoom-in" : ""
+                                )}
+                                onClick={(e) => {
+                                    // Mobile logic only
+                                    if (window.innerWidth < 768) {
+                                        handleImageInteraction(e);
+                                    }
+                                }}
+                                onDoubleClick={(e) => {
+                                    // Desktop logic only
+                                    e.stopPropagation();
+                                    if (window.innerWidth >= 768 && canZoom && !isZoomed) {
+                                        setIsZoomed(true);
+                                    }
+                                }}
                             >
                                 <Image
                                     src={product.images.gallery[0] || product.images.thumbnail}
                                     alt={product.name}
                                     fill
-                                    className="object-contain p-8 cursor-zoom-in"
+                                    className="object-contain p-8"
                                     sizes="(max-width: 1024px) 50vw, 800px"
                                     quality={95}
                                     priority
                                 />
+                                {/* Double click hint overlay Desktop */}
+                                {canZoom && !isZoomed && (
+                                    <div className="absolute inset-x-0 bottom-4 flex justify-center px-4 pointer-events-none">
+                                        <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse z-20">
+                                            Doble click para ampliar
+                                        </div>
+                                    </div>
+                                )}
                                 {/* Category Badge */}
                                 <div className="absolute top-4 left-4 z-10">
                                     <span className="px-4 py-2 text-sm font-medium bg-slate-blue text-off-white rounded-full">

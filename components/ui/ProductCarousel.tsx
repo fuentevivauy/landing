@@ -191,6 +191,7 @@ export const ProductCarouselCard = ({
         if (isExpanded) {
             setIsImageZoomed(false);
             setCanZoom(false);
+            lastTap.current = 0; // RESET TAP HISTORY
             const timer = setTimeout(() => setCanZoom(true), 800);
             return () => clearTimeout(timer);
         } else {
@@ -291,16 +292,16 @@ export const ProductCarouselCard = ({
                                     canZoom ? "cursor-zoom-in" : "cursor-wait pointer-events-none opacity-80"
                                 )}
                                 onClick={(e) => {
-                                    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
-                                        e.stopPropagation();
-                                        canZoom && setIsImageZoomed(true);
-                                    } else {
+                                    // Mobile Only: Manual double tap
+                                    if (typeof window !== 'undefined' && window.innerWidth < 768) {
                                         handleImageInteraction(e);
                                     }
                                 }}
-                                onTouchEnd={(e) => {
-                                    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                                        handleImageInteraction(e);
+                                onDoubleClick={(e) => {
+                                    // Desktop Only: Native event
+                                    e.stopPropagation();
+                                    if (typeof window !== 'undefined' && window.innerWidth >= 768 && canZoom && !isImageZoomed) {
+                                        setIsImageZoomed(true);
                                     }
                                 }}
                             >
@@ -313,7 +314,7 @@ export const ProductCarouselCard = ({
                                 />
                                 {/* Double click hint overlay - Only on mobile */}
                                 {canZoom && !isImageZoomed && (
-                                    <div className="absolute inset-x-0 bottom-4 flex justify-center px-4 pointer-events-none md:hidden">
+                                    <div className="absolute inset-x-0 bottom-4 flex justify-center px-4 pointer-events-none">
                                         <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse">
                                             Doble click para ampliar
                                         </div>
