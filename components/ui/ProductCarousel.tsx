@@ -179,6 +179,10 @@ export const ProductCarouselCard = ({
         setIsExpanded(false);
         onCardClose();
     };
+    // New state for image zoom within expanded modal
+    const [isImageZoomed, setIsImageZoomed] = useState(false);
+    const handleImageZoom = () => setIsImageZoomed(true);
+    const handleImageZoomClose = () => setIsImageZoomed(false);
 
     // Helper to format price
     const formatPrice = (price: number | null) => {
@@ -239,15 +243,37 @@ export const ProductCarouselCard = ({
                             </button>
 
                             {/* Expanded Content */}
-                            <div className="w-full md:w-1/2 h-1/3 md:h-full relative shrink-0">
+                            <div className="w-full md:w-1/2 h-1/3 md:h-full relative shrink-0 cursor-pointer" onClick={handleImageZoom}>
                                 <Image
-                                    src={images.gallery[0]}
+                                    src={images.thumbnail}
                                     alt={product.name}
                                     layout="fill"
                                     objectFit="cover"
                                     className="object-center"
                                 />
                             </div>
+                            {/* Image Zoom Overlay */}
+                            <AnimatePresence>
+                                {isImageZoomed && (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+                                        onClick={handleImageZoomClose}
+                                    >
+                                        <Image
+                                            src={images.gallery[0]}
+                                            alt={product.name}
+                                            layout="responsive"
+                                            width={800}
+                                            height={600}
+                                            objectFit="contain"
+                                            className="max-h-[90vh] max-w-[90vw]"
+                                        />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                             <div className="w-full md:w-1/2 p-6 md:p-10 overflow-y-auto custom-scrollbar flex flex-col text-left">
                                 <motion.p
