@@ -2,13 +2,14 @@ import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Product } from '@/lib/types/product';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
 // --- TYPES ---
 interface CarouselProps extends React.HTMLAttributes<HTMLDivElement> {
     items: { product: Product; index: number }[];
     onCenterClick: (product: Product, index: number) => void;
+    onInteraction?: () => void;
 }
 
 // --- CAROUSEL CARD COMPONENT ---
@@ -58,9 +59,13 @@ const CarouselCard = ({
 
 // --- FEATURE CAROUSEL COMPONENT ---
 export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
-    ({ items, className, onCenterClick, ...props }, ref) => {
+    ({ items, className, onCenterClick, onInteraction, ...props }, ref) => {
         const [currentIndex, setCurrentIndex] = React.useState(0);
         const [isMobileView, setIsMobileView] = React.useState(false);
+
+        const handleInteraction = React.useCallback(() => {
+            onInteraction?.();
+        }, [onInteraction]);
 
         React.useEffect(() => {
             const checkMobile = () => setIsMobileView(window.innerWidth < 768);
@@ -78,10 +83,12 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
 
         const handleNext = React.useCallback(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-        }, [items.length]);
+            handleInteraction();
+        }, [items.length, handleInteraction]);
 
         const handlePrev = () => {
             setCurrentIndex((prevIndex) => (prevIndex - 1 + items.length) % items.length);
+            handleInteraction();
         };
 
         return (
@@ -129,6 +136,7 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                                                 handlePrev();
                                             }
                                         }
+                                        handleInteraction();
                                     }}
                                     animate={{
                                         x: `${pos * (isMobileView ? 65 : 75)}%`,
@@ -168,13 +176,13 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
 
                     {/* Navigation Buttons - Hidden on Mobile */}
                     <button
-                        className="absolute left-2 sm:left-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-blue/80 hover:bg-slate-blue text-white backdrop-blur-sm z-50 transition-all shadow-lg hidden md:flex"
+                        className="absolute left-2 sm:left-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-emerald-600/80 hover:bg-emerald-600 text-white backdrop-blur-sm z-50 transition-all shadow-lg hidden md:flex"
                         onClick={handlePrev}
                     >
                         <ChevronLeft className="h-6 w-6" />
                     </button>
                     <button
-                        className="absolute right-2 sm:right-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-blue/80 hover:bg-slate-blue text-white backdrop-blur-sm z-50 transition-all shadow-lg hidden md:flex"
+                        className="absolute right-2 sm:right-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-emerald-600/80 hover:bg-emerald-600 text-white backdrop-blur-sm z-50 transition-all shadow-lg hidden md:flex"
                         onClick={handleNext}
                     >
                         <ChevronRight className="h-6 w-6" />
