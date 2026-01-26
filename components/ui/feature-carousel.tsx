@@ -9,7 +9,6 @@ import Image from 'next/image';
 interface CarouselProps extends React.HTMLAttributes<HTMLDivElement> {
     items: { product: Product; index: number }[];
     onCenterClick: (product: Product, index: number) => void;
-    onInteraction?: () => void;
 }
 
 // --- CAROUSEL CARD COMPONENT ---
@@ -59,13 +58,9 @@ const CarouselCard = ({
 
 // --- FEATURE CAROUSEL COMPONENT ---
 export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
-    ({ items, className, onCenterClick, onInteraction, ...props }, ref) => {
+    ({ items, className, onCenterClick, ...props }, ref) => {
         const [currentIndex, setCurrentIndex] = React.useState(0);
         const [isMobileView, setIsMobileView] = React.useState(false);
-
-        const handleInteraction = React.useCallback(() => {
-            onInteraction?.();
-        }, [onInteraction]);
 
         React.useEffect(() => {
             const checkMobile = () => setIsMobileView(window.innerWidth < 768);
@@ -83,12 +78,10 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
 
         const handleNext = React.useCallback(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-            handleInteraction();
-        }, [items.length, handleInteraction]);
+        }, [items.length]);
 
         const handlePrev = () => {
             setCurrentIndex((prevIndex) => (prevIndex - 1 + items.length) % items.length);
-            handleInteraction();
         };
 
         return (
@@ -136,7 +129,6 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                                                 handlePrev();
                                             }
                                         }
-                                        handleInteraction();
                                     }}
                                     animate={{
                                         x: `${pos * (isMobileView ? 65 : 75)}%`,

@@ -1,12 +1,10 @@
 import { useState, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Product, ProductCategory, PRODUCT_CATEGORIES } from '@/lib/types/product';
-import { products, getImages } from '@/lib/data/products';
+import { products } from '@/lib/data/products';
 import { Container } from '@/components/ui/Container';
 import { cn } from '@/lib/utils';
 import { FeatureCarousel } from '@/components/ui/feature-carousel';
-import { X, Info } from 'lucide-react';
-import Image from 'next/image';
 
 type FilterOption = 'Todos' | ProductCategory;
 type PriceFilter = 'Todos' | 'Hasta $10.000' | '$10.000 - $20.000' | 'Más de $20.000';
@@ -18,7 +16,6 @@ interface ProductGalleryProps {
 export function ProductGallery({ onProductClick }: ProductGalleryProps) {
     const [activeCategory, setActiveCategory] = useState<FilterOption>('Todos');
     const [activePrice, setActivePrice] = useState<PriceFilter>('Todos');
-    const [hasInteracted, setHasInteracted] = useState(false);
 
     const categoryOptions: FilterOption[] = ['Todos', ...PRODUCT_CATEGORIES];
     const priceOptions: PriceFilter[] = ['Todos', 'Hasta $10.000', '$10.000 - $20.000', 'Más de $20.000'];
@@ -108,34 +105,25 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                     </div>
                 </motion.div>
 
-                {/* Swipe Indicator - Mobile Only */}
-                <AnimatePresence>
-                    {!hasInteracted && (
+                {/* Swipe Indicator - Mobile Only - Persistent */}
+                <div className="flex md:hidden justify-center mb-10">
+                    <motion.div
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="bg-emerald-600/90 backdrop-blur-md px-6 py-2.5 rounded-full shadow-lg border border-white/20 flex items-center gap-3"
+                    >
+                        <span className="text-white font-medium text-sm">
+                            Desliza para ver más
+                        </span>
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            className="flex md:hidden justify-center mb-10"
+                            animate={{ x: [-5, 5, -5] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                            className="text-white/80"
                         >
-                            <motion.div
-                                animate={{ y: [0, -4, 0] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                                className="bg-emerald-600/90 backdrop-blur-md px-6 py-2.5 rounded-full shadow-lg border border-white/20 flex items-center gap-3"
-                            >
-                                <span className="text-white font-medium text-sm">
-                                    Desliza para ver más
-                                </span>
-                                <motion.div
-                                    animate={{ x: [-5, 5, -5] }}
-                                    transition={{ duration: 1.5, repeat: Infinity }}
-                                    className="text-white/80"
-                                >
-                                    →
-                                </motion.div>
-                            </motion.div>
+                            →
                         </motion.div>
-                    )}
-                </AnimatePresence>
+                    </motion.div>
+                </div>
 
                 {/* 3D Carousel */}
                 <div className="w-full">
@@ -143,7 +131,6 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                         <FeatureCarousel
                             items={useMemo(() => filteredProducts.map((product, index) => ({ product, index })), [filteredProducts])}
                             onCenterClick={useCallback((product) => onProductClick(product), [onProductClick])}
-                            onInteraction={() => setHasInteracted(true)}
                         />
                     ) : (
                         <motion.div
