@@ -1,4 +1,4 @@
-import { MapPin, Phone, Clock, Mail } from 'lucide-react';
+import { MapPin, Phone, Clock, Mail, Instagram, Facebook } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 
 export function Footer() {
@@ -69,6 +69,28 @@ export function Footer() {
                             </li>
                         </ul>
                     </div>
+                </div>
+
+                {/* Social Media Links */}
+                <div className="flex justify-center gap-6 mb-8">
+                    <a
+                        href="https://www.instagram.com/fuenteviva_uy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white/10 p-3 rounded-full hover:bg-white/20 transition-all text-white"
+                        aria-label="Instagram"
+                    >
+                        <Instagram className="w-6 h-6" />
+                    </a>
+                    <a
+                        href="https://www.facebook.com/profile.php?id=61582434964463&mibextid=wwXIfr&rdid=EmcK24k4yI3kiVBO&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1PV8WcaDum%2F%3Fmibextid%3DwwXIfr#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white/10 p-3 rounded-full hover:bg-white/20 transition-all text-white"
+                        aria-label="Facebook"
+                    >
+                        <Facebook className="w-6 h-6" />
+                    </a>
                 </div>
 
                 {/* Divider */}

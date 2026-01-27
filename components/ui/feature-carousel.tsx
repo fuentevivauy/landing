@@ -166,15 +166,15 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                         })}
                     </div>
 
-                    {/* Navigation Buttons - Hidden on Mobile */}
+                    {/* Navigation Buttons - Visible on all devices */}
                     <button
-                        className="absolute left-2 sm:left-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-emerald-600/80 hover:bg-emerald-600 text-white backdrop-blur-sm z-50 transition-all shadow-lg hidden md:flex"
+                        className="absolute left-2 sm:left-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-emerald-600/80 hover:bg-emerald-600 text-white backdrop-blur-sm z-50 transition-all shadow-lg flex"
                         onClick={handlePrev}
                     >
                         <ChevronLeft className="h-6 w-6" />
                     </button>
                     <button
-                        className="absolute right-2 sm:right-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-emerald-600/80 hover:bg-emerald-600 text-white backdrop-blur-sm z-50 transition-all shadow-lg hidden md:flex"
+                        className="absolute right-2 sm:right-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-emerald-600/80 hover:bg-emerald-600 text-white backdrop-blur-sm z-50 transition-all shadow-lg flex"
                         onClick={handleNext}
                     >
                         <ChevronRight className="h-6 w-6" />

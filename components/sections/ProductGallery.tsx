@@ -105,23 +105,17 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                     </div>
                 </motion.div>
 
-                {/* Swipe Indicator - Mobile Only - Persistent */}
-                <div className="flex md:hidden justify-center mb-10">
+                {/* Hacé click Banner */}
+                <div className="flex justify-center mb-6">
                     <motion.div
-                        animate={{ y: [0, -4, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="bg-emerald-600/90 backdrop-blur-md px-6 py-2.5 rounded-full shadow-lg border border-white/20 flex items-center gap-3"
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-2xl shadow-lg border border-stone-gray/10 max-w-sm text-center"
                     >
-                        <span className="text-white font-medium text-sm">
-                            Desliza para ver más
-                        </span>
-                        <motion.div
-                            animate={{ x: [-5, 5, -5] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                            className="text-white/80"
-                        >
-                            →
-                        </motion.div>
+                        <p className="text-stone-gray font-serif text-sm md:text-base">
+                            Hacé click en la foto para ver precio, descripción y medidas
+                        </p>
                     </motion.div>
                 </div>
 
@@ -147,6 +141,18 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                             </button>
                         </motion.div>
                     )}
+                </div>
+
+                {/* Deslizá Banner */}
+                <div className="flex justify-center mt-8">
+                    <motion.div
+                        animate={{ x: [-5, 5, -5] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        className="bg-emerald-800 text-white px-8 py-3 rounded-full flex items-center gap-3 shadow-xl cursor-default"
+                    >
+                        <span className="font-serif text-lg tracking-wide">Deslizá para ver más</span>
+                        <span className="text-xl">→</span>
+                    </motion.div>
                 </div>
             </Container>
         </section>

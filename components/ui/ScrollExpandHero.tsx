@@ -8,7 +8,7 @@ import {
 } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, ChevronDown } from 'lucide-react';
 
 interface ScrollExpandHeroProps {
     videoSrc?: string;
@@ -259,6 +259,17 @@ export function ScrollExpandHero({
                                         </div>
                                     )}
                                 </div>
+
+                                {/* Scroll Indicator Arrow */}
+                                {!mediaFullyExpanded && (
+                                    <motion.div
+                                        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/70 z-20"
+                                        animate={{ y: [0, 10, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                    >
+                                        <ChevronDown className="w-10 h-10" />
+                                    </motion.div>
+                                )}
 
                                 {/* Hero Titles */}
                                 {/* SEO Hidden H1 */}
