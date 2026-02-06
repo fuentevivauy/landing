@@ -36,10 +36,10 @@ export const metadata: Metadata = {
     siteName: "Fuente Viva",
     images: [
       {
-        url: 'https://res.cloudinary.com/dj1wscyom/image/upload/f_auto,q_auto/Fuente_barroca_gdabi6',
+        url: '/images/og-fuente.jpg',
         width: 1200,
-        height: 630,
-        alt: 'Fuente Viva - Arte en Hormigón',
+        height: 1600,
+        alt: 'Fuente de agua artesanal de tres niveles - Fuente Viva',
       }
     ],
     locale: "es_UY",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fuente Viva | Arte y Naturaleza en Hormigón Premium",
     description: "Transforma tu jardín con nuestras fuentes y estatuas de hormigón premium.",
-    images: ['https://res.cloudinary.com/dj1wscyom/image/upload/f_auto,q_auto/Fuente_barroca_gdabi6'],
+    images: ['/images/og-fuente.jpg'],
   },
   robots: {
     index: true,

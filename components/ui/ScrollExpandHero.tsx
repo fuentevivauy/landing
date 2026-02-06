@@ -283,7 +283,7 @@ export function ScrollExpandHero({
                                     <div className="font-cormorant text-7xl font-light text-sage-green mix-blend-normal -mt-2">
                                         Viva
                                     </div>
-                                    <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4 mt-2">
+                                    <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4 mt-2 text-center">
                                         Un rincón de calma donde <br />
                                         la naturaleza se detiene a beber
                                     </p>
@@ -305,7 +305,7 @@ export function ScrollExpandHero({
                                     </motion.div>
                                 </div>
                                 <motion.p
-                                    className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-2xl hidden md:block"
+                                    className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-2xl hidden md:block text-center"
                                     style={{ opacity: 1 - scrollProgress * 2 }}
                                     aria-hidden="true"
                                 >
