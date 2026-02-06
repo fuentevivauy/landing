@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { MessageCircle, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 
@@ -11,27 +12,32 @@ export function FinalCTA() {
 
     return (
         <section className="relative py-24 bg-slate-blue overflow-hidden">
-            {/* Background Video */}
-            <div className="absolute inset-0 z-0">
-                {/* Mobile Video */}
-                <video
-                    src="https://res.cloudinary.com/dj1wscyom/video/upload/v1768915137/IMG_3426_ixgfyl.mov"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="w-full h-full object-cover object-top md:hidden"
-                />
-                {/* Desktop Video */}
-                <video
-                    src="https://res.cloudinary.com/dj1wscyom/video/upload/v1768934599/video_fuentes_web_final_lokfit.mp4"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="hidden md:block w-full h-full object-cover object-top"
-                />
-                <div className="absolute inset-0 bg-slate-blue/80 mix-blend-multiply" />
+            {/* Background Images */}
+            <div className="absolute inset-0 z-0 select-none">
+                {/* Mobile Image */}
+                <div className="relative w-full h-full md:hidden">
+                    <Image
+                        src="https://res.cloudinary.com/doyde4ron/image/upload/v1769032745/final_cta_mobile_birds.jpg"
+                        alt="Bebedero con pájaros"
+                        fill
+                        className="object-cover"
+                        priority
+                    />
+                </div>
+
+                {/* Desktop Image */}
+                <div className="hidden md:block relative w-full h-full">
+                    <Image
+                        src="https://res.cloudinary.com/doyde4ron/image/upload/v1769032745/final_cta_desktop_birds.jpg"
+                        alt="Bebedero con pájaros"
+                        fill
+                        className="object-cover"
+                        priority
+                    />
+                </div>
+
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black/40" />
             </div>
 
             {/* Content Container */}

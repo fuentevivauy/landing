@@ -1,7 +1,7 @@
 import { Product, ProductCategory } from '@/lib/types/product';
 
 // Cloudinary configuration
-const CLOUDINARY_CLOUD = 'dj1wscyom';
+const CLOUDINARY_CLOUD = 'doyde4ron';
 const CLOUDINARY_BASE = `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/upload`;
 
 // Helper para generar URLs de Cloudinary con optimización automática

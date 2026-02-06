@@ -17,7 +17,7 @@ interface ScrollExpandHeroProps {
 }
 
 export function ScrollExpandHero({
-    videoSrc = "https://res.cloudinary.com/dj1wscyom/image/upload/v1769032717/Leve_zoom_in_202601211857_fx6480.gif",
+    videoSrc = "https://res.cloudinary.com/doyde4ron/image/upload/v1769032717/Leve_zoom_in_202601211857_fx6480.gif",
     bgImageSrc = "/images/hero-fountain.jpg",
     children,
 }: ScrollExpandHeroProps) {
