@@ -31,7 +31,7 @@ export function FinalCTA() {
                         src="https://res.cloudinary.com/doyde4ron/image/upload/v1770408607/final_cta_desktop_birds_uh8qyg.png"
                         alt="Bebedero con pájaros"
                         fill
-                        className="object-cover"
+                        className="object-cover object-top"
                         priority
                     />
                 </div>
