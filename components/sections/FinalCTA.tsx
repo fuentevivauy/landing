@@ -17,7 +17,7 @@ export function FinalCTA() {
                 {/* Mobile Image */}
                 <div className="relative w-full h-full md:hidden">
                     <Image
-                        src="https://res.cloudinary.com/doyde4ron/image/upload/final_cta_mobile_birds.jpeg"
+                        src="https://res.cloudinary.com/doyde4ron/image/upload/v1770408575/final_cta_mobile_birds_azmtti.jpg"
                         alt="Bebedero con pájaros"
                         fill
                         className="object-cover"
@@ -28,7 +28,7 @@ export function FinalCTA() {
                 {/* Desktop Image */}
                 <div className="hidden md:block relative w-full h-full">
                     <Image
-                        src="https://res.cloudinary.com/doyde4ron/image/upload/final_cta_desktop_birds.png"
+                        src="https://res.cloudinary.com/doyde4ron/image/upload/v1770408607/final_cta_desktop_birds_uh8qyg.png"
                         alt="Bebedero con pájaros"
                         fill
                         className="object-cover"
