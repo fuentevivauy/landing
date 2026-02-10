@@ -144,8 +144,8 @@ export const products: Product[] = [
         slug: 'fuente-plaqueta-buda-extra-grande',
         name: 'Fuente Plaqueta Buda Extra Grande',
         category: 'Fuentes',
-        price: 23990,
-        priceFormatted: '$23.990',
+        price: 25500,
+        priceFormatted: '$25.500',
         description: '🧘‍♂️ Paz monumental. Esta imponente fuente de pared con relieve de Buda es el punto focal perfecto para crear un santuario de serenidad en tu hogar. Conecta con lo esencial. 🌿💧',
         benefits: [
             'Diseño de pared imponente',
