@@ -1,10 +1,10 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Product, ProductCategory, PRODUCT_CATEGORIES } from '@/lib/types/product';
-import { products } from '@/lib/data/products';
 import { Container } from '@/components/ui/Container';
 import { cn } from '@/lib/utils';
 import { FeatureCarousel } from '@/components/ui/feature-carousel';
+import { createClient } from '@/lib/supabase/client';
 
 type FilterOption = 'Todos' | ProductCategory;
 type PriceFilter = 'Todos' | 'Hasta $10.000' | '$10.000 - $20.000' | 'Más de $20.000';
@@ -14,16 +14,60 @@ interface ProductGalleryProps {
 }
 
 export function ProductGallery({ onProductClick }: ProductGalleryProps) {
+    const supabase = createClient();
+    const [dbProducts, setDbProducts] = useState<Product[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    
     const [activeCategory, setActiveCategory] = useState<FilterOption>('Todos');
     const [activePrice, setActivePrice] = useState<PriceFilter>('Todos');
 
     const categoryOptions: FilterOption[] = ['Todos', ...PRODUCT_CATEGORIES];
     const priceOptions: PriceFilter[] = ['Todos', 'Hasta $10.000', '$10.000 - $20.000', 'Más de $20.000'];
 
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (data) {
+                    const formatted: Product[] = data.map((dbProd: any) => ({
+                        id: dbProd.id,
+                        slug: dbProd.slug,
+                        name: dbProd.name,
+                        category: dbProd.category as ProductCategory,
+                        price: dbProd.price,
+                        priceFormatted: dbProd.price ? `$${dbProd.price.toLocaleString('es-UY')}` : dbProd.price_formatted,
+                        description: dbProd.description,
+                        benefits: dbProd.benefits || [],
+                        specs: dbProd.specs || {},
+                        images: {
+                            thumbnail: dbProd.image_thumbnail || '/images/placeholder.jpg',
+                            gallery: (dbProd.image_gallery?.length > 0) ? dbProd.image_gallery : [dbProd.image_thumbnail || '/images/placeholder.jpg'],
+                        },
+                        inStock: dbProd.in_stock,
+                        featured: dbProd.featured,
+                    }));
+                    setDbProducts(formatted);
+                }
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
     const filteredProducts = useMemo(() => {
         const isFiltered = activeCategory !== 'Todos' || activePrice !== 'Todos';
 
-        const filtered = products.filter((p) => {
+        const filtered = dbProducts.filter((p) => {
             if (activeCategory !== 'Todos' && p.category !== activeCategory) return false;
             if (activePrice === 'Todos') return true;
             if (!p.price) return false;
@@ -38,7 +82,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
         }
 
         return filtered;
-    }, [activeCategory, activePrice]);
+    }, [activeCategory, activePrice, dbProducts]);
 
     return (
         <section id="catalogo" className="py-20 bg-off-white overflow-hidden relative">
@@ -120,11 +164,16 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                 </div>
 
                 {/* 3D Carousel */}
-                <div className="w-full">
-                    {filteredProducts.length > 0 ? (
-                        <FeatureCarousel
-                            items={useMemo(() => filteredProducts.map((product, index) => ({ product, index })), [filteredProducts])}
-                            onCenterClick={useCallback((product) => onProductClick(product), [onProductClick])}
+                <div className="w-full min-h-[400px]">
+                    {isLoading ? (
+                        <div className="flex flex-col items-center justify-center h-full text-stone-gray py-20">
+                            <div className="w-10 h-10 border-4 border-slate-blue/20 border-t-slate-blue rounded-full animate-spin mb-4" />
+                            <p>Cargando catálogo...</p>
+                        </div>
+                    ) : filteredProducts.length > 0 ? (
+                        <CarouselContent 
+                            products={filteredProducts} 
+                            onProductClick={onProductClick} 
                         />
                     ) : (
                         <motion.div
@@ -156,5 +205,25 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                 </div>
             </Container>
         </section>
+    );
+}
+
+// Sub-component to handle hooks correctly outside of the main component's conditional rendering
+function CarouselContent({ products, onProductClick }: { products: Product[], onProductClick: (p: Product) => void }) {
+    const items = useMemo(() => 
+        products.map((product, index) => ({ product, index })), 
+        [products]
+    );
+
+    const handleCenterClick = useCallback(
+        (product: Product) => onProductClick(product),
+        [onProductClick]
+    );
+
+    return (
+        <FeatureCarousel
+            items={items}
+            onCenterClick={handleCenterClick}
+        />
     );
 }

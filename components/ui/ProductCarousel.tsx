@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
@@ -6,8 +6,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, X, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Product } from '@/lib/types/product';
-import { getImages } from '@/lib/data/products';
-
 // ===== Hooks =====
 const useOutsideClick = (
     ref: React.RefObject<HTMLDivElement | null>,
@@ -237,7 +235,7 @@ export const ProductCarouselCard = ({
         }).format(price);
     };
 
-    const images = getImages(product.slug);
+    const images = product.images;
 
     useEffect(() => {
         const handleEscapeKey = (event: KeyboardEvent) => {

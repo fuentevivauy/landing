@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --stone-gray: #8E8E8E;
   --slate-blue: #2F3E46;

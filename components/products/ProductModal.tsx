@@ -1,4 +1,4 @@
-﻿import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { X, MessageCircle, Check, Package } from 'lucide-react';
@@ -16,7 +16,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     const [isZoomed, setIsZoomed] = useState(false);
     const [canZoom, setCanZoom] = useState(false);
 
-    // Scroll lock mejorado - bloquea scroll del body cuando el modal estÃ¡ abierto
+    // Scroll lock mejorado - bloquea scroll del body cuando el modal está abierto
     useEffect(() => {
         if (product) {
             // Guardar el estilo original
@@ -290,8 +290,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 >
                                     {!product.inStock && (
                                         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800">
-                                            <p className="font-medium">â±ï¸ FabricaciÃ³n bajo pedido</p>
-                                            <p className="text-sm">Tiempo de entrega: 10 dÃ­as hÃ¡biles</p>
+                                            <p className="font-medium">⏳ Fabricación bajo pedido</p>
+                                            <p className="text-sm">Tiempo de entrega: 10 días hábiles</p>
                                         </div>
                                     )}
 
@@ -433,24 +433,18 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                                 <span className="font-medium text-slate-blue">{product.specs.levels}</span>
                                             </div>
                                         )}
-                                        {product.specs.diameter && (
-                                            <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Diámetro</span>
-                                                <span className="font-medium text-slate-blue">{product.specs.diameter}</span>
-                                            </div>
-                                        )}
-                                        {product.specs.maxLoad && (
-                                            <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Carga máxima</span>
-                                                <span className="font-medium text-slate-blue">{product.specs.maxLoad}</span>
-                                            </div>
-                                        )}
                                         {(product.specs.diameter || product.specs.diameter_main) && (
                                             <div className="bg-off-white rounded-lg p-3">
                                                 <span className="text-xs text-stone-gray block">Diámetro</span>
                                                 <span className="font-medium text-slate-blue">
                                                     {product.specs.diameter || product.specs.diameter_main}
                                                 </span>
+                                            </div>
+                                        )}
+                                        {product.specs.maxLoad && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Carga máxima</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.maxLoad}</span>
                                             </div>
                                         )}
                                         {product.specs.table_dim && (
@@ -513,8 +507,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 >
                                     {!product.inStock && (
                                         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800">
-                                            <p className="font-medium">â±ï¸ FabricaciÃ³n bajo pedido</p>
-                                            <p className="text-sm">Tiempo de entrega: 10 dÃ­as hÃ¡biles</p>
+                                            <p className="font-medium">⏳ Fabricación bajo pedido</p>
+                                            <p className="text-sm">Tiempo de entrega: 10 días hábiles</p>
                                         </div>
                                     )}
 
@@ -572,10 +566,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                 </>
             )
             }
-        </AnimatePresence >
+        </AnimatePresence>
     );
 }
-
-
-
 
