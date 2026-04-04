@@ -178,9 +178,6 @@ export default function AdminAnalytics() {
                         </div>
                     </header>
 
-                    {/* 🔧 Diagnóstico de tracking — REMOVER después de verificar */}
-                    <DiagnosticPanel />
-
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center p-32">
                             <Loader2 className="w-10 h-10 text-sky-500 animate-spin mb-4" />
@@ -324,58 +321,3 @@ function PackageIcon({ className }: { className?: string }) {
     );
 }
 
-// 🔧 Panel de diagnóstico temporal — REMOVER una vez confirmado que funciona
-function DiagnosticPanel() {
-    const [testResult, setTestResult] = useState<string | null>(null);
-    const [testing, setTesting] = useState(false);
-    const supabase = createClient();
-
-    const runTest = async (eventType: string) => {
-        setTesting(true);
-        setTestResult(null);
-        try {
-            // Test 1: Direct insert via supabase client (bypass trackEvent)
-            const { data, error } = await supabase
-                .from('analytics_events')
-                .insert({
-                    product_id: null,
-                    event_type: eventType,
-                    metadata: { source: 'diagnostic_test', timestamp: new Date().toISOString() }
-                })
-                .select();
-
-            if (error) {
-                setTestResult(`❌ ERROR (${eventType}): ${error.message} | Code: ${error.code} | Details: ${error.details} | Hint: ${error.hint}`);
-            } else {
-                setTestResult(`✅ OK (${eventType}): Insertado correctamente. ID: ${data?.[0]?.id || 'N/A'}`);
-            }
-        } catch (err: any) {
-            setTestResult(`💥 EXCEPTION (${eventType}): ${err.message}`);
-        }
-        setTesting(false);
-    };
-
-    return (
-        <div className="mb-8 p-6 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-300 dark:border-amber-700 rounded-2xl">
-            <h3 className="text-lg font-bold text-amber-800 dark:text-amber-300 mb-2">🔧 Diagnóstico de Eventos</h3>
-            <p className="text-sm text-amber-700 dark:text-amber-400 mb-4">Prueba insertar cada tipo de evento para ver cuál falla:</p>
-            <div className="flex flex-wrap gap-3 mb-4">
-                {['view', 'click', 'whatsapp_click', 'page_view'].map((type) => (
-                    <button
-                        key={type}
-                        onClick={() => runTest(type)}
-                        disabled={testing}
-                        className="px-4 py-2 bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-600 rounded-lg text-sm font-bold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors disabled:opacity-50"
-                    >
-                        Test: {type}
-                    </button>
-                ))}
-            </div>
-            {testResult && (
-                <pre className="p-4 bg-white dark:bg-slate-900 rounded-lg text-sm font-mono break-all whitespace-pre-wrap border border-amber-200 dark:border-amber-800">
-                    {testResult}
-                </pre>
-            )}
-        </div>
-    );
-}
