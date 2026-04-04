@@ -57,6 +57,9 @@ export const metadata: Metadata = {
   },
 };
 
+import { Suspense } from "react";
+import { Analytics } from "@/components/Analytics";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -72,8 +75,12 @@ export default function RootLayout({
           cormorant.variable
         )}
       >
+        <Suspense fallback={null}>
+          <Analytics />
+        </Suspense>
         {children}
       </body>
     </html>
   );
 }
+

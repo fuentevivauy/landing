@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { Product } from '@/lib/types/product';
 import { cn } from '@/lib/utils';
 
+import { trackEvent } from '@/lib/supabase/analytics';
+
 interface ProductCardProps {
     product: Product;
     onClick: () => void;
@@ -12,6 +14,16 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onClick, index = 0 }: ProductCardProps) {
+    const handleCardClick = () => {
+        // Track the click before opening the modal
+        trackEvent('click', product.id, {
+            name: product.name,
+            category: product.category,
+            source: 'product_card'
+        });
+        onClick();
+    };
+
     return (
         <motion.article
             initial={{ opacity: 0, y: 20 }}
@@ -20,7 +32,7 @@ export function ProductCard({ product, onClick, index = 0 }: ProductCardProps) {
             transition={{ duration: 0.4, delay: index * 0.1 }}
             whileHover={{ y: -8 }}
             className="group cursor-pointer"
-            onClick={onClick}
+            onClick={handleCardClick}
             layoutId={`product-card-${product.id}`}
         >
             <div className="relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">

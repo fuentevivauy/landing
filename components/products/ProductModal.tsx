@@ -6,6 +6,8 @@ import { Product } from '@/lib/types/product';
 import { getWhatsAppLink } from '@/lib/data/products';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
+import { trackEvent } from '@/lib/supabase/analytics';
+
 
 interface ProductModalProps {
     product: Product | null;
@@ -19,6 +21,9 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     // Scroll lock mejorado - bloquea scroll del body cuando el modal está abierto
     useEffect(() => {
         if (product) {
+            // Track de vista
+            trackEvent('view', product.id, { name: product.name, category: product.category });
+
             // Guardar el estilo original
             const originalStyle = window.getComputedStyle(document.body).overflow;
 
@@ -64,6 +69,9 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     };
 
     const handleWhatsApp = () => {
+        // Track de consulta por WhatsApp
+        trackEvent('whatsapp_click', product.id, { name: product.name, category: product.category, source: 'product_modal' });
+
         window.open(getWhatsAppLink(product), '_blank');
     };
 
