@@ -44,15 +44,24 @@ export default function AdminAnalytics() {
     const [isLoading, setIsLoading] = useState(true);
     const [events, setEvents] = useState<AnalyticsStat[]>([]);
     const [productReports, setProductReports] = useState<ProductReport[]>([]);
-    const [stats, setStats] = useState({
+    const [stats, setStats] = useState<{
+        totalViews: number;
+        totalClicks: number;
+        totalWhatsapp: number;
+        globalConversion: number;
+        viewsTrend: number | null;
+        clicksTrend: number | null;
+        whatsappTrend: number | null;
+        conversionTrend: number | null;
+    }>({
         totalViews: 0,
         totalClicks: 0,
         totalWhatsapp: 0,
         globalConversion: 0,
-        viewsTrend: 0,
-        clicksTrend: 0,
-        whatsappTrend: 0,
-        conversionTrend: 0
+        viewsTrend: null,
+        clicksTrend: null,
+        whatsappTrend: null,
+        conversionTrend: null
     });
 
     useEffect(() => {
@@ -99,7 +108,7 @@ export default function AdminAnalytics() {
 
                     // Calculate trends (percentage increase/decrease)
                     const calcTrend = (current: number, prev: number) => {
-                        if (prev === 0) return current > 0 ? 100 : 0; // If there was nothing before, any new is +100%
+                        if (prev === 0) return null; // If there was nothing before, we hide the trend pill
                         return ((current - prev) / prev) * 100;
                     };
 
@@ -239,28 +248,28 @@ export default function AdminAnalytics() {
                                         title="Alcance Total" 
                                         value={stats.totalViews.toLocaleString()} 
                                         icon={<Eye className="w-6 h-6" />} 
-                                        trend={parseFloat(stats.viewsTrend.toFixed(0))} 
+                                        trend={stats.viewsTrend !== null ? parseFloat(stats.viewsTrend.toFixed(0)) : null} 
                                         trendLabel="vs últimos 30 días"
                                     />
                                     <AnalyticsCard 
                                         title="Interacciones" 
                                         value={stats.totalClicks.toLocaleString()} 
                                         icon={<MousePointerClick className="w-6 h-6" />} 
-                                        trend={parseFloat(stats.clicksTrend.toFixed(0))} 
+                                        trend={stats.clicksTrend !== null ? parseFloat(stats.clicksTrend.toFixed(0)) : null} 
                                         trendLabel="vs últimos 30 días"
                                     />
                                     <AnalyticsCard 
                                         title="Ventas Potenciales" 
                                         value={stats.totalWhatsapp.toLocaleString()} 
                                         icon={<MessageCircle className="w-6 h-6" />} 
-                                        trend={parseFloat(stats.whatsappTrend.toFixed(0))} 
+                                        trend={stats.whatsappTrend !== null ? parseFloat(stats.whatsappTrend.toFixed(0)) : null} 
                                         trendLabel="vs últimos 30 días"
                                     />
                                     <AnalyticsCard 
                                         title="Eficiencia" 
                                         value={`${stats.globalConversion.toFixed(1)}%`} 
                                         icon={<ArrowUpRight className="w-6 h-6" />} 
-                                        trend={parseFloat(stats.conversionTrend.toFixed(0))} 
+                                        trend={stats.conversionTrend !== null ? parseFloat(stats.conversionTrend.toFixed(0)) : null} 
                                         trendLabel="vs últimos 30 días"
                                     />
                                 </div>
