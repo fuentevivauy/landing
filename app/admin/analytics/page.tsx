@@ -17,6 +17,7 @@ import {
     Filter
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { trackEvent } from '@/lib/supabase/analytics';
 // import { format } from 'date-fns';
 // import { es } from 'date-fns/locale';
 
@@ -51,17 +52,9 @@ export default function AdminAnalytics() {
     });
 
     useEffect(() => {
-        async function fetchAnalytics() {
+        const fetchAnalytics = async () => {
             try {
-                // 1. Fetch all analytics events
-                const { data: eventsData, error: eventsError } = await supabase
-                    .from('analytics_events')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (eventsError) throw eventsError;
-
-                // 2. Fetch products to map names
+                // 1. Fetch products to map names first (optimization)
                 const { data: productsData } = await supabase
                     .from('products')
                     .select('id, name, category');
@@ -71,58 +64,86 @@ export default function AdminAnalytics() {
                     productMap[p.id] = { name: p.name, category: p.category };
                 });
 
-                // Process events with product names
-                const enrichedEvents = (eventsData || []).map(event => ({
-                    ...event,
-                    product_name: event.product_id ? productMap[event.product_id]?.name : 'Visita general'
-                }));
+                // Helper function to process and set data
+                const processData = (data: any[]) => {
+                    const enriched = data.map(event => ({
+                        ...event,
+                        product_name: event.product_id ? productMap[event.product_id]?.name || 'Producto eliminado' : 'Visita general'
+                    }));
 
-                setEvents(enrichedEvents);
+                    const v = enriched.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
+                    const c = enriched.filter(e => e.event_type === 'click').length;
+                    const w = enriched.filter(e => e.event_type === 'whatsapp_click').length;
+                    const conv = v > 0 ? (w / v) * 100 : 0;
 
-                // Calculate Totals
-                const views = enrichedEvents.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
-                const clicks = enrichedEvents.filter(e => e.event_type === 'click').length;
-                const whatsapp = enrichedEvents.filter(e => e.event_type === 'whatsapp_click').length;
-                const conversion = views > 0 ? (whatsapp / views) * 100 : 0;
+                    setEvents(enriched);
+                    setStats({
+                        totalViews: v,
+                        totalClicks: c,
+                        totalWhatsapp: w,
+                        globalConversion: conv
+                    });
 
-                setStats({
-                    totalViews: views,
-                    totalClicks: clicks,
-                    totalWhatsapp: whatsapp,
-                    globalConversion: conversion
-                });
+                    // Update reports
+                    const reports: Record<string, ProductReport> = {};
+                    productsData?.forEach(p => {
+                        reports[p.id] = { id: p.id, name: p.name, category: p.category, views: 0, whatsapp: 0, conversion: 0 };
+                    });
 
-                // Calculate Product Report
-                const reports: Record<string, ProductReport> = {};
-                productsData?.forEach(p => {
-                    reports[p.id] = { id: p.id, name: p.name, category: p.category, views: 0, whatsapp: 0, conversion: 0 };
-                });
-
-                enrichedEvents.forEach(e => {
-                    if (e.product_id && reports[e.product_id]) {
-                        if (e.event_type === 'view') {
-                            reports[e.product_id].views += 1;
-                        } else if (e.event_type === 'whatsapp_click') {
-                            reports[e.product_id].whatsapp += 1;
+                    enriched.forEach(e => {
+                        if (e.product_id && reports[e.product_id]) {
+                            if (e.event_type === 'view') {
+                                reports[e.product_id].views += 1;
+                            } else if (e.event_type === 'whatsapp_click') {
+                                reports[e.product_id].whatsapp += 1;
+                            }
                         }
-                    }
-                });
+                    });
 
-                const finalReports = Object.values(reports)
-                    .map(r => ({
-                        ...r,
-                        conversion: r.views > 0 ? (r.whatsapp / r.views) * 100 : 0
-                    }))
-                    .sort((a, b) => b.views - a.views)
-                    .filter(r => r.views > 0 || r.whatsapp > 0);
+                    setProductReports(Object.values(reports)
+                        .map(r => ({ ...r, conversion: r.views > 0 ? (r.whatsapp / r.views) * 100 : 0 }))
+                        .sort((a, b) => b.views - a.views)
+                        .filter(r => r.views > 0 || r.whatsapp > 0)
+                    );
+                };
 
-                setProductReports(finalReports);
+                // Fetch initial data
+                const { data: eventsData, error: eventsError } = await supabase
+                    .from('analytics_events')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (eventsError) throw eventsError;
+                
+                processData(eventsData || []);
                 setIsLoading(false);
+
+                // --- Real-time Subscription ---
+                const channel = supabase
+                    .channel('analytics_realtime')
+                    .on('postgres_changes', { 
+                        event: 'INSERT', 
+                        schema: 'public', 
+                        table: 'analytics_events' 
+                    }, async () => {
+                        // Re-fetch all data on new event to ensure consistent sorting and mapping
+                        const { data: freshData } = await supabase
+                            .from('analytics_events')
+                            .select('*')
+                            .order('created_at', { ascending: false });
+                        
+                        if (freshData) processData(freshData);
+                    })
+                    .subscribe();
+
+                return () => {
+                    supabase.removeChannel(channel);
+                };
             } catch (err) {
-                console.error('Error fetching analytics:', err);
+                console.error('Error in analytics setup:', err);
                 setIsLoading(false);
             }
-        }
+        };
 
         fetchAnalytics();
     }, [supabase]);
@@ -156,6 +177,9 @@ export default function AdminAnalytics() {
                             </button>
                         </div>
                     </header>
+
+                    {/* 🔧 Diagnóstico de tracking — REMOVER después de verificar */}
+                    <DiagnosticPanel />
 
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center p-32">
@@ -297,5 +321,61 @@ function PackageIcon({ className }: { className?: string }) {
             <path d="m3.3 7 8.7 5 8.7-5"/>
             <path d="M12 22V12"/>
         </svg>
+    );
+}
+
+// 🔧 Panel de diagnóstico temporal — REMOVER una vez confirmado que funciona
+function DiagnosticPanel() {
+    const [testResult, setTestResult] = useState<string | null>(null);
+    const [testing, setTesting] = useState(false);
+    const supabase = createClient();
+
+    const runTest = async (eventType: string) => {
+        setTesting(true);
+        setTestResult(null);
+        try {
+            // Test 1: Direct insert via supabase client (bypass trackEvent)
+            const { data, error } = await supabase
+                .from('analytics_events')
+                .insert({
+                    product_id: null,
+                    event_type: eventType,
+                    metadata: { source: 'diagnostic_test', timestamp: new Date().toISOString() }
+                })
+                .select();
+
+            if (error) {
+                setTestResult(`❌ ERROR (${eventType}): ${error.message} | Code: ${error.code} | Details: ${error.details} | Hint: ${error.hint}`);
+            } else {
+                setTestResult(`✅ OK (${eventType}): Insertado correctamente. ID: ${data?.[0]?.id || 'N/A'}`);
+            }
+        } catch (err: any) {
+            setTestResult(`💥 EXCEPTION (${eventType}): ${err.message}`);
+        }
+        setTesting(false);
+    };
+
+    return (
+        <div className="mb-8 p-6 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-300 dark:border-amber-700 rounded-2xl">
+            <h3 className="text-lg font-bold text-amber-800 dark:text-amber-300 mb-2">🔧 Diagnóstico de Eventos</h3>
+            <p className="text-sm text-amber-700 dark:text-amber-400 mb-4">Prueba insertar cada tipo de evento para ver cuál falla:</p>
+            <div className="flex flex-wrap gap-3 mb-4">
+                {['view', 'click', 'whatsapp_click', 'page_view'].map((type) => (
+                    <button
+                        key={type}
+                        onClick={() => runTest(type)}
+                        disabled={testing}
+                        className="px-4 py-2 bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-600 rounded-lg text-sm font-bold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors disabled:opacity-50"
+                    >
+                        Test: {type}
+                    </button>
+                ))}
+            </div>
+            {testResult && (
+                <pre className="p-4 bg-white dark:bg-slate-900 rounded-lg text-sm font-mono break-all whitespace-pre-wrap border border-amber-200 dark:border-amber-800">
+                    {testResult}
+                </pre>
+            )}
+        </div>
     );
 }

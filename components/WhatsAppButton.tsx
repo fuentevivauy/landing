@@ -8,8 +8,8 @@ import { trackEvent } from '@/lib/supabase/analytics';
 export function WhatsAppButton() {
     const whatsappLink = 'https://wa.me/59894713998?text=Hola%20Fuente%20Viva%2C%20quiero%20consultar%20sobre%20sus%20productos.';
 
-    const handleClick = () => {
-        trackEvent('whatsapp_click', null, { source: 'floating_button' });
+    const handleClick = async () => {
+        await trackEvent('whatsapp_click', null, { source: 'floating_button' });
         window.open(whatsappLink, '_blank', 'noopener,noreferrer');
     };
 

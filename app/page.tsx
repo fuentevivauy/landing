@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { trackEvent } from '@/lib/supabase/analytics';
 import { ScrollExpandHero } from '@/components/ui/ScrollExpandHero';
 import { Philosophy } from '@/components/sections/Philosophy';
 import { ProductGallery } from '@/components/sections/ProductGallery';
@@ -13,6 +14,10 @@ import { Product } from '@/lib/types/product';
 
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  useEffect(() => {
+    trackEvent('page_view');
+  }, []);
 
   return (
     <ScrollExpandHero

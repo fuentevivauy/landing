@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, X, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Product } from '@/lib/types/product';
+import { trackEvent } from '@/lib/supabase/analytics';
 // ===== Hooks =====
 const useOutsideClick = (
     ref: React.RefObject<HTMLDivElement | null>,
@@ -175,6 +176,12 @@ export const ProductCarouselCard = ({
     const handleExpand = (e: React.MouseEvent | React.TouchEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        // Track the click before expanding
+        trackEvent('click', product.id, {
+            name: product.name,
+            category: product.category,
+            source: 'product_carousel'
+        });
         setIsExpanded(true);
     };
     const handleCollapse = () => {
@@ -411,6 +418,10 @@ export const ProductCarouselCard = ({
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl mt-4"
+                                        onClick={() => trackEvent('whatsapp_click', product.id, {
+                                            name: product.name,
+                                            source: 'product_carousel_modal'
+                                        })}
                                     >
                                         Consultar por WhatsApp
                                     </a>

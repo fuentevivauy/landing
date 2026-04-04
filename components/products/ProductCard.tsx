@@ -14,9 +14,9 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onClick, index = 0 }: ProductCardProps) {
-    const handleCardClick = () => {
+    const handleCardClick = async () => {
         // Track the click before opening the modal
-        trackEvent('click', product.id, {
+        await trackEvent('click', product.id, {
             name: product.name,
             category: product.category,
             source: 'product_card'

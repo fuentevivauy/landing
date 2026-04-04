@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Product } from '@/lib/types/product';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { trackEvent } from '@/lib/supabase/analytics';
 
 // --- TYPES ---
 interface CarouselProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -155,6 +156,12 @@ export const FeatureCarousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                                         isCenter={isCenter}
                                         onClick={() => {
                                             if (isCenter) {
+                                                // Track the click before opening modal
+                                                trackEvent('click', item.product.id, {
+                                                    name: item.product.name,
+                                                    category: item.product.category,
+                                                    source: 'feature_carousel'
+                                                });
                                                 onCenterClick(item.product, index);
                                             } else {
                                                 setCurrentIndex(index);

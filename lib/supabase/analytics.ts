@@ -15,15 +15,18 @@ export async function trackEvent(
     try {
         const supabase = createClient();
         
-        // Incluir información del navegador/cliente en el metadata si no existe
+        // Incluir información del navegador/cliente en el metadata
         const eventMetadata = {
             url: typeof window !== 'undefined' ? window.location.href : '',
             referrer: typeof document !== 'undefined' ? document.referrer : '',
             screenSize: typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : '',
+            timestamp: new Date().toISOString(),
             ...metadata
         };
 
-        const { error } = await supabase
+        console.log(`[Analytics] Sending event: ${eventType}, productId: ${productId}`);
+
+        const result = await supabase
             .from('analytics_events')
             .insert({
                 product_id: productId,
@@ -31,10 +34,15 @@ export async function trackEvent(
                 metadata: eventMetadata
             });
 
-        if (error) {
-            console.error('Error tracking event:', error.message);
+        if (result.error) {
+            console.error(`[Analytics] ERROR inserting '${eventType}':`, result.error.message, result.error.details, result.error.hint);
+        } else {
+            console.log(`[Analytics] SUCCESS: '${eventType}' event recorded`);
         }
+
+        return result;
     } catch (err) {
-        console.error('Unexpected error tracking event:', err);
+        console.error('[Analytics] Unexpected error:', err);
+        return { error: err };
     }
 }
