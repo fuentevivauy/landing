@@ -48,7 +48,11 @@ export default function AdminAnalytics() {
         totalViews: 0,
         totalClicks: 0,
         totalWhatsapp: 0,
-        globalConversion: 0
+        globalConversion: 0,
+        viewsTrend: 0,
+        clicksTrend: 0,
+        whatsappTrend: 0,
+        conversionTrend: 0
     });
 
     useEffect(() => {
@@ -66,25 +70,64 @@ export default function AdminAnalytics() {
 
                 // Helper function to process and set data
                 const processData = (data: any[]) => {
+                    const now = new Date();
+                    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+
                     const enriched = data.map(event => ({
                         ...event,
-                        product_name: event.product_id ? productMap[event.product_id]?.name || 'Producto eliminado' : 'Visita general'
+                        product_name: event.product_id ? productMap[event.product_id]?.name || 'Producto eliminado' : 'Visita general',
+                        dateObj: new Date(event.created_at)
                     }));
 
-                    const v = enriched.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
-                    const c = enriched.filter(e => e.event_type === 'click').length;
-                    const w = enriched.filter(e => e.event_type === 'whatsapp_click').length;
-                    const conv = v > 0 ? (w / v) * 100 : 0;
+                    // --- Current Window (Last 30 days) ---
+                    const currentEvents = enriched.filter(e => e.dateObj >= thirtyDaysAgo);
+                    const v = currentEvents.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
+                    const c = currentEvents.filter(e => e.event_type === 'click').length;
+                    const w = currentEvents.filter(e => e.event_type === 'whatsapp_click').length;
+                    // Conversión = Whatsapps / (Clicks al catálogo + vistas de producto directo)
+                    const totalInteractions = c + currentEvents.filter(e => e.event_type === 'view').length;
+                    const conv = totalInteractions > 0 ? (w / totalInteractions) * 100 : 0;
+
+                    // --- Previous Window (30 to 60 days ago) ---
+                    const prevEvents = enriched.filter(e => e.dateObj >= sixtyDaysAgo && e.dateObj < thirtyDaysAgo);
+                    const prevV = prevEvents.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
+                    const prevC = prevEvents.filter(e => e.event_type === 'click').length;
+                    const prevW = prevEvents.filter(e => e.event_type === 'whatsapp_click').length;
+                    const prevTotalInteractions = prevC + prevEvents.filter(e => e.event_type === 'view').length;
+                    const prevConv = prevTotalInteractions > 0 ? (prevW / prevTotalInteractions) * 100 : 0;
+
+                    // Calculate trends (percentage increase/decrease)
+                    const calcTrend = (current: number, prev: number) => {
+                        if (prev === 0) return current > 0 ? 100 : 0; // If there was nothing before, any new is +100%
+                        return ((current - prev) / prev) * 100;
+                    };
 
                     setEvents(enriched);
+                    
+                    // We use total (all-time) for display or 30 days? Usually dashboards show all time if they don't have a date picker, 
+                    // but since we are showing "vs mes anterior", it's better if the main numbers are ALL TIME, 
+                    // and the trend looks at the last 30 vs prev 30. Better yet: main numbers = last 30 days.
+                    // For this request, we will keep the main numbers as total-to-date, but use the all-time vs trend.
+                    // Let's just make everything be ALL TIME for the big number, and the trend compares the velocity.
+                    const totalV = enriched.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
+                    const totalC = enriched.filter(e => e.event_type === 'click').length;
+                    const totalW = enriched.filter(e => e.event_type === 'whatsapp_click').length;
+                    const allTimeInteractions = totalC + enriched.filter(e => e.event_type === 'view').length;
+                    const totalConv = allTimeInteractions > 0 ? (totalW / allTimeInteractions) * 100 : 0;
+
                     setStats({
-                        totalViews: v,
-                        totalClicks: c,
-                        totalWhatsapp: w,
-                        globalConversion: conv
+                        totalViews: totalV,
+                        totalClicks: totalC,
+                        totalWhatsapp: totalW,
+                        globalConversion: totalConv,
+                        viewsTrend: calcTrend(v, prevV),
+                        clicksTrend: calcTrend(c, prevC),
+                        whatsappTrend: calcTrend(w, prevW),
+                        conversionTrend: calcTrend(conv, prevConv),
                     });
 
-                    // Update reports
+                    // Update reports (All Time)
                     const reports: Record<string, ProductReport> = {};
                     productsData?.forEach(p => {
                         reports[p.id] = { id: p.id, name: p.name, category: p.category, views: 0, whatsapp: 0, conversion: 0 };
@@ -92,7 +135,7 @@ export default function AdminAnalytics() {
 
                     enriched.forEach(e => {
                         if (e.product_id && reports[e.product_id]) {
-                            if (e.event_type === 'view') {
+                            if (e.event_type === 'view' || e.event_type === 'click') {
                                 reports[e.product_id].views += 1;
                             } else if (e.event_type === 'whatsapp_click') {
                                 reports[e.product_id].whatsapp += 1;
@@ -196,36 +239,36 @@ export default function AdminAnalytics() {
                                         title="Alcance Total" 
                                         value={stats.totalViews.toLocaleString()} 
                                         icon={<Eye className="w-6 h-6" />} 
-                                        trend={0} 
-                                        trendLabel="Vistas en total"
+                                        trend={parseFloat(stats.viewsTrend.toFixed(0))} 
+                                        trendLabel="vs últimos 30 días"
                                     />
                                     <AnalyticsCard 
                                         title="Interacciones" 
                                         value={stats.totalClicks.toLocaleString()} 
                                         icon={<MousePointerClick className="w-6 h-6" />} 
-                                        trend={0} 
-                                        trendLabel="Clics en el catálogo"
+                                        trend={parseFloat(stats.clicksTrend.toFixed(0))} 
+                                        trendLabel="vs últimos 30 días"
                                     />
                                     <AnalyticsCard 
                                         title="Ventas Potenciales" 
                                         value={stats.totalWhatsapp.toLocaleString()} 
                                         icon={<MessageCircle className="w-6 h-6" />} 
-                                        trend={0} 
-                                        trendLabel="Consultas por WA"
+                                        trend={parseFloat(stats.whatsappTrend.toFixed(0))} 
+                                        trendLabel="vs últimos 30 días"
                                     />
                                     <AnalyticsCard 
                                         title="Eficiencia" 
                                         value={`${stats.globalConversion.toFixed(1)}%`} 
                                         icon={<ArrowUpRight className="w-6 h-6" />} 
-                                        trend={0} 
-                                        trendLabel="Conversión global"
+                                        trend={parseFloat(stats.conversionTrend.toFixed(0))} 
+                                        trendLabel="vs últimos 30 días"
                                     />
                                 </div>
 
                                 {/* Detailed Breakdown */}
-                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <div className="mt-8">
                                     {/* Products Table */}
-                                    <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                                    <div className="w-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
                                         <div className="p-6 border-b border-slate-50 dark:border-slate-800 flex items-center justify-between">
                                             <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
                                                 <PackageIcon className="w-5 h-5 text-sky-500" />
@@ -237,8 +280,8 @@ export default function AdminAnalytics() {
                                                 <thead>
                                                     <tr className="bg-slate-50/50 dark:bg-slate-800/20 text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                                                         <th className="px-6 py-4">Producto</th>
-                                                        <th className="px-6 py-4 text-center">Vistas</th>
-                                                        <th className="px-6 py-4 text-center">WA</th>
+                                                        <th className="px-6 py-4 text-center">Interacciones</th>
+                                                        <th className="px-6 py-4 text-center">WA (Consultas)</th>
                                                         <th className="px-6 py-4 text-right">Conversión</th>
                                                     </tr>
                                                 </thead>
@@ -258,47 +301,6 @@ export default function AdminAnalytics() {
                                                     ))}
                                                 </tbody>
                                             </table>
-                                        </div>
-                                    </div>
-
-                                    {/* Recent Activity */}
-                                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
-                                        <div className="p-6 border-b border-slate-50 dark:border-slate-800">
-                                            <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                                <TrendingUp className="w-5 h-5 text-sky-500" />
-                                                Actividad Reciente
-                                            </h2>
-                                        </div>
-                                        <div className="flex-1 overflow-y-auto max-h-[500px]">
-                                            <div className="divide-y divide-slate-50 dark:divide-slate-800">
-                                                {events.slice(0, 15).map((e, i) => (
-                                                    <div key={i} className="p-4 flex items-start gap-3 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                                        <div className={`p-2 rounded-lg shrink-0 ${
-                                                            e.event_type === 'whatsapp_click' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500' :
-                                                            e.event_type === 'view' ? 'bg-sky-50 dark:bg-sky-500/10 text-sky-500' :
-                                                            'bg-slate-50 dark:bg-slate-800 text-slate-400'
-                                                        }`}>
-                                                            {e.event_type === 'whatsapp_click' ? <MessageCircle className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                                        </div>
-                                                        <div className="flex flex-col min-w-0">
-                                                            <p className="text-sm font-bold text-slate-700 dark:text-slate-300 truncate">
-                                                                {e.event_type === 'whatsapp_click' ? 'Consulta WhatsApp' : 'Vista de Producto'}
-                                                            </p>
-                                                            <p className="text-[11px] text-slate-500 dark:text-slate-500 truncate mb-1">
-                                                                {e.product_name}
-                                                            </p>
-                                                            <span className="text-[10px] text-slate-400 uppercase font-black tracking-tighter">
-                                                                {new Date(e.created_at).toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' })} · {new Date(e.created_at).toLocaleDateString('es-UY', { day: 'numeric', month: 'short' })}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div className="p-4 border-t border-slate-50 dark:border-slate-800 text-center">
-                                            <button className="text-xs font-bold text-sky-500 hover:text-sky-600 transition-colors uppercase tracking-widest">
-                                                Ver todo el historial
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
