@@ -222,6 +222,7 @@ export function ScrollExpandHero({
                             fill
                             sizes="100vw"
                             quality={100}
+                            unoptimized={true}
                             className="object-cover grayscale"
                             style={{ objectPosition: 'center' }}
                             priority
@@ -233,50 +234,44 @@ export function ScrollExpandHero({
                         <div className="flex flex-col items-center justify-center w-full h-[100dvh] relative">
 
                             {/* === THE EXPANDING VIDEO CARD === */}
-                            <div 
-                                className="absolute inset-0 z-0"
-                                style={{ 
-                                    filter: `drop-shadow(0px 0px 30px rgba(0, 0, 0, ${0.5 * (1 - scrollProgress)}))`
-                                }}
-                            >
-                                <div
-                                    className="absolute z-0 top-0 left-0 w-full h-full overflow-hidden"
+                            <div className="absolute inset-0 flex items-center justify-center z-0">
+                                <motion.div
+                                    className="relative overflow-hidden rounded-3xl"
                                     style={{
-                                        clipPath: `inset(calc((50dvh - 200px) * ${1 - scrollProgress}) calc((50vw - 150px) * ${1 - scrollProgress}) round ${24 * (1 - scrollProgress)}px)`,
-                                        transform: 'translateZ(0)', // Force GPU acceleration
-                                        willChange: 'clip-path'
+                                        width: `${mediaWidth}px`,
+                                        height: `${mediaHeight}px`,
+                                        maxWidth: '100vw',
+                                        maxHeight: '100dvh',
+                                        boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
                                     }}
                                 >
-                                    <div className="relative w-full h-full pointer-events-none bg-slate-900">
-                                        <video
-                                            ref={videoRef}
-                                            src={videoSrc}
-                                            autoPlay
-                                            muted
-                                            loop
-                                            playsInline
-                                            preload="auto"
-                                            className="w-full h-full object-cover"
-                                            controls={false}
-                                            poster={bgImageSrc}
-                                        />
-                                        {/* Overlay that fades as video expands */}
-                                        <motion.div
-                                            className="absolute inset-0 bg-black/30"
-                                            initial={{ opacity: 0.7 }}
-                                            animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
-                                            transition={{ duration: 0.2 }}
-                                        />
-                                    </div>
-                                </div>
+                                    <video
+                                        ref={videoRef}
+                                        src={videoSrc}
+                                        autoPlay
+                                        muted
+                                        loop
+                                        playsInline
+                                        preload="auto"
+                                        className="w-full h-full object-cover"
+                                        controls={false}
+                                        poster={bgImageSrc}
+                                    />
+                                    {/* Overlay that fades as video expands */}
+                                    <motion.div
+                                        className="absolute inset-0 bg-black/30"
+                                        initial={{ opacity: 0.7 }}
+                                        animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
+                                        transition={{ duration: 0.2 }}
+                                    />
+                                </motion.div>
                             </div>
 
-                            {/* Scroll-to-expand hint (below the video card) */}
-                            <div className="flex flex-col items-center text-center relative z-10 mt-4 transition-none pointer-events-none">
+                            {/* Scroll-to-expand hint (above the title text) */}
+                            <div className="flex flex-col items-center text-center relative z-10 transition-none pointer-events-none mb-4">
                                 <p
                                     className="text-white/60 font-medium text-sm text-center"
                                     style={{
-                                        transform: `translateX(${textTranslateX}vw)`,
                                         opacity: 1 - scrollProgress * 2,
                                     }}
                                 >
@@ -285,7 +280,7 @@ export function ScrollExpandHero({
                             </div>
 
                             {/* === TITLE TEXT (splits apart on scroll) === */}
-                            <div className="flex items-center justify-center text-center gap-4 w-full relative z-10 transition-none flex-col mix-blend-normal">
+                            <div className="flex items-center justify-center text-center gap-4 w-full relative z-10 transition-none mix-blend-normal">
                                 <motion.span
                                     className="font-serif text-6xl md:text-8xl lg:text-9xl font-bold text-white italic drop-shadow-2xl transition-none"
                                     style={{
@@ -295,7 +290,7 @@ export function ScrollExpandHero({
                                     Fuente
                                 </motion.span>
                                 <motion.span
-                                    className="font-cormorant text-7xl md:text-9xl lg:text-[11rem] font-light text-sage-green drop-shadow-2xl transition-none -mt-4"
+                                    className="font-cormorant text-7xl md:text-9xl lg:text-[11rem] font-light text-sage-green drop-shadow-2xl transition-none"
                                     style={{
                                         transform: `translateX(${textTranslateX}vw)`,
                                     }}
@@ -306,7 +301,7 @@ export function ScrollExpandHero({
 
                             {/* Subtitle */}
                             <motion.p
-                                className="text-white/80 text-lg md:text-2xl font-light tracking-[0.2em] uppercase mt-6 text-center relative z-10"
+                                className="text-white/80 text-lg md:text-2xl font-light tracking-[0.2em] uppercase mt-4 text-center relative z-10"
                                 style={{ opacity: 1 - scrollProgress * 2 }}
                             >
                                 Naturaleza en Movimiento
