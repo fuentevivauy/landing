@@ -1,13 +1,13 @@
 'use client';
 
 import {
-    useEffect,
     useRef,
     useState,
     ReactNode,
+    useEffect,
 } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Volume2, VolumeX, ChevronDown } from 'lucide-react';
 
 interface ScrollExpandHeroProps {
@@ -17,21 +17,43 @@ interface ScrollExpandHeroProps {
 }
 
 export function ScrollExpandHero({
-    videoSrc = "https://res.cloudinary.com/doyde4ron/image/upload/v1769032717/Leve_zoom_in_202601211857_fx6480.gif",
-    bgImageSrc = "/images/hero-fountain.jpg",
+    videoSrc = "https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-video.mp4",
+    bgImageSrc = "/images/hero-fountain-new.jpg",
     children,
 }: ScrollExpandHeroProps) {
-    const [scrollProgress, setScrollProgress] = useState<number>(0);
-    const [showContent, setShowContent] = useState<boolean>(false);
-    const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
-    const [isMobile, setIsMobile] = useState<boolean>(false);
-    const [isMuted, setIsMuted] = useState<boolean>(false);
-    const [isMounted, setIsMounted] = useState<boolean>(false);
-
-    const sectionRef = useRef<HTMLDivElement | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const [isMuted, setIsMuted] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
 
-    // Toggle mute
+    // useScroll tracking for the height of the hero section
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
+
+    // Smooth out the scroll progress
+    const smoothProgress = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
+    // Animation transformations
+    // Desktop animations
+    const mediaWidth = useTransform(smoothProgress, [0, 0.4], ["320px", "100vw"]);
+    const mediaHeight = useTransform(smoothProgress, [0, 0.4], ["450px", "100vh"]);
+    const mediaBorderRadius = useTransform(smoothProgress, [0, 0.35], ["24px", "0px"]);
+    
+    const textTranslateLeft = useTransform(smoothProgress, [0, 0.4], ["0px", "-250px"]);
+    const textTranslateRight = useTransform(smoothProgress, [0, 0.4], ["0px", "250px"]);
+    const heroOpacity = useTransform(smoothProgress, [0, 0.3], [1, 0]);
+    const videoOverlayOpacity = useTransform(smoothProgress, [0, 0.4], [0.6, 0.2]);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     const toggleMute = (e: React.MouseEvent) => {
         e.stopPropagation();
         if (videoRef.current) {
@@ -40,306 +62,105 @@ export function ScrollExpandHero({
         }
     };
 
-    // Auto-play / Unmute on expand logic
-    useEffect(() => {
-        if (mediaFullyExpanded && videoRef.current) {
-            if (!videoRef.current.muted) {
-                videoRef.current.play().catch(() => {
-                    // Fallback if blocked
-                    if (videoRef.current) {
-                        videoRef.current.muted = true;
-                        setIsMuted(true);
-                        videoRef.current.play();
-                    }
-                });
-            } else {
-                videoRef.current.play();
-            }
-        }
-    }, [mediaFullyExpanded]);
-
-    useEffect(() => {
-        setIsMounted(true);
-        setScrollProgress(0);
-        setShowContent(false);
-        setMediaFullyExpanded(false);
-        // Ensure video autoplays on mount (muted for browser policy compliance)
-        if (videoRef.current) {
-            videoRef.current.muted = true;
-            setIsMuted(true);
-            videoRef.current.play().catch(() => { });
-        }
-    }, []);
-
-    useEffect(() => {
-        // Desktop Scroll Logic
-        const handleWheel = (e: globalThis.WheelEvent) => {
-            if (isMobile) return;
-
-            // Si hay un modal abierto, no interferir con el scroll/wheel
-            if (document.body.getAttribute('data-modal-open') === 'true') return;
-
-            if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
-                setMediaFullyExpanded(false);
-                e.preventDefault();
-            } else if (!mediaFullyExpanded) {
-                e.preventDefault();
-                const scrollDelta = e.deltaY * 0.0009;
-                const newProgress = Math.min(
-                    Math.max(scrollProgress + scrollDelta, 0),
-                    1
-                );
-                setScrollProgress(newProgress);
-
-                if (newProgress >= 1) {
-                    setMediaFullyExpanded(true);
-                    setShowContent(true);
-                } else if (newProgress < 0.75) {
-                    setShowContent(false);
-                }
-            }
-        };
-
-        const handleScroll = (): void => {
-            if (!mediaFullyExpanded && !isMobile) {
-                window.scrollTo(0, 0);
-            }
-        };
-
-        if (!isMobile) {
-            window.addEventListener('wheel', handleWheel, { passive: false });
-            window.addEventListener('scroll', handleScroll);
-        }
-
-        return () => {
-            window.removeEventListener('wheel', handleWheel);
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [scrollProgress, mediaFullyExpanded, isMobile]);
-
-    useEffect(() => {
-        const checkIfMobile = (): void => {
-            setIsMobile(window.innerWidth < 768);
-        };
-
-        checkIfMobile();
-        window.addEventListener('resize', checkIfMobile);
-
-        return () => window.removeEventListener('resize', checkIfMobile);
-    }, []);
-
-    const mediaWidth = 300 + scrollProgress * (1350);
-    const mediaHeight = 400 + scrollProgress * (500);
-    const textTranslateX = scrollProgress * (180);
+    if (!isMounted) return null;
 
     return (
-        <>
-            <div
-                ref={sectionRef}
-                className="transition-colors duration-700 ease-in-out overflow-x-hidden"
-            >
-                <section className="relative flex flex-col items-center justify-start min-h-[100svh] bg-black">
-                    <div className="relative w-full flex flex-col items-center min-h-[100svh]">
-                        {/* Persistent Background Image to prevent gray flicker */}
-                        <div className="absolute inset-0 z-0">
-                            <Image
-                                src={bgImageSrc}
-                                alt="Paisaje con fuente de agua de artesanal - Fuente Viva"
-                                fill
-                                className="object-cover grayscale opacity-20 blur-sm"
-                                priority
-                            />
-                        </div>
-
-                        {/* Background Image - Desktop Version (hidden on mobile via CSS) */}
-                        <motion.div
-                            className="absolute inset-0 z-0 h-full hidden md:block"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 - scrollProgress }}
-                            transition={{ duration: 0.1 }}
-                        >
-                            <Image
-                                src={bgImageSrc}
-                                alt="Diseño exterior con fuentes de hormigón premium"
-                                width={1920}
-                                height={1080}
-                                className="w-full h-full object-cover grayscale"
-                                priority
-                            />
-                            <div className="absolute inset-0 bg-slate-blue/30" />
-                        </motion.div>
-
-
-                        {/* MOBILE HERO: Full Loop Video or GIF (hidden on desktop via CSS) */}
-                        <div className="absolute inset-0 z-0 bg-black md:hidden">
-                            {videoSrc.toLowerCase().endsWith('.gif') ? (
-                                <img
-                                    src={videoSrc}
-                                    alt="Hero Background"
-                                    className="w-full h-full object-cover object-center opacity-80"
-                                />
-                            ) : (
-                                <video
-                                    src={videoSrc}
-                                    autoPlay
-                                    muted
-                                    loop
-                                    playsInline
-                                    className="w-full h-full object-cover object-center opacity-80"
-                                />
-                            )}
-                            <div className="absolute inset-0 bg-black/40" />
-                        </div>
-
-
-
-                        <div className="container mx-auto flex flex-col items-center justify-start relative z-10">
-                            <div className="flex flex-col items-center justify-center w-full h-[100svh] relative">
-
-                                {/* DESKTOP HERO: Expandable Video (Audio) */}
-                                <div
-                                    className="absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none rounded-2xl overflow-hidden group hidden md:block"
-                                    style={{
-                                        width: `${mediaWidth}px`,
-                                        height: `${mediaHeight}px`,
-                                        maxWidth: '95vw',
-                                        maxHeight: '85vh',
-                                        boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
-                                    }}
-                                >
-                                    <div className="relative w-full h-full">
-                                        {videoSrc.toLowerCase().endsWith('.gif') ? (
-                                            <img
-                                                src={videoSrc}
-                                                alt="Video demostrativo de fuente de agua fluyendo - Fuente Viva"
-                                                className="w-full h-full object-cover object-center"
-                                            />
-                                        ) : (
-                                            <video
-                                                ref={videoRef}
-                                                src={videoSrc}
-                                                autoPlay
-                                                muted
-                                                loop
-                                                playsInline
-                                                preload="auto"
-                                                className="w-full h-full object-cover object-center"
-                                                controls={false}
-                                            />
-                                        )}
-
-                                        <motion.div
-                                            className="absolute inset-0 bg-black/30 pointer-events-none"
-                                            initial={{ opacity: 0.7 }}
-                                            animate={{ opacity: 0.5 - scrollProgress * 0.5 }}
-                                        />
-
-                                        {/* Mute Button - Only show if it's a video */}
-                                        {!videoSrc.toLowerCase().endsWith('.gif') && (
-                                            <motion.button
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: scrollProgress > 0.5 ? 1 : 0 }}
-                                                onClick={toggleMute}
-                                                className="absolute bottom-6 right-6 z-50 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all"
-                                            >
-                                                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-                                            </motion.button>
-                                        )}
-                                    </div>
-
-                                    {!mediaFullyExpanded && (
-                                        <div className="absolute bottom-4 left-0 w-full flex justify-center text-center z-10">
-                                            <motion.p
-                                                className="text-off-white/80 font-medium text-center text-sm"
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: scrollProgress < 0.3 ? 1 : 0 }}
-                                            >
-                                                Desliza para explorar
-                                            </motion.p>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Scroll Indicator Arrow */}
-                                {!mediaFullyExpanded && (
-                                    <motion.div
-                                        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/70 z-20"
-                                        animate={{ y: [0, 10, 0] }}
-                                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                                    >
-                                        <ChevronDown className="w-10 h-10" />
-                                    </motion.div>
-                                )}
-
-                                {/* Hero Titles */}
-                                {/* SEO Hidden H1 */}
-                                <h1 className="sr-only">Fuente Viva | Fuentes, Bebederos y Estatuas de Hormigón Premium en Uruguay</h1>
-
-                                {/* Mobile Titles - Visual Only */}
-                                <div className="flex md:hidden flex-col items-center mb-2" aria-hidden="true">
-                                    <div className="font-serif text-5xl font-bold text-off-white italic mix-blend-difference leading-tight">
-                                        Fuente
-                                    </div>
-                                    <div className="font-cormorant text-7xl font-light text-sage-green mix-blend-normal -mt-2">
-                                        Viva
-                                    </div>
-                                    <p className="text-off-white font-medium text-lg tracking-wide max-w-sm px-4 mt-2 text-center">
-                                        Un rincón de calma donde <br />
-                                        la naturaleza se detiene a beber
-                                    </p>
-                                </div>
-
-                                {/* Desktop Titles - Visual Only */}
-                                <div className="hidden md:flex items-center gap-6" aria-hidden="true">
-                                    <motion.div
-                                        className="font-serif text-6xl lg:text-9xl font-bold text-off-white transition-none italic mix-blend-difference"
-                                        style={{ transform: `translateX(-${textTranslateX}px)` }}
-                                    >
-                                        Fuente
-                                    </motion.div>
-                                    <motion.div
-                                        className="font-cormorant text-8xl lg:text-[11.5rem] font-light text-center text-sage-green transition-none mix-blend-normal tracking-tighter"
-                                        style={{ transform: `translateX(${textTranslateX}px)` }}
-                                    >
-                                        Viva
-                                    </motion.div>
-                                </div>
-                                <motion.p
-                                    className="mt-6 text-off-white font-medium text-xl tracking-wide max-w-2xl hidden md:block text-center"
-                                    style={{ opacity: 1 - scrollProgress * 2 }}
-                                    aria-hidden="true"
-                                >
-                                    Un rincón de calma donde <br />
-                                    la naturaleza se detiene a beber
-                                </motion.p>
-                            </div>
-
-                            {/* Spacer Content */}
-                            <motion.section
-                                className="flex flex-col w-full md:hidden"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.7 }}
-                            >
-                                {/* Contenido visible solo en móvil inicialmente si el video no se expande */}
-                            </motion.section>
-
-                            <motion.section
-                                className="hidden md:flex flex-col w-full"
-                                style={{ display: mediaFullyExpanded ? 'flex' : 'none' }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.7 }}
-                            >
-                            </motion.section>
-                        </div>
+        <div ref={containerRef} className="relative w-full">
+            {/* Sticky Container for the Hero Animation - Height determines how much "scroll" it takes to expand */}
+            <div className="h-[200vh] md:h-[250vh] relative w-full bg-black">
+                <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+                    
+                    {/* Background Layer (Static fallback) */}
+                    <div className="absolute inset-0 z-0">
+                        <Image
+                            src={bgImageSrc || "/images/hero-fountain-new.jpg"}
+                            alt="Fondo decorativo"
+                            fill
+                            className="object-cover grayscale opacity-20 blur-sm"
+                            priority
+                        />
                     </div>
-                </section>
+
+                    {/* The Media (Video/Image) that expands - In Mobile it stays full screen */}
+                    <motion.div
+                        className="relative z-10 overflow-hidden flex items-center justify-center shadow-2xl"
+                        style={{
+                            width: typeof window !== 'undefined' && window.innerWidth < 768 ? '100vw' : mediaWidth,
+                            height: typeof window !== 'undefined' && window.innerWidth < 768 ? '100vh' : mediaHeight,
+                            borderRadius: typeof window !== 'undefined' && window.innerWidth < 768 ? '0px' : mediaBorderRadius,
+                        }}
+                    >
+                        <video
+                            ref={videoRef}
+                            src={videoSrc}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            className="w-full h-full object-cover"
+                            poster={bgImageSrc}
+                        />
+                        
+                        {/* Overlay to darken slightly for text readability */}
+                        <motion.div 
+                            className="absolute inset-0 bg-black/40 z-10"
+                            style={{ opacity: videoOverlayOpacity }}
+                        />
+
+                        {/* Mute toggle - Always visible on scroll in desktop, hidden in mobile if static */}
+                        <motion.button
+                            onClick={toggleMute}
+                            className="absolute bottom-10 right-10 z-30 p-4 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 transition-all shadow-lg hidden md:flex"
+                            style={{ opacity: useTransform(smoothProgress, [0.35, 0.45], [0, 1]) }}
+                        >
+                            {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+                        </motion.button>
+                    </motion.div>
+
+                    {/* Titles - Layered on top */}
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4">
+                        
+                        {/* Main Title Container */}
+                        <div className="relative flex flex-col items-center justify-center">
+                            <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-10">
+                                <motion.span 
+                                    className="font-serif text-6xl md:text-9xl font-bold text-white italic drop-shadow-2xl"
+                                    style={{ x: typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : textTranslateLeft, opacity: heroOpacity }}
+                                >
+                                    Fuente
+                                </motion.span>
+                                <motion.span 
+                                    className="font-cormorant text-7xl md:text-[12rem] font-light text-sage-green drop-shadow-2xl -mt-4 md:mt-0"
+                                    style={{ x: typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : textTranslateRight, opacity: heroOpacity }}
+                                >
+                                    Viva
+                                </motion.span>
+                            </div>
+                            
+                            <motion.p 
+                                className="text-white/90 text-sm md:text-2xl font-light tracking-[0.2em] uppercase mt-4 md:mt-8 text-center max-w-[280px] md:max-w-none"
+                                style={{ opacity: heroOpacity }}
+                            >
+                                Naturaleza en Movimiento
+                            </motion.p>
+                        </div>
+
+                        {/* Scroll Indicator */}
+                        <motion.div 
+                            className="absolute bottom-10 flex flex-col items-center gap-2"
+                            style={{ opacity: useTransform(smoothProgress, [0, 0.1], [1, 0]) }}
+                        >
+                            <span className="text-white/50 text-[10px] md:text-xs tracking-widest uppercase">Desliza para explorar</span>
+                            <ChevronDown className="text-white/30 animate-bounce" size={24} />
+                        </motion.div>
+                    </div>
+                </div>
             </div>
 
-            <div className="relative z-10 bg-off-white">
+            {/* Content following the hero */}
+            <div className="relative z-30 bg-off-white">
                 {children}
             </div>
-        </>
+        </div>
     );
 }

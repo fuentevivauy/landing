@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <ScrollExpandHero
-      videoSrc="https://res.cloudinary.com/doyde4ron/video/upload/v1769032745/Leve_zoom_in_1080p_202601211857_c6jg0h.mp4"
+      videoSrc="https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-video.mp4"
       bgImageSrc="/images/hero-fountain-new.jpg"
     >
       <Philosophy />
