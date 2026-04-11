@@ -209,7 +209,7 @@ export function ScrollExpandHero({
             <section className="relative flex flex-col items-center justify-start min-h-[100dvh]">
                 <div className="relative w-full flex flex-col items-center min-h-[100dvh]">
 
-                    {/* Background image (grayscale, fades out as scroll progresses) */}
+                    {/* Background image (fades out as scroll progresses) */}
                     <motion.div
                         className="absolute inset-0 z-0 h-full"
                         initial={{ opacity: 1 }}
@@ -223,7 +223,7 @@ export function ScrollExpandHero({
                             sizes="100vw"
                             quality={100}
                             unoptimized={true}
-                            className="object-cover grayscale"
+                            className="object-cover"
                             style={{ objectPosition: 'center' }}
                             priority
                         />
@@ -255,7 +255,6 @@ export function ScrollExpandHero({
                                         preload="auto"
                                         className="w-full h-full object-cover"
                                         controls={false}
-                                        poster={bgImageSrc}
                                     />
                                     {/* Overlay that fades as video expands */}
                                     <motion.div
@@ -265,18 +264,6 @@ export function ScrollExpandHero({
                                         transition={{ duration: 0.2 }}
                                     />
                                 </motion.div>
-                            </div>
-
-                            {/* Scroll-to-expand hint (above the title text) */}
-                            <div className="flex flex-col items-center text-center relative z-10 transition-none pointer-events-none mb-4">
-                                <p
-                                    className="text-white/60 font-medium text-sm text-center"
-                                    style={{
-                                        opacity: 1 - scrollProgress * 2,
-                                    }}
-                                >
-                                    Desliza para explorar
-                                </p>
                             </div>
 
                             {/* === TITLE TEXT (splits apart on scroll) === */}
@@ -299,20 +286,15 @@ export function ScrollExpandHero({
                                 </motion.span>
                             </div>
 
-                            {/* Subtitle */}
-                            <motion.p
-                                className="text-white/80 text-lg md:text-2xl font-light tracking-[0.2em] uppercase mt-4 text-center relative z-10"
-                                style={{ opacity: 1 - scrollProgress * 2 }}
-                            >
-                                Naturaleza en Movimiento
-                            </motion.p>
-
-                            {/* Scroll indicator arrow */}
+                            {/* Scroll indicator text & arrow */}
                             <motion.div
                                 className="absolute bottom-10 flex flex-col items-center gap-2 z-10"
-                                style={{ opacity: 1 - scrollProgress * 3 }}
+                                style={{ opacity: Math.max(0, 1 - scrollProgress * 8) }}
                             >
-                                <ChevronDown className="text-white/30 animate-bounce" size={24} />
+                                <span className="text-white font-bold text-sm tracking-wider uppercase drop-shadow-md">
+                                    Desliza para explorar
+                                </span>
+                                <ChevronDown className="text-white animate-bounce" size={24} />
                             </motion.div>
                         </div>
 
