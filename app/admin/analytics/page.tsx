@@ -44,6 +44,7 @@ export default function AdminAnalytics() {
     const [isLoading, setIsLoading] = useState(true);
     const [events, setEvents] = useState<AnalyticsStat[]>([]);
     const [productReports, setProductReports] = useState<ProductReport[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [stats, setStats] = useState<{
         totalViews: number;
         totalClicks: number;
@@ -154,7 +155,7 @@ export default function AdminAnalytics() {
 
                     setProductReports(Object.values(reports)
                         .map(r => ({ ...r, conversion: r.views > 0 ? (r.whatsapp / r.views) * 100 : 0 }))
-                        .sort((a, b) => b.views - a.views)
+                        .sort((a, b) => b.conversion - a.conversion) // Changed to sort by conversion desc
                         .filter(r => r.views > 0 || r.whatsapp > 0)
                     );
                 };
@@ -200,6 +201,35 @@ export default function AdminAnalytics() {
         fetchAnalytics();
     }, [supabase]);
 
+    // Extract unique categories
+    const categories = Array.from(new Set(productReports.map(r => r.category).filter(Boolean)));
+
+    const handleDownloadCSV = () => {
+        const headers = ['Producto', 'Categoria', 'Interacciones', 'WhatsApp', 'Conversion (%)'];
+        const filteredReports = selectedCategory === 'all' 
+            ? productReports 
+            : productReports.filter(p => p.category === selectedCategory);
+            
+        const rows = filteredReports.map(r => [
+            `"${r.name}"`, 
+            `"${r.category}"`, 
+            r.views, 
+            r.whatsapp, 
+            r.conversion.toFixed(1)
+        ]);
+        const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `reporte_fuenteviva_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="flex w-full min-h-screen bg-slate-50 dark:bg-slate-950 font-sans">
             <AdminSidebar />
@@ -219,12 +249,25 @@ export default function AdminAnalytics() {
                             <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">Análisis de rendimiento y comportamiento del usuario.</p>
                         </div>
                         
-                        <div className="flex items-center gap-3">
-                            <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm">
-                                <Filter className="w-4 h-4" />
-                                Todos los productos
-                            </button>
-                            <button className="flex items-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-xl text-sm font-bold hover:bg-sky-600 transition-all shadow-lg shadow-sky-500/20">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <div className="relative">
+                                <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <select 
+                                    className="pl-9 pr-8 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm appearance-none outline-none focus:ring-2 focus:ring-sky-500/50"
+                                    value={selectedCategory}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                >
+                                    <option value="all">Todas las categorías</option>
+                                    {categories.map(cat => (
+                                        <option key={cat} value={cat}>{cat}</option>
+                                    ))}
+                                </select>
+                                <ChevronRight className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 rotate-90 pointer-events-none" />
+                            </div>
+                            <button 
+                                onClick={handleDownloadCSV}
+                                className="flex items-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-xl text-sm font-bold hover:bg-sky-600 transition-all shadow-lg shadow-sky-500/20"
+                            >
                                 Descargar Reporte
                             </button>
                         </div>
@@ -295,7 +338,9 @@ export default function AdminAnalytics() {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="text-sm">
-                                                    {productReports.map((prod, i) => (
+                                                    {productReports
+                                                        .filter(p => selectedCategory === 'all' || p.category === selectedCategory)
+                                                        .map((prod, i) => (
                                                         <tr key={i} className="border-b border-slate-50 dark:border-slate-800/50 last:border-0 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
                                                             <td className="px-6 py-4">
                                                                 <div className="flex flex-col">
