@@ -61,6 +61,10 @@ export function ScrollExpandHero({
     const heroOpacity = useTransform(smoothProgress, [0, 0.3], [1, 0]);
     const videoOverlayOpacity = useTransform(smoothProgress, [0, 0.4], [0.6, 0.2]);
 
+    // These were previously inline in JSX — moved here to comply with Rules of Hooks
+    const muteButtonOpacity = useTransform(smoothProgress, [0.35, 0.45], [0, 1]);
+    const scrollIndicatorOpacity = useTransform(smoothProgress, [0, 0.1], [1, 0]);
+
     const toggleMute = (e: React.MouseEvent) => {
         e.stopPropagation();
         if (videoRef.current) {
@@ -118,7 +122,7 @@ export function ScrollExpandHero({
                         <motion.button
                             onClick={toggleMute}
                             className="absolute bottom-10 right-10 z-30 p-4 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 transition-all shadow-lg hidden md:flex"
-                            style={{ opacity: useTransform(smoothProgress, [0.35, 0.45], [0, 1]) }}
+                            style={{ opacity: muteButtonOpacity }}
                         >
                             {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
                         </motion.button>
@@ -155,7 +159,7 @@ export function ScrollExpandHero({
                         {/* Scroll Indicator */}
                         <motion.div 
                             className="absolute bottom-10 flex flex-col items-center gap-2"
-                            style={{ opacity: useTransform(smoothProgress, [0, 0.1], [1, 0]) }}
+                            style={{ opacity: scrollIndicatorOpacity }}
                         >
                             <span className="text-white/50 text-[10px] md:text-xs tracking-widest uppercase">Desliza para explorar</span>
                             <ChevronDown className="text-white/30 animate-bounce" size={24} />
