@@ -213,18 +213,24 @@ export function ScrollExpandHero({
 
                     {/* Background image (fades out as scroll progresses) */}
                     <motion.div
-                        className="absolute inset-0 z-0 h-full"
+                        className="absolute inset-0 z-0 h-full overflow-hidden flex items-center justify-center bg-black"
                         initial={{ opacity: 1 }}
                         animate={{ opacity: 1 - scrollProgress }}
                         transition={{ duration: 0.1 }}
                     >
+                        {/* Capa de relleno borrosa (evita los bordes negros) */}
+                        <img
+                            src={bgImageSrc}
+                            alt="Fondo borroso"
+                            className="absolute inset-0 w-full h-full object-cover grayscale blur-xl opacity-40 scale-110"
+                        />
+                        {/* Capa principal ajustada sin expandirse brutalmente */}
                         <img
                             src={bgImageSrc}
                             alt="Fondo decorativo"
-                            className="w-full h-full object-cover grayscale"
-                            style={{ objectPosition: 'center' }}
+                            className="relative z-10 w-full h-full object-contain grayscale"
                         />
-                        <div className="absolute inset-0 bg-black/10" />
+                        <div className="absolute inset-0 z-20 bg-black/30" />
                     </motion.div>
 
                     <div className="container mx-auto flex flex-col items-center justify-start relative z-10">
