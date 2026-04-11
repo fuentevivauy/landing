@@ -5,9 +5,10 @@ import {
     useState,
     ReactNode,
     useEffect,
+    useCallback,
 } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Volume2, VolumeX, ChevronDown } from 'lucide-react';
 
 interface ScrollExpandHeroProps {
@@ -21,12 +22,18 @@ export function ScrollExpandHero({
     bgImageSrc = "/images/hero-fountain-new.jpg",
     children,
 }: ScrollExpandHeroProps) {
-    const containerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isMuted, setIsMuted] = useState(true);
+    const sectionRef = useRef<HTMLDivElement>(null);
+
     const [isMounted, setIsMounted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const [showContent, setShowContent] = useState(false);
+    const [mediaFullyExpanded, setMediaFullyExpanded] = useState(false);
+    const [touchStartY, setTouchStartY] = useState(0);
 
+    // Check mobile on mount and resize
     useEffect(() => {
         setIsMounted(true);
         const checkMobile = () => {
@@ -37,141 +44,288 @@ export function ScrollExpandHero({
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    // useScroll tracking for the height of the hero section
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end start"]
-    });
+    // Scroll-jacking logic — ONLY for desktop
+    useEffect(() => {
+        if (!isMounted || isMobile) return;
 
-    // Smooth out the scroll progress
-    const smoothProgress = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001
-    });
+        const handleWheel = (e: WheelEvent) => {
+            if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
+                setMediaFullyExpanded(false);
+                setShowContent(false);
+                e.preventDefault();
+            } else if (!mediaFullyExpanded) {
+                e.preventDefault();
+                const scrollDelta = e.deltaY * 0.0009;
+                const newProgress = Math.min(
+                    Math.max(scrollProgress + scrollDelta, 0),
+                    1
+                );
+                setScrollProgress(newProgress);
 
-    // Animation transformations
-    // Desktop animations
-    const mediaWidth = useTransform(smoothProgress, [0, 0.4], ["320px", "100vw"]);
-    const mediaHeight = useTransform(smoothProgress, [0, 0.4], ["450px", "100vh"]);
-    const mediaBorderRadius = useTransform(smoothProgress, [0, 0.35], ["24px", "0px"]);
-    
-    const textTranslateLeft = useTransform(smoothProgress, [0, 0.4], ["0px", "-250px"]);
-    const textTranslateRight = useTransform(smoothProgress, [0, 0.4], ["0px", "250px"]);
-    const heroOpacity = useTransform(smoothProgress, [0, 0.3], [1, 0]);
-    const videoOverlayOpacity = useTransform(smoothProgress, [0, 0.4], [0.6, 0.2]);
+                if (newProgress >= 1) {
+                    setMediaFullyExpanded(true);
+                    setShowContent(true);
+                } else if (newProgress < 0.75) {
+                    setShowContent(false);
+                }
+            }
+        };
 
-    // These were previously inline in JSX — moved here to comply with Rules of Hooks
-    const muteButtonOpacity = useTransform(smoothProgress, [0.35, 0.45], [0, 1]);
-    const scrollIndicatorOpacity = useTransform(smoothProgress, [0, 0.1], [1, 0]);
+        const handleTouchStart = (e: TouchEvent) => {
+            setTouchStartY(e.touches[0].clientY);
+        };
 
-    const toggleMute = (e: React.MouseEvent) => {
+        const handleTouchMove = (e: TouchEvent) => {
+            if (!touchStartY) return;
+
+            const touchY = e.touches[0].clientY;
+            const deltaY = touchStartY - touchY;
+
+            if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
+                setMediaFullyExpanded(false);
+                setShowContent(false);
+                e.preventDefault();
+            } else if (!mediaFullyExpanded) {
+                e.preventDefault();
+                const scrollFactor = deltaY < 0 ? 0.008 : 0.005;
+                const scrollDelta = deltaY * scrollFactor;
+                const newProgress = Math.min(
+                    Math.max(scrollProgress + scrollDelta, 0),
+                    1
+                );
+                setScrollProgress(newProgress);
+
+                if (newProgress >= 1) {
+                    setMediaFullyExpanded(true);
+                    setShowContent(true);
+                } else if (newProgress < 0.75) {
+                    setShowContent(false);
+                }
+
+                setTouchStartY(touchY);
+            }
+        };
+
+        const handleTouchEnd = () => {
+            setTouchStartY(0);
+        };
+
+        const handleScroll = () => {
+            if (!mediaFullyExpanded) {
+                window.scrollTo(0, 0);
+            }
+        };
+
+        window.addEventListener('wheel', handleWheel, { passive: false });
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('touchstart', handleTouchStart, { passive: false });
+        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+        window.addEventListener('touchend', handleTouchEnd);
+
+        return () => {
+            window.removeEventListener('wheel', handleWheel);
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, [isMounted, isMobile, scrollProgress, mediaFullyExpanded, touchStartY]);
+
+    const toggleMute = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
         if (videoRef.current) {
             videoRef.current.muted = !videoRef.current.muted;
             setIsMuted(videoRef.current.muted);
         }
-    };
+    }, []);
 
     if (!isMounted) return null;
 
-    return (
-        <div ref={containerRef} className="relative w-full">
-            {/* Sticky Container for the Hero Animation - Height determines how much "scroll" it takes to expand */}
-            <div className="h-[200vh] md:h-[250vh] relative w-full bg-black">
-                <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
-                    
-                    {/* Background Layer (Static fallback) */}
-                    <div className="absolute inset-0 z-0">
-                        <Image
-                            src={bgImageSrc || "/images/hero-fountain-new.jpg"}
-                            alt="Fondo decorativo"
-                            fill
-                            className="object-cover grayscale opacity-20 blur-sm"
-                            priority
-                        />
+    // Desktop: scroll-expand effect dimensions
+    const mediaWidth = 300 + scrollProgress * 1250;
+    const mediaHeight = 400 + scrollProgress * 400;
+    const textTranslateX = scrollProgress * 150;
+
+    // === MOBILE VERSION ===
+    if (isMobile) {
+        return (
+            <div ref={sectionRef} className="overflow-x-hidden">
+                {/* Mobile Hero: full-screen video, no scroll-jacking */}
+                <section className="relative w-full h-[100dvh] overflow-hidden">
+                    <video
+                        ref={videoRef}
+                        src={videoSrc}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="w-full h-full object-cover"
+                        poster={bgImageSrc}
+                    />
+                    {/* Dark overlay */}
+                    <div className="absolute inset-0 bg-black/40 z-10" />
+
+                    {/* Title */}
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4">
+                        <div className="flex flex-col items-center justify-center">
+                            <span className="font-serif text-6xl font-bold text-white italic drop-shadow-2xl">
+                                Fuente
+                            </span>
+                            <span className="font-cormorant text-7xl font-light text-sage-green drop-shadow-2xl -mt-2">
+                                Viva
+                            </span>
+                            <p className="text-white/90 text-sm font-light tracking-[0.2em] uppercase mt-4 text-center max-w-[280px]">
+                                Naturaleza en Movimiento
+                            </p>
+                        </div>
+
+                        {/* Scroll indicator */}
+                        <div className="absolute bottom-10 flex flex-col items-center gap-2">
+                            <span className="text-white/50 text-[10px] tracking-widest uppercase">Desliza para explorar</span>
+                            <ChevronDown className="text-white/30 animate-bounce" size={24} />
+                        </div>
                     </div>
 
-                    {/* The Media (Video/Image) that expands - In Mobile it stays full screen */}
-                    <motion.div
-                        className="relative z-10 overflow-hidden flex items-center justify-center shadow-2xl"
-                        style={{
-                            width: isMobile ? '100vw' : mediaWidth,
-                            height: isMobile ? '100vh' : mediaHeight,
-                            borderRadius: isMobile ? '0px' : mediaBorderRadius,
-                        }}
+                    {/* Mute button */}
+                    <button
+                        onClick={toggleMute}
+                        className="absolute bottom-10 right-5 z-30 p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 transition-all shadow-lg"
                     >
-                        <video
-                            ref={videoRef}
-                            src={videoSrc}
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            className="w-full h-full object-cover"
-                            poster={bgImageSrc}
-                        />
-                        
-                        {/* Overlay to darken slightly for text readability */}
-                        <motion.div 
-                            className="absolute inset-0 bg-black/40 z-10"
-                            style={{ opacity: videoOverlayOpacity }}
-                        />
+                        {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                    </button>
+                </section>
 
-                        {/* Mute toggle - Always visible on scroll in desktop, hidden in mobile if static */}
-                        <motion.button
-                            onClick={toggleMute}
-                            className="absolute bottom-10 right-10 z-30 p-4 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 transition-all shadow-lg hidden md:flex"
-                            style={{ opacity: muteButtonOpacity }}
-                        >
-                            {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
-                        </motion.button>
+                {/* Content */}
+                <div className="relative z-30 bg-off-white">
+                    {children}
+                </div>
+            </div>
+        );
+    }
+
+    // === DESKTOP VERSION: Scroll-expand effect ===
+    return (
+        <div ref={sectionRef} className="overflow-x-hidden">
+            <section className="relative flex flex-col items-center justify-start min-h-[100dvh]">
+                <div className="relative w-full flex flex-col items-center min-h-[100dvh]">
+
+                    {/* Background image (grayscale, fades out as scroll progresses) */}
+                    <motion.div
+                        className="absolute inset-0 z-0 h-full"
+                        initial={{ opacity: 1 }}
+                        animate={{ opacity: 1 - scrollProgress }}
+                        transition={{ duration: 0.1 }}
+                    >
+                        <Image
+                            src={bgImageSrc}
+                            alt="Fondo decorativo"
+                            fill
+                            className="object-cover grayscale"
+                            style={{ objectPosition: 'center' }}
+                            priority
+                        />
+                        <div className="absolute inset-0 bg-black/10" />
                     </motion.div>
 
-                    {/* Titles - Layered on top */}
-                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4">
-                        
-                        {/* Main Title Container */}
-                        <div className="relative flex flex-col items-center justify-center">
-                            <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-10">
-                                <motion.span 
-                                    className="font-serif text-6xl md:text-9xl font-bold text-white italic drop-shadow-2xl"
-                                    style={{ x: isMobile ? 0 : textTranslateLeft, opacity: heroOpacity }}
+                    <div className="container mx-auto flex flex-col items-center justify-start relative z-10">
+                        <div className="flex flex-col items-center justify-center w-full h-[100dvh] relative">
+
+                            {/* === THE EXPANDING VIDEO CARD === */}
+                            <div
+                                className="absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none rounded-2xl overflow-hidden"
+                                style={{
+                                    width: `${mediaWidth}px`,
+                                    height: `${mediaHeight}px`,
+                                    maxWidth: '95vw',
+                                    maxHeight: '85vh',
+                                    boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
+                                }}
+                            >
+                                <div className="relative w-full h-full pointer-events-none">
+                                    <video
+                                        ref={videoRef}
+                                        src={videoSrc}
+                                        autoPlay
+                                        muted
+                                        loop
+                                        playsInline
+                                        preload="auto"
+                                        className="w-full h-full object-cover rounded-xl"
+                                        controls={false}
+                                        poster={bgImageSrc}
+                                    />
+                                    {/* Overlay that fades as video expands */}
+                                    <motion.div
+                                        className="absolute inset-0 bg-black/30 rounded-xl"
+                                        initial={{ opacity: 0.7 }}
+                                        animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
+                                        transition={{ duration: 0.2 }}
+                                    />
+                                </div>
+
+                                {/* Scroll-to-expand hint (below the video card) */}
+                                <div className="flex flex-col items-center text-center relative z-10 mt-4 transition-none">
+                                    <p
+                                        className="text-white/60 font-medium text-sm text-center"
+                                        style={{
+                                            transform: `translateX(${textTranslateX}vw)`,
+                                            opacity: 1 - scrollProgress * 2,
+                                        }}
+                                    >
+                                        Desliza para explorar
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* === TITLE TEXT (splits apart on scroll) === */}
+                            <div className="flex items-center justify-center text-center gap-4 w-full relative z-10 transition-none flex-col mix-blend-normal">
+                                <motion.span
+                                    className="font-serif text-6xl md:text-8xl lg:text-9xl font-bold text-white italic drop-shadow-2xl transition-none"
+                                    style={{
+                                        transform: `translateX(-${textTranslateX}vw)`,
+                                    }}
                                 >
                                     Fuente
                                 </motion.span>
-                                <motion.span 
-                                    className="font-cormorant text-7xl md:text-[12rem] font-light text-sage-green drop-shadow-2xl -mt-4 md:mt-0"
-                                    style={{ x: isMobile ? 0 : textTranslateRight, opacity: heroOpacity }}
+                                <motion.span
+                                    className="font-cormorant text-7xl md:text-9xl lg:text-[11rem] font-light text-sage-green drop-shadow-2xl transition-none -mt-4"
+                                    style={{
+                                        transform: `translateX(${textTranslateX}vw)`,
+                                    }}
                                 >
                                     Viva
                                 </motion.span>
                             </div>
-                            
-                            <motion.p 
-                                className="text-white/90 text-sm md:text-2xl font-light tracking-[0.2em] uppercase mt-4 md:mt-8 text-center max-w-[280px] md:max-w-none"
-                                style={{ opacity: heroOpacity }}
+
+                            {/* Subtitle */}
+                            <motion.p
+                                className="text-white/80 text-lg md:text-2xl font-light tracking-[0.2em] uppercase mt-6 text-center relative z-10"
+                                style={{ opacity: 1 - scrollProgress * 2 }}
                             >
                                 Naturaleza en Movimiento
                             </motion.p>
+
+                            {/* Scroll indicator arrow */}
+                            <motion.div
+                                className="absolute bottom-10 flex flex-col items-center gap-2 z-10"
+                                style={{ opacity: 1 - scrollProgress * 3 }}
+                            >
+                                <ChevronDown className="text-white/30 animate-bounce" size={24} />
+                            </motion.div>
                         </div>
 
-                        {/* Scroll Indicator */}
-                        <motion.div 
-                            className="absolute bottom-10 flex flex-col items-center gap-2"
-                            style={{ opacity: scrollIndicatorOpacity }}
+                        {/* Content section — appears once video is fully expanded */}
+                        <motion.section
+                            className="flex flex-col w-full"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: showContent ? 1 : 0 }}
+                            transition={{ duration: 0.7 }}
                         >
-                            <span className="text-white/50 text-[10px] md:text-xs tracking-widest uppercase">Desliza para explorar</span>
-                            <ChevronDown className="text-white/30 animate-bounce" size={24} />
-                        </motion.div>
+                            {children}
+                        </motion.section>
                     </div>
                 </div>
-            </div>
-
-            {/* Content following the hero */}
-            <div className="relative z-30 bg-off-white">
-                {children}
-            </div>
+            </section>
         </div>
     );
 }
