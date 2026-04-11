@@ -25,6 +25,17 @@ export function ScrollExpandHero({
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isMuted, setIsMuted] = useState(true);
     const [isMounted, setIsMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // useScroll tracking for the height of the hero section
     const { scrollYProgress } = useScroll({
@@ -49,10 +60,6 @@ export function ScrollExpandHero({
     const textTranslateRight = useTransform(smoothProgress, [0, 0.4], ["0px", "250px"]);
     const heroOpacity = useTransform(smoothProgress, [0, 0.3], [1, 0]);
     const videoOverlayOpacity = useTransform(smoothProgress, [0, 0.4], [0.6, 0.2]);
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
 
     const toggleMute = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -85,9 +92,9 @@ export function ScrollExpandHero({
                     <motion.div
                         className="relative z-10 overflow-hidden flex items-center justify-center shadow-2xl"
                         style={{
-                            width: typeof window !== 'undefined' && window.innerWidth < 768 ? '100vw' : mediaWidth,
-                            height: typeof window !== 'undefined' && window.innerWidth < 768 ? '100vh' : mediaHeight,
-                            borderRadius: typeof window !== 'undefined' && window.innerWidth < 768 ? '0px' : mediaBorderRadius,
+                            width: isMobile ? '100vw' : mediaWidth,
+                            height: isMobile ? '100vh' : mediaHeight,
+                            borderRadius: isMobile ? '0px' : mediaBorderRadius,
                         }}
                     >
                         <video
@@ -125,13 +132,13 @@ export function ScrollExpandHero({
                             <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-10">
                                 <motion.span 
                                     className="font-serif text-6xl md:text-9xl font-bold text-white italic drop-shadow-2xl"
-                                    style={{ x: typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : textTranslateLeft, opacity: heroOpacity }}
+                                    style={{ x: isMobile ? 0 : textTranslateLeft, opacity: heroOpacity }}
                                 >
                                     Fuente
                                 </motion.span>
                                 <motion.span 
                                     className="font-cormorant text-7xl md:text-[12rem] font-light text-sage-green drop-shadow-2xl -mt-4 md:mt-0"
-                                    style={{ x: typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : textTranslateRight, opacity: heroOpacity }}
+                                    style={{ x: isMobile ? 0 : textTranslateRight, opacity: heroOpacity }}
                                 >
                                     Viva
                                 </motion.span>
