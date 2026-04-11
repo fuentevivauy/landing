@@ -218,16 +218,11 @@ export function ScrollExpandHero({
                         animate={{ opacity: 1 - scrollProgress }}
                         transition={{ duration: 0.1 }}
                     >
-                        <Image
+                        <img
                             src={bgImageSrc}
                             alt="Fondo decorativo"
-                            fill
-                            sizes="100vw"
-                            quality={100}
-                            unoptimized={true}
-                            className="object-cover grayscale"
+                            className="w-full h-full object-cover grayscale"
                             style={{ objectPosition: 'center' }}
-                            priority
                         />
                         <div className="absolute inset-0 bg-black/10" />
                     </motion.div>
