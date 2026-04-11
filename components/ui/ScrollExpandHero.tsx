@@ -211,7 +211,7 @@ export function ScrollExpandHero({
                         <img
                             src={bgImageSrc}
                             alt="Fondo decorativo"
-                            className="w-full h-full object-cover grayscale"
+                            className="w-full h-full object-cover grayscale blur-[4px] scale-105"
                             style={{ objectPosition: 'center' }}
                         />
                         <div className="absolute inset-0 bg-black/10" />
