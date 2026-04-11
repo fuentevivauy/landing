@@ -185,13 +185,6 @@ export function ScrollExpandHero({
                         </div>
                     </div>
 
-                    {/* Mute button */}
-                    <button
-                        onClick={toggleMute}
-                        className="absolute bottom-10 right-5 z-30 p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 transition-all shadow-lg"
-                    >
-                        {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-                    </button>
                 </section>
 
                 {/* Content */}
