@@ -22,7 +22,8 @@ export default function Home() {
   return (
     <ScrollExpandHero
       videoSrc="https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-video.mp4"
-      bgImageSrc="/images/hero-fountain-new.jpg"
+      bgImageSrc="/images/hero-bg.jpg"
+      posterSrc="/images/hero-fountain-new.jpg"
     >
       <Philosophy />
       <ProductGallery onProductClick={setSelectedProduct} />

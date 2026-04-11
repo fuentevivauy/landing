@@ -14,12 +14,14 @@ import { Volume2, VolumeX, ChevronDown } from 'lucide-react';
 interface ScrollExpandHeroProps {
     videoSrc?: string;
     bgImageSrc?: string;
+    posterSrc?: string;
     children?: ReactNode;
 }
 
 export function ScrollExpandHero({
     videoSrc = "https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-video.mp4",
-    bgImageSrc = "/images/hero-fountain-new.jpg",
+    bgImageSrc = "/images/hero-bg.jpg",
+    posterSrc = "/images/hero-fountain-new.jpg",
     children,
 }: ScrollExpandHeroProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -160,7 +162,7 @@ export function ScrollExpandHero({
                         loop
                         playsInline
                         className="w-full h-full object-cover"
-                        poster={bgImageSrc}
+                        poster={posterSrc}
                     />
                     {/* Dark overlay */}
                     <div className="absolute inset-0 bg-black/40 z-10" />
@@ -223,7 +225,7 @@ export function ScrollExpandHero({
                             sizes="100vw"
                             quality={100}
                             unoptimized={true}
-                            className="object-cover"
+                            className="object-cover grayscale"
                             style={{ objectPosition: 'center' }}
                             priority
                         />
@@ -255,6 +257,7 @@ export function ScrollExpandHero({
                                         preload="auto"
                                         className="w-full h-full object-cover"
                                         controls={false}
+                                        poster={posterSrc}
                                     />
                                     {/* Overlay that fades as video expands */}
                                     <motion.div
