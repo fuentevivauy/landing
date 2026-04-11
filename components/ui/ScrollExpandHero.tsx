@@ -176,15 +176,12 @@ export function ScrollExpandHero({
                             <span className="font-cormorant text-7xl font-light text-sage-green drop-shadow-2xl -mt-2">
                                 Viva
                             </span>
-                            <p className="text-white/90 text-sm font-light tracking-[0.2em] uppercase mt-4 text-center max-w-[280px]">
-                                Naturaleza en Movimiento
-                            </p>
                         </div>
 
                         {/* Scroll indicator */}
-                        <div className="absolute bottom-10 flex flex-col items-center gap-2">
-                            <span className="text-white/50 text-[10px] tracking-widest uppercase">Desliza para explorar</span>
-                            <ChevronDown className="text-white/30 animate-bounce" size={24} />
+                        <div className="absolute bottom-10 flex flex-col items-center gap-3">
+                            <span className="text-white font-bold text-sm tracking-[0.2em] drop-shadow-lg uppercase">Desliza para explorar</span>
+                            <ChevronDown className="text-white animate-bounce drop-shadow-lg" size={28} />
                         </div>
                     </div>
 
@@ -213,7 +210,7 @@ export function ScrollExpandHero({
 
                     {/* Background image (fades out as scroll progresses) */}
                     <motion.div
-                        className="absolute inset-0 z-0 h-full"
+                        className="absolute top-0 left-0 w-full h-[100dvh] z-0 overflow-hidden"
                         initial={{ opacity: 1 }}
                         animate={{ opacity: 1 - scrollProgress }}
                         transition={{ duration: 0.1 }}
@@ -286,13 +283,14 @@ export function ScrollExpandHero({
 
                             {/* Scroll indicator text & arrow */}
                             <motion.div
-                                className="absolute bottom-10 flex flex-col items-center gap-2 z-10"
-                                style={{ opacity: Math.max(0, 1 - scrollProgress * 8) }}
+                                className="absolute bottom-10 flex flex-col items-center gap-3 z-10"
+                                style={{ opacity: Math.max(0, 1 - scrollProgress * 15) }}
+                                transition={{ ease: "easeInOut" }}
                             >
-                                <span className="text-white font-bold text-sm tracking-wider uppercase drop-shadow-md">
+                                <span className="text-white font-bold text-sm tracking-[0.2em] drop-shadow-lg uppercase">
                                     Desliza para explorar
                                 </span>
-                                <ChevronDown className="text-white animate-bounce" size={24} />
+                                <ChevronDown className="text-white animate-bounce drop-shadow-lg" size={28} />
                             </motion.div>
                         </div>
 
