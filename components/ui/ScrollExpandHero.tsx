@@ -220,6 +220,8 @@ export function ScrollExpandHero({
                             src={bgImageSrc}
                             alt="Fondo decorativo"
                             fill
+                            sizes="100vw"
+                            quality={100}
                             className="object-cover grayscale"
                             style={{ objectPosition: 'center' }}
                             priority
@@ -231,50 +233,55 @@ export function ScrollExpandHero({
                         <div className="flex flex-col items-center justify-center w-full h-[100dvh] relative">
 
                             {/* === THE EXPANDING VIDEO CARD === */}
-                            <div
-                                className="absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none rounded-2xl overflow-hidden"
-                                style={{
-                                    width: `${mediaWidth}px`,
-                                    height: `${mediaHeight}px`,
-                                    maxWidth: '95vw',
-                                    maxHeight: '85vh',
-                                    boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
+                            <div 
+                                className="absolute inset-0 z-0"
+                                style={{ 
+                                    filter: `drop-shadow(0px 0px 30px rgba(0, 0, 0, ${0.5 * (1 - scrollProgress)}))`
                                 }}
                             >
-                                <div className="relative w-full h-full pointer-events-none">
-                                    <video
-                                        ref={videoRef}
-                                        src={videoSrc}
-                                        autoPlay
-                                        muted
-                                        loop
-                                        playsInline
-                                        preload="auto"
-                                        className="w-full h-full object-cover rounded-xl"
-                                        controls={false}
-                                        poster={bgImageSrc}
-                                    />
-                                    {/* Overlay that fades as video expands */}
-                                    <motion.div
-                                        className="absolute inset-0 bg-black/30 rounded-xl"
-                                        initial={{ opacity: 0.7 }}
-                                        animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
-                                        transition={{ duration: 0.2 }}
-                                    />
+                                <div
+                                    className="absolute z-0 top-0 left-0 w-full h-full overflow-hidden"
+                                    style={{
+                                        clipPath: `inset(calc((50dvh - 200px) * ${1 - scrollProgress}) calc((50vw - 150px) * ${1 - scrollProgress}) round ${24 * (1 - scrollProgress)}px)`,
+                                        transform: 'translateZ(0)', // Force GPU acceleration
+                                        willChange: 'clip-path'
+                                    }}
+                                >
+                                    <div className="relative w-full h-full pointer-events-none bg-slate-900">
+                                        <video
+                                            ref={videoRef}
+                                            src={videoSrc}
+                                            autoPlay
+                                            muted
+                                            loop
+                                            playsInline
+                                            preload="auto"
+                                            className="w-full h-full object-cover"
+                                            controls={false}
+                                            poster={bgImageSrc}
+                                        />
+                                        {/* Overlay that fades as video expands */}
+                                        <motion.div
+                                            className="absolute inset-0 bg-black/30"
+                                            initial={{ opacity: 0.7 }}
+                                            animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
+                                            transition={{ duration: 0.2 }}
+                                        />
+                                    </div>
                                 </div>
+                            </div>
 
-                                {/* Scroll-to-expand hint (below the video card) */}
-                                <div className="flex flex-col items-center text-center relative z-10 mt-4 transition-none">
-                                    <p
-                                        className="text-white/60 font-medium text-sm text-center"
-                                        style={{
-                                            transform: `translateX(${textTranslateX}vw)`,
-                                            opacity: 1 - scrollProgress * 2,
-                                        }}
-                                    >
-                                        Desliza para explorar
-                                    </p>
-                                </div>
+                            {/* Scroll-to-expand hint (below the video card) */}
+                            <div className="flex flex-col items-center text-center relative z-10 mt-4 transition-none pointer-events-none">
+                                <p
+                                    className="text-white/60 font-medium text-sm text-center"
+                                    style={{
+                                        transform: `translateX(${textTranslateX}vw)`,
+                                        opacity: 1 - scrollProgress * 2,
+                                    }}
+                                >
+                                    Desliza para explorar
+                                </p>
                             </div>
 
                             {/* === TITLE TEXT (splits apart on scroll) === */}
