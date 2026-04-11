@@ -1,10 +1,41 @@
 'use client';
 
+import { useState } from 'react';
 import AdminSidebar from '@/components/admin/Sidebar';
-import { Settings, User, Shield, Bell } from 'lucide-react';
+import { Settings, User, Shield, Bell, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { createClient } from '@/lib/supabase/client';
 
 export default function AdminSettings() {
+    const supabase = createClient();
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+
+    const handleUpdatePassword = async () => {
+        if (!password || password !== confirmPassword) {
+            alert('Las contraseñas no coinciden o están vacías.');
+            return;
+        }
+
+        setIsUpdatingPassword(true);
+        try {
+            const { error } = await supabase.auth.updateUser({
+                password: password
+            });
+
+            if (error) throw error;
+            alert('¡Contraseña actualizada exitosamente!');
+            setPassword('');
+            setConfirmPassword('');
+        } catch (error: any) {
+            console.error('Error al actualizar contraseña:', error);
+            alert('Error al actualizar: ' + error.message);
+        } finally {
+            setIsUpdatingPassword(false);
+        }
+    };
+
     return (
         <div className="flex w-full min-h-screen" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
             <AdminSidebar />
@@ -65,6 +96,8 @@ export default function AdminSettings() {
                                     <label className="block text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Nueva contraseña</label>
                                     <input 
                                         type="password" 
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
                                         className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-400 transition-colors shadow-sm"
                                     />
@@ -73,6 +106,8 @@ export default function AdminSettings() {
                                     <label className="block text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Confirmar contraseña</label>
                                     <input 
                                         type="password" 
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
                                         placeholder="••••••••"
                                         className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-400 transition-colors shadow-sm"
                                     />
@@ -81,8 +116,11 @@ export default function AdminSettings() {
                             <motion.button
                                 whileHover={{ scale: 1.01 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="mt-4 px-5 py-2.5 bg-slate-900 dark:bg-sky-600 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 dark:hover:bg-sky-500 transition-colors"
+                                onClick={handleUpdatePassword}
+                                disabled={isUpdatingPassword}
+                                className="mt-4 px-5 py-2.5 bg-slate-900 dark:bg-sky-600 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 dark:hover:bg-sky-500 transition-colors disabled:opacity-50 flex items-center gap-2"
                             >
+                                {isUpdatingPassword && <Loader2 className="w-4 h-4 animate-spin" />}
                                 Actualizar contraseña
                             </motion.button>
                         </div>

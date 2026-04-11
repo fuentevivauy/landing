@@ -93,8 +93,10 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
         try {
             const finalCategory = formData.newCategory.trim() !== '' ? formData.newCategory.trim() : formData.category;
             
-            // Basic slug generation
-            const generatedSlug = formData.name.toLowerCase().trim().replace(/[\s\W-]+/g, '-');
+            // Basic slug generation with random string to avoid collisions
+            const baseSlug = formData.name.toLowerCase().trim().replace(/[\s\W-]+/g, '-');
+            const randomString = Math.random().toString(36).substring(2, 6);
+            const generatedSlug = `${baseSlug}-${randomString}`;
             
             const productData = {
                 name: formData.name,
