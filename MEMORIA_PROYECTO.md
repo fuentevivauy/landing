@@ -34,6 +34,18 @@ Se perfeccionó la experiencia visual del Hero tras la migración, logrando la f
 *   **Migración de Assets**: El video y la imagen principal del Hero fueron migrados de Cloudinary a Supabase Storage (`product-images/hero/`), eliminando dependencias externas.
 *   **Slugs Únicos**: Se actualizó la lógica en `ProductModal.tsx` para generar slugs con sufijos aleatorios, evitando errores de duplicación en la base de datos.
 
+### C. Panel de Analíticas (`app/admin/analytics/page.tsx`)
+*   **Filtro de Categorías Funcional:** Se programó el filtrado dinámico para que la tabla central muestre datos basados en la selección de la categoría específica o "Todas".
+*   **Ordenamiento Estratégico:** Se modificó la regla de orden para que los productos con **mayor tasa de conversión** (%) se presenten en los primeros resultados.
+*   **Exportación de Reportes (CSV):** Creada y asegurada la funcionalidad para obtener un reporte Excel/CSV respetando los filtros que el administrador haya seleccionado previamente.
+
+### D. Configuración Global Dinámica (WhatsApp)
+*   **Persistencia en Base de Datos:** Se estableció el manejo la tabla `site_settings` en Supabase para administrar parámetros globales modificables.
+*   **Panel de Ajustes (`app/admin/settings/page.tsx`):** Ahora funciona con un sistema que permite editar, visualizar y guardar el Número de WhatsApp, Nombre de la Tienda y Email, guardándose de forma directa en Supabase.
+*   **Integración Frontend (`useSiteSettings.ts`):** 
+    *   Implementación de hook para centralizar e inyectar el número de contacto directamente desde la la base de datos a los diferentes puntos de entrada de la app.
+    *   Se actualizaron `ProductModal.tsx`, `WhatsAppButton.tsx` y `FinalCTA.tsx` para consumir e inyectar dinámicamente este valor; con salvaguarda a un número fallback ("59894713998") cuando el campo esté vacío.
+
 ## 4. Variables de Entorno Necesarias (.env.local)
 
 ```env
@@ -49,4 +61,4 @@ SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 2.  **SEO Final**: Revisar meta-tags dinámicos para las páginas de productos individuales.
 
 ---
-*Última actualización: 11 de Abril, 2026 (Finalización de Hero y Assets)*
+*Última actualización: 11 de Abril, 2026 (Analíticas Avanzadas y WhatsApp Dinámico)*

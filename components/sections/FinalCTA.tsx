@@ -5,10 +5,11 @@ import { MessageCircle, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 export function FinalCTA() {
-    const whatsappLink =
-        'https://wa.me/59894713998?text=Hola%20Fuente%20Viva%2C%20quiero%20hacer%20un%20pedido.';
+    const { settings } = useSiteSettings();
+    const whatsappLink = `https://wa.me/${settings.whatsapp_number}?text=Hola%20Fuente%20Viva%2C%20quiero%20hacer%20un%20pedido.`;
 
     return (
         <section className="relative py-24 bg-slate-blue overflow-hidden">

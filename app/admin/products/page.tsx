@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import AdminSidebar from '@/components/admin/Sidebar';
 import ProductModal from '@/components/admin/ProductModal';
-import { Package, Plus, Search, Edit2, Trash2, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Package, Plus, Search, Edit2, Trash2, Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { DBProduct } from '@/lib/types/admin';
+
+type Feedback = { type: 'success' | 'error'; text: string } | null;
 
 export default function AdminProducts() {
     const supabase = createClient();
@@ -15,11 +17,17 @@ export default function AdminProducts() {
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
-    
+    const [feedback, setFeedback] = useState<Feedback>(null);
+
     // Modal states
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<DBProduct | null>(null);
     const [productToDelete, setProductToDelete] = useState<string | null>(null);
+
+    const showFeedback = (f: Feedback) => {
+        setFeedback(f);
+        setTimeout(() => setFeedback(null), 4000);
+    };
 
     const fetchProducts = async () => {
         setIsLoading(true);
@@ -39,19 +47,20 @@ export default function AdminProducts() {
 
     useEffect(() => {
         fetchProducts();
-    }, [supabase]);
+    }, []);
 
     const handleDelete = async () => {
         if (!productToDelete) return;
-        
+
         const { error } = await supabase.from('products').delete().eq('id', productToDelete);
-        
+
         if (!error) {
             setProducts(prev => prev.filter(p => p.id !== productToDelete));
             setProductToDelete(null);
+            showFeedback({ type: 'success', text: 'Producto eliminado correctamente.' });
         } else {
-            console.error('Error deleting:', error);
-            alert('Error al eliminar');
+            setProductToDelete(null);
+            showFeedback({ type: 'error', text: 'Error al eliminar el producto. Intentá de nuevo.' });
         }
     };
 
@@ -214,7 +223,28 @@ export default function AdminProducts() {
                     </div>
                 </div>
                 
-                <ProductModal 
+                {/* Toast de feedback */}
+                <AnimatePresence>
+                    {feedback && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-2xl shadow-xl text-sm font-semibold ${
+                                feedback.type === 'success'
+                                    ? 'bg-emerald-600 text-white'
+                                    : 'bg-red-500 text-white'
+                            }`}
+                        >
+                            {feedback.type === 'success'
+                                ? <CheckCircle className="w-5 h-5 shrink-0" />
+                                : <XCircle className="w-5 h-5 shrink-0" />}
+                            {feedback.text}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <ProductModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     product={editingProduct}

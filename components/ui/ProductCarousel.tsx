@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, X, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Product } from '@/lib/types/product';
 import { trackEvent } from '@/lib/supabase/analytics';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 // ===== Hooks =====
 const useOutsideClick = (
     ref: React.RefObject<HTMLDivElement | null>,
@@ -171,6 +172,7 @@ export const ProductCarouselCard = ({
     onCardClose = () => { },
 }: ProductCardProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const { settings } = useSiteSettings();
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handleExpand = (e: React.MouseEvent | React.TouchEvent) => {
@@ -368,7 +370,7 @@ export const ProductCarouselCard = ({
                                 <div className="space-y-8 flex-grow">
                                     <div>
                                         <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                                            <Info className="w-5 h-5" /> DescripciÃ³n
+                                            <Info className="w-5 h-5" /> Descripción
                                         </h3>
                                         <p className="text-stone-gray leading-relaxed text-lg">
                                             {product.description}
@@ -414,7 +416,7 @@ export const ProductCarouselCard = ({
 
                                     {/* WhatsApp CTA */}
                                     <a
-                                        href={`https://wa.me/59894713998?text=Hola,%20me%20interesa%20la%20${product.name}`}
+                                        href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(`${settings.whatsapp_message} Me interesa: ${product.name}`)}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl mt-4"
@@ -477,7 +479,7 @@ export const ProductCarouselCard = ({
 
                         <div className="h-0 group-hover:h-8 overflow-hidden transition-all duration-300 opacity-0 group-hover:opacity-100">
                             <span className="text-white/90 text-sm mt-3 inline-block font-medium">
-                                Ver detalles â†’
+                                Ver detalles →
                             </span>
                         </div>
                     </div>

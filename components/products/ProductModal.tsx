@@ -7,6 +7,7 @@ import { getWhatsAppLink } from '@/lib/data/products';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { trackEvent } from '@/lib/supabase/analytics';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 
 interface ProductModalProps {
@@ -17,6 +18,7 @@ interface ProductModalProps {
 export function ProductModal({ product, onClose }: ProductModalProps) {
     const [isZoomed, setIsZoomed] = useState(false);
     const [canZoom, setCanZoom] = useState(false);
+    const { settings } = useSiteSettings();
 
     // Scroll lock mejorado - bloquea scroll del body cuando el modal está abierto
     useEffect(() => {
@@ -72,7 +74,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
         // Track de consulta por WhatsApp
         await trackEvent('whatsapp_click', product.id, { name: product.name, category: product.category, source: 'product_modal' });
 
-        window.open(getWhatsAppLink(product), '_blank');
+        window.open(getWhatsAppLink(product, settings?.whatsapp_number), '_blank');
     };
 
     return (

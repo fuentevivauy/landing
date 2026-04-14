@@ -1060,11 +1060,11 @@ export const getFeaturedProducts = (): Product[] =>
 export const getInStockProducts = (): Product[] =>
     products.filter((p) => p.inStock);
 
-export const getWhatsAppLink = (product: Product): string => {
+export const getWhatsAppLink = (product: Product, whatsappNumber: string = '59894713998'): string => {
     const message = encodeURIComponent(
         `Hola Fuente Viva, deseo consultar por el producto ${product.name} con precio ${product.priceFormatted}`
     );
-    return `https://wa.me/59894713998?text=${message}`;
+    return `https://wa.me/${whatsappNumber}?text=${message}`;
 };
 
 // ============================================

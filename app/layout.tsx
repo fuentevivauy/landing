@@ -59,6 +59,7 @@ export const metadata: Metadata = {
 
 import { Suspense } from "react";
 import { Analytics } from "@/components/Analytics";
+import FacebookPixel from "@/components/FacebookPixel";
 
 export default function RootLayout({
   children,
@@ -77,6 +78,7 @@ export default function RootLayout({
       >
         <Suspense fallback={null}>
           <Analytics />
+          <FacebookPixel />
         </Suspense>
         {children}
       </body>

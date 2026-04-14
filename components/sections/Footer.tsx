@@ -1,8 +1,13 @@
-import { MapPin, Phone, Clock, Mail, Instagram, Facebook } from 'lucide-react';
+'use client';
+
+import { MapPin, Phone, Clock, Instagram, Facebook } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
+    const { settings } = useSiteSettings();
+    const waNumber = settings.whatsapp_number;
 
     return (
         <footer className="bg-slate-blue text-off-white py-16">
@@ -22,10 +27,10 @@ export function Footer() {
                             <li className="flex items-center gap-3">
                                 <Phone className="w-5 h-5 text-stone-gray flex-shrink-0" />
                                 <a
-                                    href="https://wa.me/59894713998"
+                                    href={`https://wa.me/${waNumber}`}
                                     className="text-off-white/70 hover:text-off-white transition-colors"
                                 >
-                                    +598 94 713 998
+                                    +{waNumber.replace(/(\d{3})(\d{2})(\d{3})(\d{3})/, '$1 $2 $3 $4')}
                                 </a>
                             </li>
                             <li className="flex items-center gap-3">
@@ -59,7 +64,7 @@ export function Footer() {
                             </li>
                             <li>
                                 <a
-                                    href="https://wa.me/59894713998"
+                                    href={`https://wa.me/${waNumber}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-off-white/70 hover:text-off-white transition-colors"

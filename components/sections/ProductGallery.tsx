@@ -54,8 +54,8 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                     }));
                     setDbProducts(formatted);
                 }
-            } catch (error) {
-                console.error("Error fetching products:", error);
+            } catch {
+                // Products failed to load, dbProducts stays empty
             } finally {
                 setIsLoading(false);
             }
