@@ -3,22 +3,23 @@
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
 import { trackEvent } from '@/lib/supabase/analytics';
-
-
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 export function WhatsAppButton() {
     const { settings } = useSiteSettings();
     const whatsappLink = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(settings.whatsapp_message)}`;
 
-    const handleClick = async () => {
-        await trackEvent('whatsapp_click', null, { source: 'floating_button' });
-        window.open(whatsappLink, '_blank', 'noopener,noreferrer');
+    const handleTrack = () => {
+        // Fire and forget tracking so it doesn't block the window.open or link navigation
+        trackEvent('whatsapp_click', null, { source: 'floating_button' });
     };
 
     return (
-        <motion.div
-            onClick={handleClick}
+        <motion.a
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleTrack}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 1, type: 'spring', stiffness: 200 }}
@@ -36,7 +37,7 @@ export function WhatsAppButton() {
             <span className="absolute right-full mr-3 px-3 py-2 bg-slate-blue text-off-white text-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
                 ¿Consultas? ¡Escribinos!
             </span>
-        </motion.div>
+        </motion.a>
     );
 }
 

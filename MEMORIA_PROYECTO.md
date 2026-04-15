@@ -50,6 +50,8 @@ Se perfeccionó la experiencia visual del Hero tras la migración, logrando la f
 Se implementó un sistema híbrido de tracking para maximizar la captura de eventos y evitar pérdidas por bloqueadores de anuncios (AdBlockers):
 *   **Implementación Dual:** Uso de Meta Pixel (lado cliente) y Conversions API (CAPI) (lado servidor) trabajando en conjunto.
 *   **Deduplicación Estricta:** Se sincronizaron ambos sistemas mediante un `eventId` único generado en el cliente y compartido con el servidor, permitiendo que Meta elimine duplicados correctamente.
+*   **Sincronización de Inicialización (Fix de Retraso):** Se implementó una lógica de reintentos múltiples (retry mechanism) para resolver *race conditions*. El evento del Pixel ya no falla si se activa de forma asíncrona por React/Next.js antes de que la cola de comandos `fbq` termine de inicializarse. Los eventos esperan activamente a que Meta esté listo antes de registrarse.
+*   **Aislamiento de Errores:** Se desacopló la ejecución del Pixel de la base de datos de Supabase. El frontend ahora dispara tracking a facebook inmediatamente, independientemente de si la petición interna falla, resguardando los embudos de conversión reales.
 *   **Optimización de CAPI:**
     *   **Match Quality:** El sistema ahora captura y envía automáticamente la IP del cliente, el User Agent y las cookies de Meta (`_fbp`, `_fbc`) directamente desde las cabeceras de la petición.
     *   **Nombres de Eventos:** Se mapearon eventos internos (`page_view`, `view`, `whatsapp_click`, `click`) a los estándares de Meta (`PageView`, `ViewContent`, `Lead`, `GenericClick`).

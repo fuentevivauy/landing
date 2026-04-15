@@ -70,9 +70,9 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
         lastTap.current = now;
     };
 
-    const handleWhatsApp = async () => {
-        // Track de consulta por WhatsApp
-        await trackEvent('whatsapp_click', product.id, { name: product.name, category: product.category, source: 'product_modal' });
+    const handleWhatsApp = () => {
+        // Track de consulta por WhatsApp (non-blocking)
+        trackEvent('whatsapp_click', product.id, { name: product.name, category: product.category, source: 'product_modal' });
 
         window.open(getWhatsAppLink(product, settings?.whatsapp_number), '_blank');
     };

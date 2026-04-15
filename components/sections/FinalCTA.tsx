@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
+import { trackEvent } from '@/lib/supabase/analytics';
 
 export function FinalCTA() {
     const { settings } = useSiteSettings();
@@ -78,7 +79,12 @@ export function FinalCTA() {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="flex flex-col sm:flex-row gap-4 justify-center"
                     >
-                        <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                        <a 
+                            href={whatsappLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            onClick={() => trackEvent('whatsapp_click', null, { source: 'final_cta' })}
+                        >
                             <Button
                                 size="lg"
                                 className="w-full sm:w-auto bg-sage-green hover:bg-sage-green/90 text-white shadow-lg hover:shadow-xl"
