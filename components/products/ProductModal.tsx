@@ -70,11 +70,11 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
         lastTap.current = now;
     };
 
-    const handleWhatsApp = () => {
+    const whatsAppLink = getWhatsAppLink(product, settings?.whatsapp_number);
+
+    const handleWhatsAppTrack = () => {
         // Track de consulta por WhatsApp (non-blocking)
         trackEvent('whatsapp_click', product.id, { name: product.name, category: product.category, source: 'product_modal' });
-
-        window.open(getWhatsAppLink(product, settings?.whatsapp_number), '_blank');
     };
 
     return (
@@ -305,14 +305,21 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         </div>
                                     )}
 
-                                    <Button
-                                        size="lg"
-                                        onClick={handleWhatsApp}
-                                        className="w-full bg-green-500 hover:bg-green-600 text-white"
+                                    <a
+                                        href={whatsAppLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={handleWhatsAppTrack}
+                                        className="block w-full"
                                     >
-                                        <MessageCircle className="w-5 h-5" />
-                                        Consultar por WhatsApp
-                                    </Button>
+                                        <Button
+                                            size="lg"
+                                            className="w-full bg-green-500 hover:bg-green-600 text-white"
+                                        >
+                                            <MessageCircle className="w-5 h-5" />
+                                            Consultar por WhatsApp
+                                        </Button>
+                                    </a>
                                 </motion.div>
                             </div>
                         </div>
@@ -522,14 +529,21 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         </div>
                                     )}
 
-                                    <Button
-                                        size="lg"
-                                        onClick={handleWhatsApp}
-                                        className="w-full bg-green-500 hover:bg-green-600 text-white"
+                                    <a
+                                        href={whatsAppLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={handleWhatsAppTrack}
+                                        className="block w-full"
                                     >
-                                        <MessageCircle className="w-5 h-5" />
-                                        Consultar por WhatsApp
-                                    </Button>
+                                        <Button
+                                            size="lg"
+                                            className="w-full bg-green-500 hover:bg-green-600 text-white"
+                                        >
+                                            <MessageCircle className="w-5 h-5" />
+                                            Consultar por WhatsApp
+                                        </Button>
+                                    </a>
                                 </motion.div>
                             </div>
                         </div>
