@@ -161,8 +161,8 @@ export function ScrollExpandHero({
                         muted
                         loop
                         playsInline
+                        preload="auto"
                         className="w-full h-full object-cover"
-                        poster={posterSrc}
                     />
                     {/* Dark overlay */}
                     <div className="absolute inset-0 bg-black/40 z-10" />
@@ -242,7 +242,6 @@ export function ScrollExpandHero({
                                         preload="auto"
                                         className="w-full h-full object-cover"
                                         controls={false}
-                                        poster={posterSrc}
                                     />
                                     {/* Overlay that fades as video expands */}
                                     <motion.div
