@@ -18,34 +18,46 @@ export async function trackEvent(
     // eventId único compartido entre Pixel y CAPI → deduplicación en Meta
     const eventId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
 
-    // --- 1. META PIXEL (navegador) — se dispara PRIMERO, sin depender de Supabase ---
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-        try {
-            const fbq = (window as any).fbq;
-            const pixelOptions = { eventID: eventId };
+    // --- 1. META PIXEL (navegador) — con reintentos en caso de que fbq no cargue a tiempo ---
+    if (typeof window !== 'undefined') {
+        let attempts = 0;
+        const maxAttempts = 50; // Hasta 5 segundos (50 * 100ms) esperando a que fbq cargue
 
-            if (eventType === 'page_view') {
-                fbq('track', 'PageView', {}, pixelOptions);
-            } else if (eventType === 'view') {
-                fbq('track', 'ViewContent', {
-                    content_name: metadata.name || 'Product',
-                    content_category: metadata.category || 'General',
-                    content_ids: productId ? [productId] : [],
-                    content_type: 'product',
-                }, pixelOptions);
-            } else if (eventType === 'whatsapp_click') {
-                fbq('track', 'Lead', {
-                    content_name: metadata.name || 'WhatsApp Contact',
-                    content_category: metadata.category || 'Contact',
-                }, pixelOptions);
-            } else if (eventType === 'click') {
-                fbq('trackCustom', 'GenericClick', {
-                    content_name: metadata.source || 'Button',
-                }, pixelOptions);
+        const tryFirePixel = () => {
+            if ((window as any).fbq) {
+                try {
+                    const fbq = (window as any).fbq;
+                    const pixelOptions = { eventID: eventId };
+
+                    if (eventType === 'page_view') {
+                        fbq('track', 'PageView', {}, pixelOptions);
+                    } else if (eventType === 'view') {
+                        fbq('track', 'ViewContent', {
+                            content_name: metadata.name || 'Product',
+                            content_category: metadata.category || 'General',
+                            content_ids: productId ? [productId] : [],
+                            content_type: 'product',
+                        }, pixelOptions);
+                    } else if (eventType === 'whatsapp_click') {
+                        fbq('track', 'Lead', {
+                            content_name: metadata.name || 'WhatsApp Contact',
+                            content_category: metadata.category || 'Contact',
+                        }, pixelOptions);
+                    } else if (eventType === 'click') {
+                        fbq('trackCustom', 'GenericClick', {
+                            content_name: metadata.source || 'Button',
+                        }, pixelOptions);
+                    }
+                } catch {
+                    // Ignorar errores del Pixel
+                }
+            } else if (attempts < maxAttempts) {
+                attempts++;
+                setTimeout(tryFirePixel, 100);
             }
-        } catch {
-            // Pixel errors are non-critical
-        }
+        };
+
+        tryFirePixel();
     }
 
     // --- 2. META CAPI (server side) — evita pérdida por AdBlockers ---
