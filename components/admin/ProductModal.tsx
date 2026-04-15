@@ -107,7 +107,6 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 in_stock: formData.in_stock,
                 featured: formData.featured,
                 image_thumbnail: formData.image_main,
-                image_main: formData.image_main,
             };
 
             if (product) {
