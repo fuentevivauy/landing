@@ -4,6 +4,8 @@ import { trackCapiEvent } from '@/app/actions/analytics';
 
 /**
  * Registra un evento de analítica en Supabase y lo envía a Meta (Pixel + CAPI).
+ * El mismo eventId se comparte entre Pixel y CAPI para que Meta pueda deduplicar
+ * y no contar el mismo evento dos veces.
  */
 export async function trackEvent(
     eventType: AnalyticsEventType,
@@ -13,10 +15,9 @@ export async function trackEvent(
     try {
         const supabase = createClient();
 
-        // Generar un eventId único para de-duplicación entre Pixel y CAPI
+        // eventId único compartido entre Pixel y CAPI → deduplicación en Meta
         const eventId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
 
-        // Incluir información del navegador/cliente en el metadata
         const eventMetadata = {
             url: typeof window !== 'undefined' ? window.location.href : '',
             referrer: typeof document !== 'undefined' ? document.referrer : '',
@@ -34,13 +35,16 @@ export async function trackEvent(
                 metadata: eventMetadata
             });
 
-        // --- ENVIAR DATOS A META PIXEL (Frontend) ---
+        // --- META PIXEL (navegador) ---
         if (typeof window !== 'undefined' && (window as any).fbq) {
             try {
                 const fbq = (window as any).fbq;
                 const pixelOptions = { eventID: eventId };
 
-                if (eventType === 'view') {
+                if (eventType === 'page_view') {
+                    // PageView con eventId compartido con CAPI → Meta deduplica correctamente
+                    fbq('track', 'PageView', {}, pixelOptions);
+                } else if (eventType === 'view') {
                     fbq('track', 'ViewContent', {
                         content_name: metadata.name || 'Product',
                         content_category: metadata.category || 'General',
@@ -62,8 +66,7 @@ export async function trackEvent(
             }
         }
 
-        // --- ENVIAR DATOS A META CAPI (Server Side) ---
-        // Esto ayuda a evitar la pérdida de eventos por AdBlockers
+        // --- META CAPI (server side) — evita pérdida por AdBlockers ---
         if (typeof window !== 'undefined') {
             trackCapiEvent({
                 eventName: eventType,

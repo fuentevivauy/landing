@@ -46,11 +46,23 @@ Se perfeccionó la experiencia visual del Hero tras la migración, logrando la f
     *   Implementación de hook para centralizar e inyectar el número de contacto directamente desde la la base de datos a los diferentes puntos de entrada de la app.
     *   Se actualizaron `ProductModal.tsx`, `WhatsAppButton.tsx` y `FinalCTA.tsx` para consumir e inyectar dinámicamente este valor; con salvaguarda a un número fallback ("59894713998") cuando el campo esté vacío.
 
+### E. Sistema de Seguimiento (Meta Pixel & CAPI)
+Se implementó un sistema híbrido de tracking para maximizar la captura de eventos y evitar pérdidas por bloqueadores de anuncios (AdBlockers):
+*   **Implementación Dual:** Uso de Meta Pixel (lado cliente) y Conversions API (CAPI) (lado servidor) trabajando en conjunto.
+*   **Deduplicación Estricta:** Se sincronizaron ambos sistemas mediante un `eventId` único generado en el cliente y compartido con el servidor, permitiendo que Meta elimine duplicados correctamente.
+*   **Optimización de CAPI:**
+    *   **Match Quality:** El sistema ahora captura y envía automáticamente la IP del cliente, el User Agent y las cookies de Meta (`_fbp`, `_fbc`) directamente desde las cabeceras de la petición.
+    *   **Nombres de Eventos:** Se mapearon eventos internos (`page_view`, `view`, `whatsapp_click`, `click`) a los estándares de Meta (`PageView`, `ViewContent`, `Lead`, `GenericClick`).
+*   **Resolución de Errores de Despliegue:** Se corrigió un error crítico en el build de Vercel asegurando que todas las funciones en archivos `'use server'` (`lib/meta-capi.ts`) sean asíncronas (`async`), cumpliendo con los requisitos de Next.js para Server Actions.
+
 ## 4. Variables de Entorno Necesarias (.env.local)
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+NEXT_PUBLIC_FB_PIXEL_ID=tu_pixel_id
+FB_PIXEL_ID=tu_pixel_id
+FB_ACCESS_TOKEN=tu_token_capi
 # Solo para desarrollo/migración (NO subir a GitHub)
 SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 ```
@@ -58,7 +70,7 @@ SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 ## 5. Pendientes y Próximos Pasos 📋
 
 1.  **Monitoreo de Performance**: Vigilar la carga del video en dispositivos de gama baja; considerar compresión adicional del asset si es necesario.
-2.  **SEO Final**: Revisar meta-tags dinámicos para las páginas de productos individuales.
+2.  **Verificación de Eventos**: Confirmar en el Meta Events Manager que los eventos de CAPI y Pixel están siendo deduplicados correctamente.
 
 ---
-*Última actualización: 11 de Abril, 2026 (Analíticas Avanzadas y WhatsApp Dinámico)*
+*Última actualización: 14 de Abril, 2026 (Meta Pixel, CAPI y Corrección de Server Actions)*

@@ -78,6 +78,6 @@ export async function sendMetaCapiEvent(data: MetaEventData) {
 /**
  * Genera un hash SHA256 para los datos del usuario (requerido por Meta).
  */
-export function hashData(data: string) {
+export async function hashData(data: string) {
   return crypto.createHash('sha256').update(data.toLowerCase().trim()).digest('hex');
 }
