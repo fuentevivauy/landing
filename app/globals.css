@@ -9,6 +9,8 @@
   --sage-green: #73a58b;
   --sage-light: #E8F5EE;
   --warm-cream: #F5F5F0;
+  --burgundy: #6a1b2a;
+  --soft-pink: #e5b3bb;
 }
 
 @theme inline {
@@ -18,6 +20,8 @@
   --color-sage-green: var(--sage-green);
   --color-sage-light: var(--sage-light);
   --color-warm-cream: var(--warm-cream);
+  --color-burgundy: var(--burgundy);
+  --color-soft-pink: var(--soft-pink);
 
   --font-serif: var(--font-playfair), serif;
   --font-sans: var(--font-montserrat), sans-serif;

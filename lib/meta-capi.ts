@@ -13,11 +13,18 @@ interface MetaEventData {
     clientUserAgent?: string;
     fbc?: string;
     fbp?: string;
-    em?: string[]; // email hashed
-    ph?: string[]; // phone hashed
+    em?: string[]; // email SHA256 hashed
+    ph?: string[]; // phone SHA256 hashed
   };
   customData?: Record<string, any>;
   eventId?: string;
+}
+
+/**
+ * Genera un hash SHA256 para datos de usuario (requerido por Meta para em/ph).
+ */
+export function hashData(data: string): string {
+  return crypto.createHash('sha256').update(data.toLowerCase().trim()).digest('hex');
 }
 
 /**
@@ -30,6 +37,15 @@ export async function sendMetaCapiEvent(data: MetaEventData) {
 
   const unixTimestamp = Math.floor(Date.now() / 1000);
 
+  // Construir user_data omitiendo campos undefined para no ensuciar el payload
+  const userData: Record<string, any> = {};
+  if (data.userData.clientIpAddress) userData.client_ip_address = data.userData.clientIpAddress;
+  if (data.userData.clientUserAgent) userData.client_user_agent = data.userData.clientUserAgent;
+  if (data.userData.fbc) userData.fbc = data.userData.fbc;
+  if (data.userData.fbp) userData.fbp = data.userData.fbp;
+  if (data.userData.em?.length) userData.em = data.userData.em;
+  if (data.userData.ph?.length) userData.ph = data.userData.ph;
+
   const eventPayload = {
     data: [
       {
@@ -38,25 +54,18 @@ export async function sendMetaCapiEvent(data: MetaEventData) {
         action_source: 'website',
         event_source_url: data.eventSourceUrl,
         event_id: data.eventId,
-        user_data: {
-          client_ip_address: data.userData.clientIpAddress,
-          client_user_agent: data.userData.clientUserAgent,
-          fbc: data.userData.fbc,
-          fbp: data.userData.fbp,
-          em: data.userData.em,
-          ph: data.userData.ph,
-        },
-        custom_data: data.customData,
+        user_data: userData,
+        ...(data.customData && Object.keys(data.customData).length > 0 && {
+          custom_data: data.customData,
+        }),
       },
     ],
   };
 
   try {
-    const response = await fetch(`https://graph.facebook.com/v18.0/${FB_PIXEL_ID}/events`, {
+    const response = await fetch(`https://graph.facebook.com/v21.0/${FB_PIXEL_ID}/events`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...eventPayload,
         access_token: FB_ACCESS_TOKEN,
@@ -73,11 +82,4 @@ export async function sendMetaCapiEvent(data: MetaEventData) {
   } catch (error) {
     return { success: false, error };
   }
-}
-
-/**
- * Genera un hash SHA256 para los datos del usuario (requerido por Meta).
- */
-export async function hashData(data: string) {
-  return crypto.createHash('sha256').update(data.toLowerCase().trim()).digest('hex');
 }

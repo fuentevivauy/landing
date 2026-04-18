@@ -77,8 +77,8 @@ export default function RootLayout({
         )}
       >
         <Suspense fallback={null}>
-          <Analytics />
           <FacebookPixel />
+          <Analytics />
         </Suspense>
         {children}
       </body>
