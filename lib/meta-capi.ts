@@ -23,7 +23,7 @@ interface MetaEventData {
 /**
  * Genera un hash SHA256 para datos de usuario (requerido por Meta para em/ph).
  */
-export function hashData(data: string): string {
+export async function hashData(data: string): Promise<string> {
   return crypto.createHash('sha256').update(data.toLowerCase().trim()).digest('hex');
 }
 
