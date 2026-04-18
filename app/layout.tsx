@@ -76,8 +76,8 @@ export default function RootLayout({
           cormorant.variable
         )}
       >
+        <FacebookPixel />
         <Suspense fallback={null}>
-          <FacebookPixel />
           <Analytics />
         </Suspense>
         {children}
