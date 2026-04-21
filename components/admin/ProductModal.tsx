@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Upload, Loader2, Image as ImageIcon, CheckCircle, XCircle } from 'lucide-react';
+import { X, Upload, Loader2, Image as ImageIcon, CheckCircle, XCircle, Plus, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DBProduct } from '@/lib/types/admin';
 import { createClient } from '@/lib/supabase/client';
@@ -30,7 +30,15 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
         newCategory: '',
         in_stock: true,
         featured: false,
+        display_order: 0,
         image_main: '',
+        benefits: [] as string[],
+        specs: {
+            dimensions: '',
+            diameter: '',
+            weight: '',
+            height: '',
+        } as Record<string, string>,
     });
 
     useEffect(() => {
@@ -43,7 +51,15 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 newCategory: '',
                 in_stock: product.in_stock,
                 featured: product.featured,
+                display_order: product.display_order || 0,
                 image_main: product.image_main || product.image_thumbnail || '',
+                benefits: product.benefits || [],
+                specs: {
+                    dimensions: String(product.specs?.dimensions || ''),
+                    diameter: String(product.specs?.diameter || ''),
+                    weight: String(product.specs?.weight || ''),
+                    height: String(product.specs?.height || ''),
+                },
             });
         } else {
             setFormData({
@@ -54,7 +70,15 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 newCategory: '',
                 in_stock: true,
                 featured: false,
+                display_order: categories.length > 0 ? 0 : 0,
                 image_main: '',
+                benefits: [],
+                specs: {
+                    dimensions: '',
+                    diameter: '',
+                    weight: '',
+                    height: '',
+                },
             });
         }
         setFeedback(null);
@@ -106,7 +130,10 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 category: finalCategory,
                 in_stock: formData.in_stock,
                 featured: formData.featured,
+                display_order: parseInt(String(formData.display_order)) || 0,
                 image_thumbnail: formData.image_main,
+                benefits: formData.benefits,
+                specs: formData.specs,
             };
 
             if (product) {
@@ -268,12 +295,114 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500/50 outline-none transition-all resize-none"
-                                placeholder="Escribe los detalles del producto..."
                             />
                         </div>
 
-                        {/* Toggles */}
-                        <div className="flex flex-col sm:flex-row gap-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                        {/* Technical Specs */}
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider mb-4">Datos Técnicos</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Medidas (cm)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.specs.dimensions}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, dimensions: e.target.value } })}
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        placeholder="Ej. 40x40x60"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Diámetro (cm)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.specs.diameter}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, diameter: e.target.value } })}
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        placeholder="Ej. 50"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Peso (kg)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.specs.weight}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, weight: e.target.value } })}
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        placeholder="Ej. 15"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Altura (cm)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.specs.height}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, height: e.target.value } })}
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        placeholder="Ej. 80"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Benefits Section */}
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">Beneficios del Producto</h3>
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, benefits: [...formData.benefits, ''] })}
+                                    className="flex items-center gap-1 text-xs font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700"
+                                >
+                                    <Plus className="w-3.5 h-3.5" /> AGREGAR
+                                </button>
+                            </div>
+                            <div className="space-y-3">
+                                {formData.benefits.map((benefit, index) => (
+                                    <div key={index} className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={benefit}
+                                            onChange={(e) => {
+                                                const newBenefits = [...formData.benefits];
+                                                newBenefits[index] = e.target.value;
+                                                setFormData({ ...formData, benefits: newBenefits });
+                                            }}
+                                            className="flex-1 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                            placeholder="Ej. Material resistente a la intemperie"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const newBenefits = formData.benefits.filter((_, i) => i !== index);
+                                                setFormData({ ...formData, benefits: newBenefits });
+                                            }}
+                                            className="p-2.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                                {formData.benefits.length === 0 && (
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 italic text-center py-2">
+                                        No hay beneficios agregados.
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Order & Toggles */}
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Orden de Visualización (Menor número aparece primero)</label>
+                                <input
+                                    type="number"
+                                    value={formData.display_order}
+                                    onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
+                                    className="w-32 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500/50 outline-none transition-all"
+                                />
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
                             <label className="flex items-center gap-3 cursor-pointer">
                                 <input
                                     type="checkbox"

@@ -45,6 +45,7 @@ export interface Product {
     specs: ProductSpecs;
     images: ProductImages;
     inStock: boolean;
+    display_order?: number;
     featured?: boolean;
     maintenance?: string;
 }

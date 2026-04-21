@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS public.products (
     image_thumbnail TEXT DEFAULT '',
     image_gallery TEXT[] DEFAULT '{}',
     whatsapp_message TEXT DEFAULT 'Hola! Me interesa este producto.',
+    display_order INTEGER DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

@@ -34,6 +34,7 @@ export default function AdminProducts() {
         const { data, error } = await supabase
             .from('products')
             .select('*')
+            .order('display_order', { ascending: true })
             .order('created_at', { ascending: false });
         
         if (!error && data) {
@@ -154,6 +155,7 @@ export default function AdminProducts() {
                                         <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Categoría</th>
                                         <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Precio</th>
                                         <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Stock</th>
+                                        <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Orden</th>
                                         <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Destacado</th>
                                         <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Acciones</th>
                                     </tr>
@@ -189,6 +191,9 @@ export default function AdminProducts() {
                                                 }`}>
                                                     {product.in_stock ? 'En stock' : 'Sin stock'}
                                                 </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm font-bold text-slate-400 dark:text-slate-500">
+                                                #{product.display_order || 0}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${

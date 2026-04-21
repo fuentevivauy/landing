@@ -30,6 +30,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                 const { data, error } = await supabase
                     .from('products')
                     .select('*')
+                    .order('display_order', { ascending: true })
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
@@ -51,6 +52,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                         },
                         inStock: dbProd.in_stock,
                         featured: dbProd.featured,
+                        display_order: dbProd.display_order,
                     }));
                     setDbProducts(formatted);
                 }

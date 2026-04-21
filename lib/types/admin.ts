@@ -9,6 +9,7 @@ export interface DBProduct {
     category: string;
     in_stock: boolean;
     featured: boolean;
+    display_order: number;
     benefits: string[];
     specs: Record<string, string | number | undefined>;
     image_main?: string;
@@ -67,6 +68,7 @@ export interface ProductFormData {
     category: string;
     in_stock: boolean;
     featured: boolean;
+    display_order: number;
     benefits: string[];
     specs: Record<string, string>;
     whatsapp_message: string;
