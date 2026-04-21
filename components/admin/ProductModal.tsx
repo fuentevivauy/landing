@@ -308,7 +308,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                         type="text"
                                         value={formData.specs.dimensions}
                                         onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, dimensions: e.target.value } })}
-                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
                                         placeholder="Ej. 40x40x60"
                                     />
                                 </div>
@@ -318,7 +318,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                         type="text"
                                         value={formData.specs.diameter}
                                         onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, diameter: e.target.value } })}
-                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
                                         placeholder="Ej. 50"
                                     />
                                 </div>
@@ -328,7 +328,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                         type="text"
                                         value={formData.specs.weight}
                                         onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, weight: e.target.value } })}
-                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
                                         placeholder="Ej. 15"
                                     />
                                 </div>
@@ -338,7 +338,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                         type="text"
                                         value={formData.specs.height}
                                         onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, height: e.target.value } })}
-                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
                                         placeholder="Ej. 80"
                                     />
                                 </div>
@@ -368,7 +368,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                                 newBenefits[index] = e.target.value;
                                                 setFormData({ ...formData, benefits: newBenefits });
                                             }}
-                                            className="flex-1 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                            className="flex-1 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
                                             placeholder="Ej. Material resistente a la intemperie"
                                         />
                                         <button
