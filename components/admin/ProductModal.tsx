@@ -422,6 +422,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                 />
                                 <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Producto Destacado</span>
                             </label>
+                            </div>
                         </div>
                     </form>
                 </div>
