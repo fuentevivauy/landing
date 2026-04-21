@@ -303,23 +303,23 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                             <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider mb-4">Datos Técnicos</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Medidas (cm)</label>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Ancho (cm)</label>
                                     <input
                                         type="text"
                                         value={formData.specs.dimensions}
                                         onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, dimensions: e.target.value } })}
                                         className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
-                                        placeholder="Ej. 40x40x60"
+                                        placeholder="Ej. 40"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Diámetro (cm)</label>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Altura (cm)</label>
                                     <input
                                         type="text"
-                                        value={formData.specs.diameter}
-                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, diameter: e.target.value } })}
+                                        value={formData.specs.height}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, height: e.target.value } })}
                                         className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
-                                        placeholder="Ej. 50"
+                                        placeholder="Ej. 80"
                                     />
                                 </div>
                                 <div>
@@ -333,13 +333,13 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Altura (cm)</label>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Diámetro (cm)</label>
                                     <input
                                         type="text"
-                                        value={formData.specs.height}
-                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, height: e.target.value } })}
+                                        value={formData.specs.diameter}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, diameter: e.target.value } })}
                                         className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
-                                        placeholder="Ej. 80"
+                                        placeholder="Ej. 50"
                                     />
                                 </div>
                             </div>

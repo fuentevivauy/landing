@@ -440,7 +440,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         )}
                                         {product.specs.dimensions && (
                                             <div className="bg-off-white rounded-lg p-3">
-                                                <span className="text-xs text-stone-gray block">Dimensiones</span>
+                                                <span className="text-xs text-stone-gray block">Ancho</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.dimensions}</span>
                                             </div>
                                         )}
