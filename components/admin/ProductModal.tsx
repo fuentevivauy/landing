@@ -38,6 +38,10 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
             diameter: '',
             weight: '',
             height: '',
+            material: '',
+            motor: '',
+            color: '',
+            levels: '',
         } as Record<string, string>,
     });
 
@@ -59,6 +63,10 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                     diameter: String(product.specs?.diameter || ''),
                     weight: String(product.specs?.weight || ''),
                     height: String(product.specs?.height || ''),
+                    material: String(product.specs?.material || ''),
+                    motor: String(product.specs?.motor || ''),
+                    color: String(product.specs?.color || ''),
+                    levels: String(product.specs?.levels || ''),
                 },
             });
         } else {
@@ -78,6 +86,10 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                     diameter: '',
                     weight: '',
                     height: '',
+                    material: '',
+                    motor: '',
+                    color: '',
+                    levels: '',
                 },
             });
         }
@@ -133,7 +145,10 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 display_order: parseInt(String(formData.display_order)) || 0,
                 image_thumbnail: formData.image_main,
                 benefits: formData.benefits,
-                specs: formData.specs,
+                specs: {
+                    ...formData.specs,
+                    levels: formData.specs.levels ? parseInt(formData.specs.levels) : undefined
+                },
             };
 
             if (product) {
@@ -340,6 +355,46 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                         onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, diameter: e.target.value } })}
                                         className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
                                         placeholder="Ej. 50"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Material</label>
+                                    <input
+                                        type="text"
+                                        value={formData.specs.material}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, material: e.target.value } })}
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        placeholder="Ej. Cemento"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Motor</label>
+                                    <input
+                                        type="text"
+                                        value={formData.specs.motor}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, motor: e.target.value } })}
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        placeholder="Ej. 220V 10W"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Color</label>
+                                    <input
+                                        type="text"
+                                        value={formData.specs.color}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, color: e.target.value } })}
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        placeholder="Ej. Piedra París"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase">Niveles</label>
+                                    <input
+                                        type="text"
+                                        value={formData.specs.levels}
+                                        onChange={(e) => setFormData({ ...formData, specs: { ...formData.specs, levels: e.target.value } })}
+                                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500/50 outline-none"
+                                        placeholder="Ej. 3"
                                     />
                                 </div>
                             </div>

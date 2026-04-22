@@ -63,13 +63,16 @@ export async function sendMetaCapiEvent(data: MetaEventData) {
   };
 
   try {
+    const body = {
+      ...eventPayload,
+      access_token: FB_ACCESS_TOKEN,
+      ...(process.env.FB_TEST_EVENT_CODE && { test_event_code: process.env.FB_TEST_EVENT_CODE }),
+    };
+
     const response = await fetch(`https://graph.facebook.com/v21.0/${FB_PIXEL_ID}/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...eventPayload,
-        access_token: FB_ACCESS_TOKEN,
-      }),
+      body: JSON.stringify(body),
     });
 
     const result = await response.json();

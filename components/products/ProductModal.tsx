@@ -209,7 +209,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                                 <span className="font-medium text-slate-blue">{product.specs.dimensions}</span>
                                             </div>
                                         )}
-                                        {product.specs.levels && (
+                                        {(product.specs.levels !== undefined && product.specs.levels !== null && product.specs.levels !== '') && (
                                             <div className="bg-off-white rounded-lg p-3">
                                                 <span className="text-xs text-stone-gray block">Niveles</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.levels}</span>
@@ -448,6 +448,18 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                             <div className="bg-off-white rounded-lg p-3">
                                                 <span className="text-xs text-stone-gray block">Niveles</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.levels}</span>
+                                            </div>
+                                        )}
+                                        {product.specs.motor && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Motor</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.motor}</span>
+                                            </div>
+                                        )}
+                                        {product.specs.material && (
+                                            <div className="bg-off-white rounded-lg p-3">
+                                                <span className="text-xs text-stone-gray block">Material</span>
+                                                <span className="font-medium text-slate-blue">{product.specs.material}</span>
                                             </div>
                                         )}
                                         {(product.specs.diameter || product.specs.diameter_main) && (
