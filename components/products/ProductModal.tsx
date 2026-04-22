@@ -209,7 +209,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                                 <span className="font-medium text-slate-blue">{product.specs.dimensions}</span>
                                             </div>
                                         )}
-                                        {(product.specs.levels !== undefined && product.specs.levels !== null && product.specs.levels !== '') && (
+                                        {(product.specs.levels !== undefined && product.specs.levels !== null) && (
                                             <div className="bg-off-white rounded-lg p-3">
                                                 <span className="text-xs text-stone-gray block">Niveles</span>
                                                 <span className="font-medium text-slate-blue">{product.specs.levels}</span>
