@@ -29,6 +29,7 @@ export interface ProductSpecs {
 // Estructura de imágenes del producto
 export interface ProductImages {
     thumbnail: string;
+    carousel: string;
     gallery: string[];
 }
 

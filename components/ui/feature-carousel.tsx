@@ -28,7 +28,7 @@ const CarouselCard = ({
             onClick={onClick}
         >
             <Image
-                src={item.product.images.thumbnail}
+                src={item.product.images.carousel}
                 alt={item.product.name}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"

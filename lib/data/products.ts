@@ -7,6 +7,7 @@ const CLOUDINARY_BASE = `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/up
 // Helper para generar URLs de Cloudinary con optimización automática
 const getCloudinaryImage = (publicId: string) => ({
     thumbnail: `${CLOUDINARY_BASE}/f_auto,q_auto/${publicId}`,
+    carousel: `${CLOUDINARY_BASE}/f_auto,q_auto/${publicId}`,
     gallery: [`${CLOUDINARY_BASE}/f_auto,q_auto/${publicId}`],
 });
 
@@ -66,6 +67,7 @@ export const getImages = (slug: string) => {
     // Fallback para productos sin imagen mapeada
     return {
         thumbnail: '/images/placeholder.jpg',
+        carousel: '/images/placeholder.jpg',
         gallery: ['/images/placeholder.jpg'],
     };
 };

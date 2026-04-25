@@ -12,8 +12,8 @@ export interface DBProduct {
     display_order: number;
     benefits: string[];
     specs: Record<string, string | number | undefined>;
-    image_main?: string;
     image_thumbnail: string;
+    image_carousel: string;
     image_gallery: string[];
     whatsapp_message: string;
     created_at: string;
@@ -73,5 +73,6 @@ export interface ProductFormData {
     specs: Record<string, string>;
     whatsapp_message: string;
     image_thumbnail: string;
+    image_carousel: string;
     image_gallery: string[];
 }

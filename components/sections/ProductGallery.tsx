@@ -48,6 +48,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                         specs: dbProd.specs || {},
                         images: {
                             thumbnail: dbProd.image_thumbnail || '/images/placeholder.jpg',
+                            carousel: dbProd.image_carousel || dbProd.image_thumbnail || '/images/placeholder.jpg',
                             gallery: (dbProd.image_gallery?.length > 0) ? dbProd.image_gallery : [dbProd.image_thumbnail || '/images/placeholder.jpg'],
                         },
                         inStock: dbProd.in_stock,

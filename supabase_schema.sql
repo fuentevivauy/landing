@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS public.products (
     benefits TEXT[] DEFAULT '{}',
     specs JSONB DEFAULT '{}',
     image_thumbnail TEXT DEFAULT '',
+    image_carousel TEXT DEFAULT '',
     image_gallery TEXT[] DEFAULT '{}',
     whatsapp_message TEXT DEFAULT 'Hola! Me interesa este producto.',
     display_order INTEGER DEFAULT 0,

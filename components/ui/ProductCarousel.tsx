@@ -310,7 +310,7 @@ export const ProductCarouselCard = ({
                                 }}
                             >
                                 <Image
-                                    src={images.thumbnail}
+src={images.carousel}
                                     alt={product.name}
                                     layout="fill"
                                     objectFit="cover"
