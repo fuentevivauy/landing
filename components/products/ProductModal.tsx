@@ -107,14 +107,14 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     "relative h-[70vh] bg-stone-gray/10",
                                 )}>
                                 <Image
-                                    src={product.images.gallery[0] || product.images.thumbnail}
-                                    alt={product.name}
-                                    fill
-                                    className="object-contain p-4"
-                                    sizes="(max-width: 768px) 100vw, 800px"
-                                    quality={90}
-                                    priority
-                                />
+                                     src={product.images.carousel || product.images.gallery[0] || product.images.thumbnail}
+                                     alt={product.name}
+                                     fill
+                                     className="object-contain p-4"
+                                     sizes="(max-width: 768px) 100vw, 800px"
+                                     quality={90}
+                                     priority
+                                 />
                                 {/* Double click hint overlay */}
                                 {canZoom && !isZoomed && (
                                     <div className="hidden md:flex absolute inset-x-0 bottom-4 justify-center px-4 pointer-events-none">
@@ -314,7 +314,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     >
                                         <Button
                                             size="lg"
-                                            className="w-full bg-green-500 hover:bg-green-600 text-white"
+                                            className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white"
                                         >
                                             <MessageCircle className="w-5 h-5" />
                                             Consultar por WhatsApp
@@ -347,14 +347,14 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 }}
                             >
                                 <Image
-                                    src={product.images.gallery[0] || product.images.thumbnail}
-                                    alt={product.name}
-                                    fill
-                                    className="object-contain p-8"
-                                    sizes="(max-width: 1024px) 50vw, 800px"
-                                    quality={95}
-                                    priority
-                                />
+                                     src={product.images.carousel || product.images.gallery[0] || product.images.thumbnail}
+                                     alt={product.name}
+                                     fill
+                                     className="object-contain p-8"
+                                     sizes="(max-width: 1024px) 50vw, 800px"
+                                     quality={95}
+                                     priority
+                                 />
                                 {/* Double click hint overlay Desktop */}
                                 {canZoom && !isZoomed && (
                                     <div className="hidden md:flex absolute inset-x-0 bottom-4 justify-center px-4 pointer-events-none">
@@ -578,7 +578,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     className="relative w-full h-full flex items-center justify-center"
                                 >
                                     <Image
-                                        src={product.images.gallery[0] || product.images.thumbnail}
+                                        src={product.images.carousel || product.images.gallery[0] || product.images.thumbnail}
                                         alt={product.name}
                                         fill
                                         className="object-contain"

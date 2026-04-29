@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { trackEvent } from '@/lib/supabase/analytics';
+import { WhatsAppIcon } from '@/components/WhatsAppButton';
 
 export function FinalCTA() {
     const { settings } = useSiteSettings();
@@ -16,7 +17,6 @@ export function FinalCTA() {
         <section className="relative py-24 bg-slate-blue overflow-hidden">
             {/* Background Images */}
             <div className="absolute inset-0 z-0 select-none">
-                {/* Mobile Image */}
                 <div className="relative w-full h-full md:hidden">
                     <Image
                         src="https://res.cloudinary.com/doyde4ron/image/upload/v1770408575/final_cta_mobile_birds_azmtti.jpg"
@@ -26,8 +26,6 @@ export function FinalCTA() {
                         priority
                     />
                 </div>
-
-                {/* Desktop Image */}
                 <div className="hidden md:block relative w-full h-full">
                     <Image
                         src="https://res.cloudinary.com/doyde4ron/image/upload/v1770408607/final_cta_desktop_birds_uh8qyg.png"
@@ -37,16 +35,11 @@ export function FinalCTA() {
                         priority
                     />
                 </div>
-
-                {/* Overlay */}
                 <div className="absolute inset-0 bg-black/40" />
             </div>
 
-            {/* Content Container */}
-
             <Container className="relative z-10">
                 <div className="max-w-3xl mx-auto text-center">
-                    {/* Brand */}
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -58,7 +51,6 @@ export function FinalCTA() {
                         <span className="font-cormorant text-6xl md:text-7xl lg:text-8xl font-light text-sage-green translate-y-1">Viva</span>
                     </motion.h2>
 
-                    {/* Mission */}
                     <motion.p
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -71,7 +63,6 @@ export function FinalCTA() {
                         Fuentes, bebederos y estatuas artesanales de hormigón premium.
                     </motion.p>
 
-                    {/* CTA Buttons */}
                     <motion.div
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -79,18 +70,21 @@ export function FinalCTA() {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="flex flex-col sm:flex-row gap-4 justify-center"
                     >
-                        <a 
-                            href={whatsappLink} 
-                            target="_blank" 
+                        {/* WhatsApp CTA button with pulse animation */}
+                        <a
+                            href={whatsappLink}
+                            target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => trackEvent('whatsapp_click', null, { source: 'final_cta' })}
+                            className="relative inline-flex"
                         >
+                            <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-40" />
                             <Button
                                 size="lg"
-                                className="w-full sm:w-auto bg-sage-green hover:bg-sage-green/90 text-white shadow-lg hover:shadow-xl"
+                                className="relative w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white shadow-lg hover:shadow-xl border-0"
                             >
-                                <MessageCircle className="w-5 h-5" />
-                                Hacer mi pedido
+                                <WhatsAppIcon className="w-5 h-5 text-white" />
+                                Hacer mi pedido por WhatsApp
                             </Button>
                         </a>
                         <a href="#catalogo">
@@ -105,7 +99,6 @@ export function FinalCTA() {
                         </a>
                     </motion.div>
 
-                    {/* Trust Indicators */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}

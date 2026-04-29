@@ -218,10 +218,10 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                         <div className={'grid grid-cols-1 md:grid-cols-2 gap-6'}>
                             <div>
                                 <label className={'block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2'}>
-                                    Foto del Producto (Detalle)
+                                    Foto del Catálogo (Cuadrícula)
                                 </label>
                                 <p className={'text-xs text-slate-500 dark:text-slate-400 mb-3'}>
-                                    Imagen que se muestra cuando se abre el producto.
+                                    Imagen que se muestra en la vista principal del catálogo.
                                 </p>
                                 <div className={'flex items-start gap-4'}>
                                     <div className={'w-24 h-24 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center relative overflow-hidden'}>
@@ -255,10 +255,10 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
 
                             <div>
                                 <label className={'block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2'}>
-                                    Foto del Carrusel
+                                    Foto de Detalle (Modal)
                                 </label>
                                 <p className={'text-xs text-slate-500 dark:text-slate-400 mb-3'}>
-                                    Imagen que aparece en el carrusel de productos.
+                                    Imagen en alta resolución que aparece al abrir o ampliar el producto.
                                 </p>
                                 <div className={'flex items-start gap-4'}>
                                     <div className={'w-24 h-24 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center relative overflow-hidden'}>

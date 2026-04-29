@@ -50,7 +50,7 @@ export async function trackCapiEvent({
   let metaEventName = eventName;
   if (eventName === 'page_view') metaEventName = 'PageView';
   if (eventName === 'view') metaEventName = 'ViewContent';
-  if (eventName === 'whatsapp_click') metaEventName = 'Lead';
+  if (eventName === 'whatsapp_click') metaEventName = 'Contact';
   if (eventName === 'click') metaEventName = 'GenericClick'; // mismo nombre que trackCustom en Pixel
 
   // Custom Data

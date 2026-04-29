@@ -5,11 +5,9 @@ import {
     useState,
     ReactNode,
     useEffect,
-    useCallback,
 } from 'react';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Volume2, VolumeX, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 interface ScrollExpandHeroProps {
     videoSrc?: string;
@@ -25,134 +23,24 @@ export function ScrollExpandHero({
     children,
 }: ScrollExpandHeroProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const sectionRef = useRef<HTMLDivElement>(null);
-
     const [isMounted, setIsMounted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const [isMuted, setIsMuted] = useState(true);
-    const [scrollProgress, setScrollProgress] = useState(0);
-    const [showContent, setShowContent] = useState(false);
-    const [mediaFullyExpanded, setMediaFullyExpanded] = useState(false);
-    const [touchStartY, setTouchStartY] = useState(0);
 
-    // Check mobile on mount and resize
     useEffect(() => {
         setIsMounted(true);
-        const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
         checkMobile();
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    // Scroll-jacking logic — ONLY for desktop
-    useEffect(() => {
-        if (!isMounted || isMobile) return;
-
-        const handleWheel = (e: WheelEvent) => {
-            if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
-                setMediaFullyExpanded(false);
-                setShowContent(false);
-                e.preventDefault();
-            } else if (!mediaFullyExpanded) {
-                e.preventDefault();
-                const scrollDelta = e.deltaY * 0.0009;
-                const newProgress = Math.min(
-                    Math.max(scrollProgress + scrollDelta, 0),
-                    1
-                );
-                setScrollProgress(newProgress);
-
-                if (newProgress >= 1) {
-                    setMediaFullyExpanded(true);
-                    setShowContent(true);
-                } else if (newProgress < 0.75) {
-                    setShowContent(false);
-                }
-            }
-        };
-
-        const handleTouchStart = (e: TouchEvent) => {
-            setTouchStartY(e.touches[0].clientY);
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            if (!touchStartY) return;
-
-            const touchY = e.touches[0].clientY;
-            const deltaY = touchStartY - touchY;
-
-            if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
-                setMediaFullyExpanded(false);
-                setShowContent(false);
-                e.preventDefault();
-            } else if (!mediaFullyExpanded) {
-                e.preventDefault();
-                const scrollFactor = deltaY < 0 ? 0.008 : 0.005;
-                const scrollDelta = deltaY * scrollFactor;
-                const newProgress = Math.min(
-                    Math.max(scrollProgress + scrollDelta, 0),
-                    1
-                );
-                setScrollProgress(newProgress);
-
-                if (newProgress >= 1) {
-                    setMediaFullyExpanded(true);
-                    setShowContent(true);
-                } else if (newProgress < 0.75) {
-                    setShowContent(false);
-                }
-
-                setTouchStartY(touchY);
-            }
-        };
-
-        const handleTouchEnd = () => {
-            setTouchStartY(0);
-        };
-
-        const handleScroll = () => {
-            if (!mediaFullyExpanded) {
-                window.scrollTo(0, 0);
-            }
-        };
-
-        window.addEventListener('wheel', handleWheel, { passive: false });
-        window.addEventListener('scroll', handleScroll);
-        window.addEventListener('touchstart', handleTouchStart, { passive: false });
-        window.addEventListener('touchmove', handleTouchMove, { passive: false });
-        window.addEventListener('touchend', handleTouchEnd);
-
-        return () => {
-            window.removeEventListener('wheel', handleWheel);
-            window.removeEventListener('scroll', handleScroll);
-            window.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
-        };
-    }, [isMounted, isMobile, scrollProgress, mediaFullyExpanded, touchStartY]);
-
-    const toggleMute = useCallback((e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (videoRef.current) {
-            videoRef.current.muted = !videoRef.current.muted;
-            setIsMuted(videoRef.current.muted);
-        }
-    }, []);
-
     if (!isMounted) return null;
-
-    // Desktop: scroll-expand effect dimensions
-    const mediaWidth = 300 + scrollProgress * 1250;
-    const mediaHeight = 400 + scrollProgress * 400;
-    const textTranslateX = scrollProgress * 150;
 
     // === MOBILE VERSION ===
     if (isMobile) {
         return (
-            <div ref={sectionRef} className="overflow-x-hidden">
-                {/* Mobile Hero: full-screen video, no scroll-jacking */}
+            <div className="overflow-x-hidden">
+                {/* Mobile Hero: full-screen video */}
                 <section className="relative w-full h-[100dvh] overflow-hidden">
                     <video
                         ref={videoRef}
@@ -164,30 +52,31 @@ export function ScrollExpandHero({
                         preload="auto"
                         className="w-full h-full object-cover"
                     />
-                    {/* Dark overlay */}
-                    <div className="absolute inset-0 bg-black/40 z-10" />
+                    <div className="absolute inset-0 bg-black/30 z-10" />
 
-                    {/* Title */}
                     <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4">
-                        <div className="flex flex-col items-center justify-center">
-                            <span className="font-serif text-6xl font-bold text-white italic drop-shadow-2xl">
+                        <div className="flex flex-col items-center justify-center mb-8">
+                            <span className="font-serif text-7xl font-bold text-white italic drop-shadow-2xl">
                                 Fuente
                             </span>
-                            <span className="font-cormorant text-7xl font-light text-sage-green drop-shadow-2xl -mt-2">
+                            <span className="font-cormorant text-8xl font-light text-sage-green drop-shadow-2xl -mt-4">
                                 Viva
                             </span>
                         </div>
 
-                        {/* Scroll indicator */}
-                        <div className="absolute bottom-10 flex flex-col items-center gap-3">
-                            <span className="text-white font-bold text-sm tracking-[0.2em] drop-shadow-lg uppercase">Desliza para explorar</span>
-                            <ChevronDown className="text-white animate-bounce drop-shadow-lg" size={28} />
+                        <p className="text-white text-center text-sm md:text-base tracking-[0.2em] font-medium uppercase max-w-[280px] drop-shadow-lg mb-12">
+                            Fuentes artesanales para jardines y exteriores
+                        </p>
+
+                        <div className="absolute bottom-10 flex flex-col items-center gap-2">
+                            <p className="text-white font-medium text-sm drop-shadow-lg">
+                                Desliza para ver <span className="text-sage-green font-bold">modelos y precios</span>
+                            </p>
+                            <ChevronDown className="text-white animate-bounce drop-shadow-lg" size={24} />
                         </div>
                     </div>
-
                 </section>
 
-                {/* Content */}
                 <div className="relative z-30 bg-off-white">
                     {children}
                 </div>
@@ -195,109 +84,75 @@ export function ScrollExpandHero({
         );
     }
 
-    // === DESKTOP VERSION: Scroll-expand effect ===
+    // === DESKTOP VERSION: sticky hero with content sliding over ===
+    // NOTE: must use overflow-x:clip (not hidden) — hidden creates a scroll container that breaks position:sticky
     return (
-        <div ref={sectionRef} className="overflow-x-hidden">
-            <section className="relative flex flex-col items-center justify-start min-h-[100dvh]">
-                <div className="relative w-full flex flex-col items-center min-h-[100dvh]">
+        <div style={{ overflowX: 'clip' }}>
+            {/* Sticky hero — stays in place while content scrolls over it */}
+            <div className="sticky top-0 z-0 h-[100dvh] overflow-hidden">
+                <img
+                    src={bgImageSrc || posterSrc}
+                    alt="Fuente Viva Hero"
+                    className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/20" />
 
-                    {/* Background image (fades out as scroll progresses) */}
-                    <motion.div
-                        className="absolute top-0 left-0 w-full h-[100dvh] z-0 overflow-hidden"
-                        initial={{ opacity: 1 }}
-                        animate={{ opacity: 1 - scrollProgress }}
-                        transition={{ duration: 0.1 }}
-                    >
-                        <img
-                            src={bgImageSrc}
-                            alt="Fondo decorativo"
-                            className="w-full h-full object-cover grayscale blur-[4px] scale-105"
-                            style={{ objectPosition: 'center' }}
-                        />
-                        <div className="absolute inset-0 bg-black/10" />
-                    </motion.div>
-
-                    <div className="container mx-auto flex flex-col items-center justify-start relative z-10">
-                        <div className="flex flex-col items-center justify-center w-full h-[100dvh] relative">
-
-                            {/* === THE EXPANDING VIDEO CARD === */}
-                            <div className="absolute inset-0 flex items-center justify-center z-0">
-                                <motion.div
-                                    className="relative overflow-hidden rounded-3xl"
-                                    style={{
-                                        width: `${mediaWidth}px`,
-                                        height: `${mediaHeight}px`,
-                                        maxWidth: '100vw',
-                                        maxHeight: '100dvh',
-                                        boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
-                                    }}
-                                >
-                                    <video
-                                        ref={videoRef}
-                                        src={videoSrc}
-                                        autoPlay
-                                        muted
-                                        loop
-                                        playsInline
-                                        preload="auto"
-                                        className="w-full h-full object-cover"
-                                        controls={false}
-                                    />
-                                    {/* Overlay that fades as video expands */}
-                                    <motion.div
-                                        className="absolute inset-0 bg-black/30"
-                                        initial={{ opacity: 0.7 }}
-                                        animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
-                                        transition={{ duration: 0.2 }}
-                                    />
-                                </motion.div>
-                            </div>
-
-                            {/* === TITLE TEXT (splits apart on scroll) === */}
-                            <div className="flex items-center justify-center text-center gap-4 w-full relative z-10 transition-none mix-blend-normal">
-                                <motion.span
-                                    className="font-serif text-6xl md:text-8xl lg:text-9xl font-bold text-white italic drop-shadow-2xl transition-none"
-                                    style={{
-                                        transform: `translateX(-${textTranslateX}vw)`,
-                                    }}
-                                >
-                                    Fuente
-                                </motion.span>
-                                <motion.span
-                                    className="font-cormorant text-7xl md:text-9xl lg:text-[11rem] font-light text-sage-green drop-shadow-2xl transition-none"
-                                    style={{
-                                        transform: `translateX(${textTranslateX}vw)`,
-                                    }}
-                                >
-                                    Viva
-                                </motion.span>
-                            </div>
-
-                            {/* Scroll indicator text & arrow */}
-                            <motion.div
-                                className="absolute bottom-10 flex flex-col items-center gap-3 z-10"
-                                style={{ opacity: Math.max(0, 1 - scrollProgress * 15) }}
-                                transition={{ ease: "easeInOut" }}
-                            >
-                                <span className="text-white font-bold text-sm tracking-[0.2em] drop-shadow-lg uppercase">
-                                    Desliza para explorar
-                                </span>
-                                <ChevronDown className="text-white animate-bounce drop-shadow-lg" size={28} />
-                            </motion.div>
-                        </div>
-
-                        {/* Content section — appears once video is fully expanded */}
-                        <motion.section
-                            className="flex flex-col w-full"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: showContent ? 1 : 0 }}
-                            transition={{ duration: 0.7 }}
+                {/* Hero content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                    <div className="flex flex-col items-center justify-center mb-6">
+                        <motion.span
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8 }}
+                            className="font-serif text-8xl md:text-9xl font-bold text-white italic drop-shadow-2xl"
                         >
-                            {children}
-                        </motion.section>
+                            Fuente
+                        </motion.span>
+                        <motion.span
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="font-cormorant text-9xl md:text-[11rem] font-light text-sage-green drop-shadow-2xl -mt-8"
+                        >
+                            Viva
+                        </motion.span>
                     </div>
+
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1, delay: 0.6 }}
+                        className="text-white text-lg md:text-xl tracking-[0.3em] font-medium uppercase drop-shadow-lg mb-16"
+                    >
+                        Fuentes artesanales para jardines y exteriores
+                    </motion.p>
+
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1, delay: 1 }}
+                        className="absolute bottom-12 flex flex-col items-center gap-3"
+                    >
+                        <p className="text-white font-medium text-lg drop-shadow-lg">
+                            Desliza para ver <span className="text-sage-green font-bold">modelos y precios</span>
+                        </p>
+                        <ChevronDown className="text-white animate-bounce drop-shadow-lg" size={32} />
+                    </motion.div>
                 </div>
-            </section>
+            </div>
+
+            {/* Content slides over the hero — the rounded top + shadow creates depth */}
+            <div
+                className="relative z-10 bg-off-white"
+                style={{
+                    borderTopLeftRadius: '2rem',
+                    borderTopRightRadius: '2rem',
+                    boxShadow: '0 -24px 60px rgba(0,0,0,0.35)',
+                    marginTop: '-2rem',
+                }}
+            >
+                {children}
+            </div>
         </div>
     );
 }

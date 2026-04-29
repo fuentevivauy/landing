@@ -111,6 +111,22 @@ export default function AdminDashboard() {
         }
         
         fetchDashboardData();
+
+        // --- Real-time Subscription ---
+        const channel = supabase
+            .channel('dashboard_realtime')
+            .on('postgres_changes', { 
+                event: 'INSERT', 
+                schema: 'public', 
+                table: 'analytics_events' 
+            }, () => {
+                fetchDashboardData();
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [supabase]);
 
     return (

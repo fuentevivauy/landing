@@ -39,7 +39,7 @@ export async function trackEvent(
                             content_type: 'product',
                         }, pixelOptions);
                     } else if (eventType === 'whatsapp_click') {
-                        fbq('track', 'Lead', {
+                        fbq('track', 'Contact', {
                             content_name: metadata.name || 'WhatsApp Contact',
                             content_category: metadata.category || 'Contact',
                         }, pixelOptions);
