@@ -54,9 +54,9 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                         benefits: dbProd.benefits || [],
                         specs: dbProd.specs || {},
                         images: {
-                            thumbnail: dbProd.image_thumbnail || '/images/placeholder.jpg',
-                            carousel: dbProd.image_carousel || dbProd.image_thumbnail || '/images/placeholder.jpg',
-                            gallery: (dbProd.image_gallery?.length > 0) ? dbProd.image_gallery : [dbProd.image_thumbnail || '/images/placeholder.jpg'],
+                            thumbnail: dbProd.image_thumbnail || '/images/hero-fountain-new.jpg',
+                            carousel: dbProd.image_carousel || dbProd.image_thumbnail || '/images/hero-fountain-new.jpg',
+                            gallery: (dbProd.image_gallery?.length > 0) ? dbProd.image_gallery : [dbProd.image_thumbnail || '/images/hero-fountain-new.jpg'],
                         },
                         inStock: dbProd.in_stock,
                         featured: dbProd.featured,

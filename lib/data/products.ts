@@ -45,7 +45,7 @@ const IMAGE_MAP: Record<string, string> = {
     'estatua-diosa-hindu': 'Estatua_Diosa_Hindu_wg0csp',
     'buda-nino-parado-grande': 'Estatua_Buda_Nino_parado_Grande_s9rkpl',
     'pavo-real-chico': 'Pavo_Real_chico_crzcgv',
-    'buda-tibetano-medio': 'BUDA_TIBETANO_MEDIO_j5mwy1',
+    'buda-tibetano-medio': 'Buda_tibetano_medio_p72kxy', // TODO: Verificar este ID, actualmente da 404
     'enano-jardin-carro': 'Enano_de_Jardin_con_carro_vl6zu1',
     'buda-serenidad': 'BUDA_DE_LA_SERENIDAD_ybrzdx',
     'buho-jardin': 'Buho_de_Jardin_sik2rh',
@@ -64,11 +64,11 @@ export const getImages = (slug: string) => {
     if (publicId) {
         return getCloudinaryImage(publicId);
     }
-    // Fallback para productos sin imagen mapeada
+    // Fallback para productos sin imagen mapeada (usamos una imagen base del repo o vacía para manejar el error en el componente)
     return {
-        thumbnail: '/images/placeholder.jpg',
-        carousel: '/images/placeholder.jpg',
-        gallery: ['/images/placeholder.jpg'],
+        thumbnail: '',
+        carousel: '',
+        gallery: [],
     };
 };
 

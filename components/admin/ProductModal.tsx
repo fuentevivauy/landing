@@ -36,6 +36,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
         display_order: 0,
         image_thumbnail: '',
         image_carousel: '',
+        image_gallery: [] as string[],
         benefits: [] as string[],
         specs: {
             dimensions: '',
@@ -62,6 +63,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 display_order: product.display_order || 0,
                 image_thumbnail: product.image_thumbnail || '',
                 image_carousel: product.image_carousel || product.image_thumbnail || '',
+                image_gallery: product.image_gallery || [],
                 benefits: product.benefits || [],
                 specs: {
                     dimensions: String(product.specs?.dimensions || ''),
@@ -86,6 +88,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 display_order: categories.length > 0 ? 0 : 0,
                 image_thumbnail: '',
                 image_carousel: '',
+                image_gallery: [],
                 benefits: [],
                 specs: {
                     dimensions: '',
@@ -159,6 +162,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 display_order: parseInt(String(formData.display_order)) || 0,
                 image_thumbnail: formData.image_thumbnail,
                 image_carousel: formData.image_carousel || formData.image_thumbnail,
+                image_gallery: formData.image_gallery,
                 benefits: formData.benefits,
                 specs: {
                     ...formData.specs,

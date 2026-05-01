@@ -172,8 +172,15 @@ export default function AdminProducts() {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center shrink-0 border border-slate-200/50 dark:border-slate-700/50">
-                                                        {product.image_thumbnail || product.image_carousel ? (
-                                                            <img src={product.image_thumbnail || product.image_carousel!} alt={product.name} className="w-full h-full object-cover" />
+                                                        {(product.image_thumbnail || product.image_carousel) ? (
+                                                            <img 
+                                                                src={product.image_thumbnail || product.image_carousel!} 
+                                                                alt={product.name} 
+                                                                className="w-full h-full object-cover"
+                                                                onError={(e) => {
+                                                                    (e.target as HTMLImageElement).src = 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg';
+                                                                }}
+                                                            />
                                                         ) : (
                                                             <Package className="w-5 h-5 text-slate-400 dark:text-slate-500" />
                                                         )}

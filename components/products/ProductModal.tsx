@@ -18,6 +18,7 @@ interface ProductModalProps {
 export function ProductModal({ product, onClose }: ProductModalProps) {
     const [isZoomed, setIsZoomed] = useState(false);
     const [canZoom, setCanZoom] = useState(false);
+    const [imageError, setImageError] = useState(false);
     const { settings } = useSiteSettings();
 
     // Scroll lock mejorado - bloquea scroll del body cuando el modal está abierto
@@ -107,13 +108,14 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     "relative h-[70vh] bg-stone-gray/10",
                                 )}>
                                 <Image
-                                     src={product.images.carousel || product.images.gallery[0] || product.images.thumbnail}
+                                     src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
                                      alt={product.name}
                                      fill
                                      className="object-contain p-4"
                                      sizes="(max-width: 768px) 100vw, 800px"
                                      quality={90}
                                      priority
+                                     onError={() => setImageError(true)}
                                  />
                                 {/* Double click hint overlay */}
                                 {canZoom && !isZoomed && (
@@ -347,13 +349,14 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 }}
                             >
                                 <Image
-                                     src={product.images.carousel || product.images.gallery[0] || product.images.thumbnail}
+                                     src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
                                      alt={product.name}
                                      fill
                                      className="object-contain p-8"
                                      sizes="(max-width: 1024px) 50vw, 800px"
                                      quality={95}
                                      priority
+                                     onError={() => setImageError(true)}
                                  />
                                 {/* Double click hint overlay Desktop */}
                                 {canZoom && !isZoomed && (

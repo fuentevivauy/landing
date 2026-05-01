@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { Image as ImageIcon } from 'lucide-react';
 import { Product } from '@/lib/types/product';
 import { trackEvent } from '@/lib/supabase/analytics';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -14,6 +16,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onClick }: ProductCardProps) {
     const { settings } = useSiteSettings();
+    const [imageError, setImageError] = useState(false);
 
     const whatsappLink = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
         `Hola! Me interesa la ${product.name}. ¿Me podrías dar más información?`
@@ -41,20 +44,27 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ y: -4 }}
-            transition={{ duration: 0.4 }}
-            className="group h-full flex flex-col bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-gray/5 cursor-pointer"
+            whileHover={{ y: -8 }}
+            transition={{ duration: 0.5 }}
+            className="group cursor-pointer"
             onClick={handleCardClick}
         >
-            {/* Image — square on mobile, portrait on desktop */}
-            <div className="relative aspect-square md:aspect-[4/5] overflow-hidden">
-                <Image
-                    src={product.images.thumbnail}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 50vw, 33vw"
-                />
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-stone-gray/5 border border-stone-gray/10 shadow-sm transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-slate-blue/20">
+                {!imageError ? (
+                    <Image
+                        src={product.images.thumbnail || '/images/hero-fountain-new.jpg'}
+                        alt={product.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 400px"
+                        onError={() => setImageError(true)}
+                    />
+                ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 text-slate-300">
+                        <ImageIcon size={48} strokeWidth={1} />
+                        <span className="text-xs mt-2 uppercase tracking-widest font-bold">Sin Imagen</span>
+                    </div>
+                )}
                 {!product.inStock && (
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                         <span className="bg-white/90 text-slate-blue px-2 py-1 md:px-4 md:py-2 rounded-full font-bold text-xs md:text-sm">
