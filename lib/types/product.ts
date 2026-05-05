@@ -49,6 +49,7 @@ export interface Product {
     display_order?: number;
     featured?: boolean;
     maintenance?: string;
+    videoUrl?: string;
 }
 
 // Constantes de categorías

@@ -139,6 +139,7 @@ export const products: Product[] = [
         images: getImages('fuente-barroca'),
         inStock: true,
         featured: true,
+        videoUrl: 'https://vimeo.com/76979871',
         maintenance: 'Limpieza anual de motor; control periódico de nivel de agua.',
     },
     {
@@ -166,6 +167,7 @@ export const products: Product[] = [
         images: getImages('fuente-plaqueta-buda-extra-grande'),
         inStock: true,
         featured: true,
+        videoUrl: 'https://vimeo.com/76979871',
     },
     {
         id: 'f-03',
@@ -1108,11 +1110,5 @@ export const faqItems: FAQItem[] = [
         question: '¿Hacen envíos al interior?',
         answer:
             'Sí, realizamos envíos a Zona Metropolitana e Interior con costo adicional según el peso y destino.',
-    },
-    {
-        id: 'q6',
-        question: '¿Qué pasa si el producto no está en stock?',
-        answer:
-            'Lo fabricamos bajo pedido con seña previa. Demora: 10 días hábiles para colores estándar o 15 días para colores especiales.',
     },
 ];

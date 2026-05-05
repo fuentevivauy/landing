@@ -9,6 +9,13 @@ import { cn } from '@/lib/utils';
 import { trackEvent } from '@/lib/supabase/analytics';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 
+function getVimeoId(url: string) {
+    if (!url) return null;
+    const regExp = /vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/;
+    const match = url.match(regExp);
+    return match ? match[3] : null;
+}
+
 
 interface ProductModalProps {
     product: Product | null;
@@ -107,18 +114,30 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 className={cn(
                                     "relative h-[70vh] bg-stone-gray/10",
                                 )}>
-                                <Image
-                                     src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
-                                     alt={product.name}
-                                     fill
-                                     className="object-contain p-4"
-                                     sizes="(max-width: 768px) 100vw, 800px"
-                                     quality={90}
-                                     priority
-                                     onError={() => setImageError(true)}
-                                 />
+                                {product.videoUrl && getVimeoId(product.videoUrl) ? (
+                                    <div className="absolute inset-0 z-20 bg-black">
+                                        <iframe
+                                            src={`https://player.vimeo.com/video/${getVimeoId(product.videoUrl)}?autoplay=1&loop=1&background=1&muted=1`}
+                                            className="w-full h-full"
+                                            frameBorder="0"
+                                            allow="autoplay; fullscreen; picture-in-picture"
+                                            allowFullScreen
+                                        />
+                                    </div>
+                                ) : (
+                                    <Image
+                                        src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
+                                        alt={product.name}
+                                        fill
+                                        className="object-contain p-4"
+                                        sizes="(max-width: 768px) 100vw, 800px"
+                                        quality={90}
+                                        priority
+                                        onError={() => setImageError(true)}
+                                    />
+                                )}
                                 {/* Double click hint overlay */}
-                                {canZoom && !isZoomed && (
+                                {canZoom && !isZoomed && !product.videoUrl && (
                                     <div className="hidden md:flex absolute inset-x-0 bottom-4 justify-center px-4 pointer-events-none">
                                         <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse z-20">
                                             Doble click para ampliar
@@ -128,12 +147,12 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 {/* Close Button Mobile */}
                                 <button
                                     onClick={onClose}
-                                    className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-lg z-10"
+                                    className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-lg z-30"
                                 >
                                     <X className="w-6 h-6 text-slate-blue" />
                                 </button>
                                 {/* Category Badge */}
-                                <div className="absolute top-4 left-4">
+                                <div className="absolute top-4 left-4 z-30">
                                     <span className="px-4 py-2 text-sm font-medium bg-slate-blue text-off-white rounded-full">
                                         {product.category}
                                     </span>
@@ -348,18 +367,30 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     }
                                 }}
                             >
-                                <Image
-                                     src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
-                                     alt={product.name}
-                                     fill
-                                     className="object-contain p-8"
-                                     sizes="(max-width: 1024px) 50vw, 800px"
-                                     quality={95}
-                                     priority
-                                     onError={() => setImageError(true)}
-                                 />
+                                {product.videoUrl && getVimeoId(product.videoUrl) ? (
+                                    <div className="absolute inset-0 z-20 bg-black">
+                                        <iframe
+                                            src={`https://player.vimeo.com/video/${getVimeoId(product.videoUrl)}?autoplay=1&loop=1&background=1&muted=1`}
+                                            className="w-full h-full"
+                                            frameBorder="0"
+                                            allow="autoplay; fullscreen; picture-in-picture"
+                                            allowFullScreen
+                                        />
+                                    </div>
+                                ) : (
+                                    <Image
+                                        src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
+                                        alt={product.name}
+                                        fill
+                                        className="object-contain p-8"
+                                        sizes="(max-width: 1024px) 50vw, 800px"
+                                        quality={95}
+                                        priority
+                                        onError={() => setImageError(true)}
+                                    />
+                                )}
                                 {/* Double click hint overlay Desktop */}
-                                {canZoom && !isZoomed && (
+                                {canZoom && !isZoomed && !product.videoUrl && (
                                     <div className="hidden md:flex absolute inset-x-0 bottom-4 justify-center px-4 pointer-events-none">
                                         <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse z-20">
                                             Doble click para ampliar
@@ -367,7 +398,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     </div>
                                 )}
                                 {/* Category Badge */}
-                                <div className="absolute top-4 left-4 z-10">
+                                <div className="absolute top-4 left-4 z-30">
                                     <span className="px-4 py-2 text-sm font-medium bg-slate-blue text-off-white rounded-full">
                                         {product.category}
                                     </span>

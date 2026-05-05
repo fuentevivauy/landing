@@ -76,16 +76,10 @@ export function FinalCTA() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => trackEvent('whatsapp_click', null, { source: 'final_cta' })}
-                            className="relative inline-flex"
+                            className="inline-flex items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-5 rounded-full font-bold text-xl transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-emerald-900/20 animate-pulse-glow"
                         >
-                            <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-40" />
-                            <Button
-                                size="lg"
-                                className="relative w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white shadow-lg hover:shadow-xl border-0"
-                            >
-                                <WhatsAppIcon className="w-5 h-5 text-white" />
-                                Hacer mi pedido por WhatsApp
-                            </Button>
+                            <WhatsAppIcon className="w-7 h-7" />
+                            Consultar por WhatsApp
                         </a>
                         <a href="#catalogo">
                             <Button

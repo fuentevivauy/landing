@@ -23,8 +23,6 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
     const [dbProducts, setDbProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const [activeCategory, setActiveCategory] = useState<FilterOption>('Todos');
-    const [activePrice, setActivePrice] = useState<PriceFilter>('Todos');
     const [currentPage, setCurrentPage] = useState(1);
     const gridRef = useRef<HTMLDivElement>(null);
 
@@ -61,6 +59,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                         inStock: dbProd.in_stock,
                         featured: dbProd.featured,
                         display_order: dbProd.display_order,
+                        videoUrl: dbProd.video_url,
                     }));
                     setDbProducts(formatted);
                 }
@@ -74,17 +73,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
         fetchProducts();
     }, []);
 
-    const filteredProducts = useMemo(() => {
-        return dbProducts.filter((p) => {
-            if (activeCategory !== 'Todos' && p.category !== activeCategory) return false;
-            if (activePrice === 'Todos') return true;
-            if (!p.price) return false;
-            if (activePrice === 'Hasta $10.000') return p.price <= 10000;
-            if (activePrice === '$10.000 - $20.000') return p.price > 10000 && p.price <= 20000;
-            if (activePrice === 'Más de $20.000') return p.price > 20000;
-            return true;
-        });
-    }, [activeCategory, activePrice, dbProducts]);
+    const filteredProducts = dbProducts;
 
     const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
     const safePage = Math.min(currentPage, totalPages);
@@ -101,14 +90,6 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
         scrollToCatalog();
     };
 
-    const handleFilterChange = (cat: FilterOption) => {
-        setActiveCategory(cat);
-        setCurrentPage(1);
-    };
-    const handlePriceChange = (price: PriceFilter) => {
-        setActivePrice(price);
-        setCurrentPage(1);
-    };
 
     return (
         <section id="catalogo" className="py-24 bg-off-white overflow-hidden relative">
@@ -116,86 +97,34 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
 
             <Container>
                 {/* Header Section */}
-                <div className="text-center mb-16">
+                <div className="text-center mb-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h2 className="font-serif text-5xl md:text-6xl font-bold text-slate-blue mb-6">
+                        <h2 className="font-serif text-5xl md:text-6xl font-bold text-slate-blue mb-4">
                             Nuestro Catálogo
                         </h2>
-                        <div className="w-24 h-1 bg-sage-green mx-auto mb-6 rounded-full" />
-                        <p className="text-stone-gray text-xl max-w-2xl mx-auto leading-relaxed">
+                        <div className="w-24 h-1 bg-sage-green mx-auto mb-4 rounded-full" />
+                        <p className="text-stone-gray text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
                             Fuentes, bebederos y estatuas artesanales para realzar tus espacios con elegancia y serenidad.
                         </p>
                     </motion.div>
                 </div>
 
-                {/* Filter Section */}
-                <div className="mb-12 space-y-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: 0.2 }}
-                        className="flex flex-col gap-8"
-                    >
-                        <div className="flex flex-col items-center gap-4">
-                            <span className="text-stone-gray font-bold text-sm uppercase tracking-widest flex items-center gap-2">
-                                <Filter size={16} /> Categorías
-                            </span>
-                            <div className="flex flex-wrap justify-center gap-3">
-                                {categoryOptions.map((filter) => (
-                                    <button
-                                        key={filter}
-                                        onClick={() => handleFilterChange(filter)}
-                                        className={cn(
-                                            'px-6 py-2.5 rounded-full font-bold text-base transition-all duration-300',
-                                            activeCategory === filter
-                                                ? 'bg-slate-blue text-off-white shadow-lg scale-105'
-                                                : 'bg-white text-stone-gray hover:bg-slate-blue/5 border border-stone-gray/10'
-                                        )}
-                                    >
-                                        {filter}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col items-center gap-4">
-                            <span className="text-stone-gray font-bold text-sm uppercase tracking-widest">Rango de Precios</span>
-                            <div className="flex flex-wrap justify-center gap-3">
-                                {priceOptions.map((filter) => (
-                                    <button
-                                        key={filter}
-                                        onClick={() => handlePriceChange(filter)}
-                                        className={cn(
-                                            'px-6 py-2.5 rounded-full font-bold text-base transition-all duration-300',
-                                            activePrice === filter
-                                                ? 'bg-emerald-700 text-white shadow-lg scale-105'
-                                                : 'bg-white text-stone-gray hover:bg-emerald-700/5 border border-stone-gray/10'
-                                        )}
-                                    >
-                                        {filter}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
 
                 {/* Instruction Banner — green */}
-                <div className="flex justify-center mb-12">
+                <div className="flex justify-center mb-8">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="bg-sage-green/10 border border-sage-green/30 px-8 py-3 rounded-2xl flex items-center gap-3 shadow-sm"
+                        className="bg-sage-green/10 border border-sage-green/30 px-6 py-2.5 rounded-2xl flex items-center gap-3 shadow-sm"
                     >
-                        <Search className="text-sage-green" size={20} />
-                        <p className="text-slate-blue font-semibold text-lg">
-                            Hacé click en cualquier modelo para ver <span className="text-sage-green font-bold">medidas y detalles</span>
+                        <Search className="text-sage-green" size={18} />
+                        <p className="text-slate-blue font-semibold text-base md:text-lg">
+                            Hacé click en cualquier modelo para ver <span className="text-sage-green font-bold uppercase">medidas y precios</span>
                         </p>
                     </motion.div>
                 </div>
@@ -224,7 +153,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                     ) : (
                         <AnimatePresence mode="wait">
                             <motion.div
-                                key={`page-${safePage}-${activeCategory}-${activePrice}`}
+                                key={`page-${safePage}`}
                                 initial={{ opacity: 0, y: 16 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -16 }}

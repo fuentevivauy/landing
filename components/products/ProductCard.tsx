@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Image as ImageIcon } from 'lucide-react';
+import { Image as ImageIcon, Play } from 'lucide-react';
 import { Product } from '@/lib/types/product';
 import { trackEvent } from '@/lib/supabase/analytics';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
@@ -70,6 +70,11 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
                         <span className="bg-white/90 text-slate-blue px-2 py-1 md:px-4 md:py-2 rounded-full font-bold text-xs md:text-sm">
                             Bajo Pedido
                         </span>
+                    </div>
+                )}
+                {product.videoUrl && (
+                    <div className="absolute top-4 right-4 bg-white/90 p-2.5 rounded-full shadow-lg backdrop-blur-sm z-10 animate-pulse-glow">
+                        <Play className="w-5 h-5 text-emerald-700 fill-emerald-700" />
                     </div>
                 )}
             </div>

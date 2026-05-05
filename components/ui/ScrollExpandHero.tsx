@@ -52,14 +52,14 @@ export function ScrollExpandHero({
                         preload="auto"
                         className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/30 z-10" />
+                    <div className="absolute inset-0 bg-black/40 z-10" />
 
                     <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4">
                         <div className="flex flex-col items-center justify-center mb-8">
                             <span className="font-serif text-7xl font-bold text-white italic drop-shadow-2xl">
                                 Fuente
                             </span>
-                            <span className="font-cormorant text-8xl font-light text-sage-green drop-shadow-2xl -mt-4">
+                            <span className="font-cormorant text-8xl font-normal text-sage-green drop-shadow-2xl -mt-4">
                                 Viva
                             </span>
                         </div>
@@ -68,11 +68,14 @@ export function ScrollExpandHero({
                             Fuentes artesanales para jardines y exteriores
                         </p>
 
-                        <div className="absolute bottom-10 flex flex-col items-center gap-2">
-                            <p className="text-white font-medium text-sm drop-shadow-lg">
-                                Desliza para ver <span className="text-sage-green font-bold">modelos y precios</span>
+                        <div className="absolute bottom-10 flex flex-col items-center gap-1.5">
+                            <p className="text-white font-medium text-[10px] tracking-[0.3em] uppercase drop-shadow-lg opacity-90">
+                                Esta Frase en Mayúscula
                             </p>
-                            <ChevronDown className="text-white animate-bounce drop-shadow-lg" size={24} />
+                            <p className="text-white font-medium text-sm drop-shadow-lg">
+                                DESLIZÁ PARA VER <span className="text-sage-green font-bold">MODELOS Y PRECIOS</span>
+                            </p>
+                            <ChevronDown className="text-white animate-bounce icon-shine drop-shadow-lg" size={24} />
                         </div>
                     </div>
                 </section>
@@ -95,7 +98,7 @@ export function ScrollExpandHero({
                     alt="Fuente Viva Hero"
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute inset-0 bg-black/30" />
 
                 {/* Hero content */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -112,7 +115,7 @@ export function ScrollExpandHero({
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
-                            className="font-cormorant text-9xl md:text-[11rem] font-light text-sage-green drop-shadow-2xl -mt-8"
+                            className="font-cormorant text-9xl md:text-[11rem] font-normal text-sage-green drop-shadow-2xl -mt-8"
                         >
                             Viva
                         </motion.span>
@@ -131,12 +134,15 @@ export function ScrollExpandHero({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 1 }}
-                        className="absolute bottom-12 flex flex-col items-center gap-3"
+                        className="absolute bottom-12 flex flex-col items-center gap-2"
                     >
-                        <p className="text-white font-medium text-lg drop-shadow-lg">
-                            Desliza para ver <span className="text-sage-green font-bold">modelos y precios</span>
+                        <p className="text-white font-medium text-xs tracking-[0.4em] uppercase drop-shadow-lg opacity-80 mb-0.5">
+                            Esta Frase en Mayúscula
                         </p>
-                        <ChevronDown className="text-white animate-bounce drop-shadow-lg" size={32} />
+                        <p className="text-white font-medium text-lg drop-shadow-lg">
+                            DESLIZÁ PARA VER <span className="text-sage-green font-bold">MODELOS Y PRECIOS</span>
+                        </p>
+                        <ChevronDown className="text-white animate-bounce icon-shine drop-shadow-lg" size={32} />
                     </motion.div>
                 </div>
             </div>
