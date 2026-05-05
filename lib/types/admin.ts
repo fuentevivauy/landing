@@ -18,6 +18,7 @@ export interface DBProduct {
     whatsapp_message: string;
     created_at: string;
     updated_at: string;
+    video_url: string | null;
 }
 
 // ─── Analytics Event Types ───
@@ -75,4 +76,5 @@ export interface ProductFormData {
     image_thumbnail: string;
     image_carousel: string;
     image_gallery: string[];
+    video_url: string;
 }

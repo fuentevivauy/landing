@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { X, Upload, Loader2, Image as ImageIcon, CheckCircle, XCircle, Plus, Trash2 } from 'lucide-react';
+import { X, Upload, Loader2, Image as ImageIcon, CheckCircle, XCircle, Plus, Trash2, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DBProduct } from '@/lib/types/admin';
 import { createClient } from '@/lib/supabase/client';
@@ -37,6 +37,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
         image_thumbnail: '',
         image_carousel: '',
         image_gallery: [] as string[],
+        video_url: '',
         benefits: [] as string[],
         specs: {
             dimensions: '',
@@ -64,6 +65,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 image_thumbnail: product.image_thumbnail || '',
                 image_carousel: product.image_carousel || product.image_thumbnail || '',
                 image_gallery: product.image_gallery || [],
+                video_url: product.video_url || '',
                 benefits: product.benefits || [],
                 specs: {
                     dimensions: String(product.specs?.dimensions || ''),
@@ -89,6 +91,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 image_thumbnail: '',
                 image_carousel: '',
                 image_gallery: [],
+                video_url: '',
                 benefits: [],
                 specs: {
                     dimensions: '',
@@ -163,6 +166,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 image_thumbnail: formData.image_thumbnail,
                 image_carousel: formData.image_carousel || formData.image_thumbnail,
                 image_gallery: formData.image_gallery,
+                video_url: formData.video_url || null,
                 benefits: formData.benefits,
                 specs: {
                     ...formData.specs,
@@ -292,6 +296,25 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                         </button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className={'block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2'}>
+                                URL de Video (Vimeo)
+                            </label>
+                            <p className={'text-xs text-slate-500 dark:text-slate-400 mb-3'}>
+                                Si agregas un link de Vimeo, este reemplazará la segunda imagen en el modal del producto.
+                            </p>
+                            <div className={'relative'}>
+                                <Video className={'absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400'} />
+                                <input
+                                    type={'text'}
+                                    value={formData.video_url}
+                                    onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                                    className={'w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500/50 outline-none transition-all'}
+                                    placeholder={'Ej. https://vimeo.com/834015797'}
+                                />
                             </div>
                         </div>
 
