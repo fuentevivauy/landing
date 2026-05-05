@@ -142,12 +142,12 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                             animate={{ opacity: 1 }}
                             className="text-center py-32 bg-white/30 rounded-3xl border-2 border-dashed border-stone-gray/20"
                         >
-                            <p className="text-2xl text-stone-gray mb-6">No se encontraron productos con estos filtros.</p>
+                            <p className="text-2xl text-stone-gray mb-6">No se encontraron productos en el catálogo.</p>
                             <button
-                                onClick={() => { setActiveCategory('Todos'); setActivePrice('Todos'); setCurrentPage(1); }}
+                                onClick={() => { setCurrentPage(1); }}
                                 className="bg-slate-blue text-white px-8 py-3 rounded-full font-bold hover:bg-slate-blue/90 transition-all"
                             >
-                                Ver todo el catálogo
+                                Volver al inicio
                             </button>
                         </motion.div>
                     ) : (
