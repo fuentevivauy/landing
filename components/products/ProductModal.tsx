@@ -114,30 +114,18 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 className={cn(
                                     "relative h-[70vh] bg-stone-gray/10",
                                 )}>
-                                {product.videoUrl && getVimeoId(product.videoUrl) ? (
-                                    <div className="absolute inset-0 z-20 bg-black">
-                                        <iframe
-                                            src={`https://player.vimeo.com/video/${getVimeoId(product.videoUrl)}?autoplay=1&loop=1&background=1&muted=1`}
-                                            className="w-full h-full"
-                                            frameBorder="0"
-                                            allow="autoplay; fullscreen; picture-in-picture"
-                                            allowFullScreen
-                                        />
-                                    </div>
-                                ) : (
-                                    <Image
-                                        src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
-                                        alt={product.name}
-                                        fill
-                                        className="object-contain p-4"
-                                        sizes="(max-width: 768px) 100vw, 800px"
-                                        quality={90}
-                                        priority
-                                        onError={() => setImageError(true)}
-                                    />
-                                )}
+                                <Image
+                                    src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
+                                    alt={product.name}
+                                    fill
+                                    className="object-contain p-4"
+                                    sizes="(max-width: 768px) 100vw, 800px"
+                                    quality={90}
+                                    priority
+                                    onError={() => setImageError(true)}
+                                />
                                 {/* Double click hint overlay */}
-                                {canZoom && !isZoomed && !product.videoUrl && (
+                                {canZoom && !isZoomed && (
                                     <div className="hidden md:flex absolute inset-x-0 bottom-4 justify-center px-4 pointer-events-none">
                                         <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse z-20">
                                             Doble click para ampliar
@@ -158,6 +146,20 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     </span>
                                 </div>
                             </div>
+
+                            {/* Video Section Mobile (Debajo de la imagen) */}
+                            {product.videoUrl && getVimeoId(product.videoUrl) && (
+                                <div className="w-full aspect-[9/16] bg-black relative">
+                                    <iframe
+                                        src={`https://player.vimeo.com/video/${getVimeoId(product.videoUrl)}?autoplay=1&loop=1&background=1&muted=1`}
+                                        className="absolute top-0 left-0 w-full h-full"
+                                        frameBorder="0"
+                                        allow="autoplay; fullscreen; picture-in-picture"
+                                        allowFullScreen
+                                    />
+                                </div>
+                            )}
+
                             {/* Content Section Mobile */}
                             <div className="p-6 flex flex-col">
                                 {/* Close Button para desktop - en el contenido */}
@@ -309,8 +311,10 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                                 <span>{benefit}</span>
                                             </li>
                                         ))}
-                                    </ul>
+                                </ul>
                                 </motion.div>
+
+                                {/* Video Section removed from here */}
 
                                 {/* Stock Status & CTA */}
                                 <motion.div
@@ -347,12 +351,13 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
 
                         {/* Desktop Layout - 2 columnas Grid */}
                         <div className="hidden md:grid md:grid-cols-2 flex-1 h-full w-full relative">
-                            {/* Image Section Desktop */}
-                            <div
-                                className={cn(
-                                    "relative h-full bg-stone-gray/10",
-                                    canZoom ? "cursor-zoom-in" : ""
-                                )}
+                            {/* Image & Video Column Desktop */}
+                            <div className="flex flex-col h-full overflow-y-auto bg-stone-gray/10">
+                                <div
+                                    className={cn(
+                                        "relative min-h-full shrink-0",
+                                        canZoom ? "cursor-zoom-in" : ""
+                                    )}
                                 onClick={(e) => {
                                     // Mobile logic only
                                     if (window.innerWidth < 768) {
@@ -367,30 +372,18 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     }
                                 }}
                             >
-                                {product.videoUrl && getVimeoId(product.videoUrl) ? (
-                                    <div className="absolute inset-0 z-20 bg-black">
-                                        <iframe
-                                            src={`https://player.vimeo.com/video/${getVimeoId(product.videoUrl)}?autoplay=1&loop=1&background=1&muted=1`}
-                                            className="w-full h-full"
-                                            frameBorder="0"
-                                            allow="autoplay; fullscreen; picture-in-picture"
-                                            allowFullScreen
-                                        />
-                                    </div>
-                                ) : (
-                                    <Image
-                                        src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
-                                        alt={product.name}
-                                        fill
-                                        className="object-contain p-8"
-                                        sizes="(max-width: 1024px) 50vw, 800px"
-                                        quality={95}
-                                        priority
-                                        onError={() => setImageError(true)}
-                                    />
-                                )}
+                                <Image
+                                    src={imageError ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg' : (product.images.carousel || product.images.gallery[0] || product.images.thumbnail)}
+                                    alt={product.name}
+                                    fill
+                                    className="object-contain p-8"
+                                    sizes="(max-width: 1024px) 50vw, 800px"
+                                    quality={95}
+                                    priority
+                                    onError={() => setImageError(true)}
+                                />
                                 {/* Double click hint overlay Desktop */}
-                                {canZoom && !isZoomed && !product.videoUrl && (
+                                {canZoom && !isZoomed && (
                                     <div className="hidden md:flex absolute inset-x-0 bottom-4 justify-center px-4 pointer-events-none">
                                         <div className="bg-black/40 backdrop-blur-md text-white text-xs py-2 px-4 rounded-full border border-white/20 animate-pulse z-20">
                                             Doble click para ampliar
@@ -403,6 +396,20 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         {product.category}
                                     </span>
                                 </div>
+                                </div>
+
+                                {/* Video Section Desktop (Debajo de la imagen) */}
+                                {product.videoUrl && getVimeoId(product.videoUrl) && (
+                                    <div className="w-full aspect-[9/16] bg-black shrink-0 relative">
+                                        <iframe
+                                            src={`https://player.vimeo.com/video/${getVimeoId(product.videoUrl)}?autoplay=1&loop=1&background=1&muted=1`}
+                                            className="absolute top-0 left-0 w-full h-full"
+                                            frameBorder="0"
+                                            allow="autoplay; fullscreen; picture-in-picture"
+                                            allowFullScreen
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             {/* Content Section Desktop */}
@@ -560,6 +567,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                         ))}
                                     </ul>
                                 </motion.div>
+
+                                {/* Video Section removed from here */}
 
                                 {/* Stock Status & CTA */}
                                 <motion.div

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Image as ImageIcon, Play } from 'lucide-react';
 import { Product } from '@/lib/types/product';
 import { trackEvent } from '@/lib/supabase/analytics';
@@ -17,6 +17,8 @@ interface ProductCardProps {
 export function ProductCard({ product, onClick }: ProductCardProps) {
     const { settings } = useSiteSettings();
     const [imageError, setImageError] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     const whatsappLink = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
         `Hola! Me interesa la ${product.name}. ¿Me podrías dar más información?`
@@ -39,23 +41,45 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
         onClick(product);
     };
 
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+        if (videoRef.current) {
+            videoRef.current.play().catch(() => {
+                // Autoplay might be blocked if not muted or other browser policies
+            });
+        }
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.currentTime = 0;
+        }
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
             whileHover={{ y: -8 }}
             transition={{ duration: 0.5 }}
-            className="group cursor-pointer"
+            className="group cursor-pointer flex flex-col h-full"
             onClick={handleCardClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={() => setIsHovered(true)}
+            onTouchEnd={() => setIsHovered(false)}
         >
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-stone-gray/5 border border-stone-gray/10 shadow-sm transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-slate-blue/20">
+                {/* Main Image */}
                 {!imageError ? (
                     <Image
                         src={product.images.thumbnail || '/images/hero-fountain-new.jpg'}
                         alt={product.name}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        className={`object-cover transition-all duration-700 ${isHovered && product.videoUrl ? 'opacity-0 scale-110' : 'opacity-100 group-hover:scale-110'}`}
                         sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 400px"
                         onError={() => setImageError(true)}
                     />
@@ -65,16 +89,43 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
                         <span className="text-xs mt-2 uppercase tracking-widest font-bold">Sin Imagen</span>
                     </div>
                 )}
+
+                {/* Video Preview */}
+                {product.videoUrl && (
+                    <AnimatePresence>
+                        {isHovered && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 z-10"
+                            >
+                                <video
+                                    ref={videoRef}
+                                    src={product.videoUrl}
+                                    loop
+                                    muted
+                                    playsInline
+                                    className="w-full h-full object-cover"
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                )}
+
+                {/* Stock Badge */}
                 {!product.inStock && (
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-20">
                         <span className="bg-white/90 text-slate-blue px-2 py-1 md:px-4 md:py-2 rounded-full font-bold text-xs md:text-sm">
                             Bajo Pedido
                         </span>
                     </div>
                 )}
-                {product.videoUrl && (
-                    <div className="absolute top-4 right-4 bg-white/90 p-2.5 rounded-full shadow-lg backdrop-blur-sm z-10 animate-pulse-glow">
-                        <Play className="w-5 h-5 text-emerald-700 fill-emerald-700" />
+
+                {/* Video Icon Indicator */}
+                {product.videoUrl && !isHovered && (
+                    <div className="absolute top-4 right-4 bg-white/90 p-2 rounded-full shadow-lg backdrop-blur-sm z-20 animate-pulse-glow">
+                        <Play className="w-4 h-4 text-emerald-700 fill-emerald-700" />
                     </div>
                 )}
             </div>
@@ -89,7 +140,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
                     {product.specs.levels ? `${product.specs.levels} niv.` : product.category}
                 </p>
 
-                <div className="w-full flex items-center justify-between mt-auto">
+                <div className="w-full flex items-center justify-between mt-auto gap-2">
                     <span className="text-base md:text-2xl font-bold text-slate-blue leading-none">
                         {product.priceFormatted}
                     </span>

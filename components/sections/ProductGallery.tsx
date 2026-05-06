@@ -92,39 +92,39 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
 
 
     return (
-        <section id="catalogo" className="py-24 bg-off-white overflow-hidden relative">
+        <section id="catalogo" className="py-4 md:py-8 bg-off-white overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-stone-gray/10 to-transparent" />
 
             <Container>
                 {/* Header Section */}
-                <div className="text-center mb-10">
+                <div className="text-center mb-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h2 className="font-serif text-5xl md:text-6xl font-bold text-slate-blue mb-4">
+                        <h2 className="font-serif text-3xl md:text-5xl font-bold text-slate-blue mb-2">
                             Nuestro Catálogo
                         </h2>
-                        <div className="w-24 h-1 bg-sage-green mx-auto mb-4 rounded-full" />
-                        <p className="text-stone-gray text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-                            Fuentes, bebederos y estatuas artesanales para realzar tus espacios con elegancia y serenidad.
+                        <div className="w-16 h-1 bg-sage-green mx-auto mb-3 rounded-full" />
+                        <p className="text-stone-gray text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+                            Fuentes, bebederos y estatuas artesanales para realizar tus espacios con elegancia y serenidad.
                         </p>
                     </motion.div>
                 </div>
 
 
-                {/* Instruction Banner — green */}
-                <div className="flex justify-center mb-8">
+                {/* Instruction Banner — simplified */}
+                <div className="flex justify-center mb-6">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="bg-sage-green/10 border border-sage-green/30 px-6 py-2.5 rounded-2xl flex items-center gap-3 shadow-sm"
+                        className="bg-sage-green/5 border border-sage-green/20 px-3 md:px-5 py-1.5 md:py-2 rounded-xl flex items-center gap-2 shadow-sm"
                     >
-                        <Search className="text-sage-green" size={18} />
-                        <p className="text-slate-blue font-semibold text-base md:text-lg">
-                            Hacé click en cualquier modelo para ver <span className="text-sage-green font-bold uppercase">medidas y precios</span>
+                        <Search className="text-sage-green/60" size={14} />
+                        <p className="text-slate-blue/80 font-medium text-[11px] md:text-sm whitespace-nowrap">
+                            Tocá cualquier modelo para ver <span className="text-sage-green font-semibold">medidas y detalles</span>
                         </p>
                     </motion.div>
                 </div>

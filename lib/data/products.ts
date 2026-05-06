@@ -1084,31 +1084,26 @@ export const faqItems: FAQItem[] = [
     {
         id: 'q1',
         question: '¿Dónde se retira el producto?',
-        answer:
-            'El retiro se realiza en nuestro Pickup en El Pinar, Ciudad de la Costa. Recuerda que es solo punto de retiro, no es la fábrica.',
+        answer: 'El retiro se coordina en nuestro Pickup en El Pinar, Ciudad de la Costa.',
     },
     {
         id: 'q2',
         question: '¿Las fuentes incluyen motor?',
-        answer:
-            'Sí, todas nuestras fuentes incluyen el motor correspondiente, de bajo consumo y con regulador de presión según el modelo.',
+        answer: 'Sí, todas nuestras fuentes incluyen motor de agua de bajo consumo listo para usar.',
     },
     {
         id: 'q3',
         question: '¿Realizan instalaciones?',
-        answer:
-            'Sí, realizamos instalaciones de fuentes y bebederos. Contáctanos para recibir una cotización según tu zona.',
+        answer: 'Sí, ofrecemos instalación profesional opcional en Montevideo, Ciudad de la Costa, Canelones y Maldonado.',
     },
     {
         id: 'q4',
-        question: '¿Se puede pedir un color especial?',
-        answer:
-            'Sí, es posible bajo pedido y con seña previa. Tiene una demora aproximada de 15 días.',
+        question: '¿Hacen envíos?',
+        answer: 'Sí, realizamos envíos coordinados en Montevideo, Ciudad de la Costa, Canelones y Maldonado.',
     },
     {
         id: 'q5',
-        question: '¿Hacen envíos al interior?',
-        answer:
-            'Sí, realizamos envíos a Zona Metropolitana e Interior con costo adicional según el peso y destino.',
+        question: '¿Se puede pedir un color especial?',
+        answer: 'Sí, algunos modelos pueden realizarse en colores o terminaciones personalizadas según disponibilidad.',
     },
 ];
