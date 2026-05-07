@@ -9,19 +9,19 @@ const features = [
         icon: Leaf,
         title: 'Más de 6 Años',
         description:
-            'Vendiendo e instalando fuentes artesanales con atención personalizada.',
+            'Vendiendo e instalando fuentes artesanales con atención personalizada y dedicación en cada proyecto.',
     },
     {
         icon: Sun,
         title: 'Acabado Artesanal',
         description:
-            'Piezas moldeadas y terminaciones artesanales, logrando un resultado único.',
+            'Trabajamos con piezas moldeadas y terminaciones artesanales, logrando un resultado elegante, cuidado y único.',
     },
     {
         icon: Wrench,
         title: 'Instalación Profesional',
         description:
-            'Disponible en Montevideo, Canelones y Maldonado.',
+            'Disponible en Montevideo, Ciudad de la Costa, Canelones y Maldonado.',
     },
 ];
 

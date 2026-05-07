@@ -45,9 +45,10 @@ export function FinalCTA() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="font-serif text-4xl md:text-6xl font-bold text-off-white mb-6 leading-tight"
+                        className="mb-6 flex items-baseline justify-center gap-3"
                     >
-                        Realzamos tu hogar con el fluir del agua
+                        <span className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold italic text-off-white">Fuente</span>
+                        <span className="font-cormorant text-6xl md:text-7xl lg:text-8xl font-light text-sage-green translate-y-1">Viva</span>
                     </motion.h2>
 
                     <motion.p
@@ -55,9 +56,11 @@ export function FinalCTA() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-off-white/80 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto"
+                        className="text-off-white/80 text-lg md:text-xl leading-relaxed mb-10"
                     >
-                        Artesanías en cemento con terminaciones premium. Fuentes, bebederos y estatuas diseñadas para perdurar y traer serenidad a tu espacio.
+                        Un rincón de calma donde la naturaleza se detiene a beber.
+                        <br />
+                        Fuentes, bebederos y estatuas artesanales de hormigón premium.
                     </motion.p>
 
                     <motion.div
