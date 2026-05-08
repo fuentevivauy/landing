@@ -35,8 +35,12 @@ export function ProductCard({ product }: ProductCardProps) {
     };
 
     const handleCardClick = () => {
-        // Guardar posición de scroll antes de navegar al producto
         sessionStorage.setItem('catalog_scroll_y', String(window.scrollY));
+        // globals.css pone scroll-behavior: smooth en html, lo que hace que scrollTo
+        // sea animado y no haya terminado cuando Next.js navega. Forzamos 'auto'.
+        document.documentElement.style.scrollBehavior = 'auto';
+        window.scrollTo(0, 0);
+        document.documentElement.style.scrollBehavior = '';
         trackEvent('click', product.id, {
             name: product.name,
             source: 'product_card',

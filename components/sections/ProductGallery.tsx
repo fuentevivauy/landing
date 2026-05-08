@@ -25,14 +25,17 @@ export function ProductGallery() {
     const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
     const [currentPage, setCurrentPage] = useState(Number.isFinite(pageFromUrl) && pageFromUrl > 0 ? pageFromUrl : 1);
     const gridRef = useRef<HTMLDivElement>(null);
-    const [restoring, setRestoring] = useState(false);
 
-    // Al montar: si hay scroll guardado en sessionStorage, ocultar la sección
-    // hasta que los productos carguen y se pueda restaurar la posición exacta.
+    // Escuchar popstate (botón back del browser/teléfono): ocultar la página
+    // INMEDIATAMENTE antes de que React renderice nada, para evitar el flash del hero.
     useEffect(() => {
-        if (sessionStorage.getItem('catalog_scroll_y')) {
-            setRestoring(true);
-        }
+        const handlePopState = () => {
+            if (sessionStorage.getItem('catalog_scroll_y')) {
+                document.documentElement.style.opacity = '0';
+            }
+        };
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
     }, []);
 
     // Sincroniza el estado interno cuando cambia la URL (ej: usuario presiona back)
@@ -45,26 +48,20 @@ export function ProductGallery() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
-    // Cuando los productos cargan, restaurar scroll guardado (para back navigation)
+    // Cuando los productos cargan, restaurar scroll guardado y revelar la página
     useEffect(() => {
         if (!isLoading && dbProducts.length > 0) {
             const savedScroll = sessionStorage.getItem('catalog_scroll_y');
             if (savedScroll) {
-                // Doble rAF: primero React pinta el grid, luego restauramos posición
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
+                        document.documentElement.style.scrollBehavior = 'auto';
                         window.scrollTo(0, parseInt(savedScroll, 10));
+                        document.documentElement.style.scrollBehavior = '';
                         sessionStorage.removeItem('catalog_scroll_y');
-                        setRestoring(false);
-                        // Revelar la página completa (Home la oculta durante restauración)
-                        const reveal = (window as unknown as Record<string, unknown>).__revealPage;
-                        if (typeof reveal === 'function') (reveal as () => void)();
+                        document.documentElement.style.opacity = '';
                     });
                 });
-            } else {
-                setRestoring(false);
-                const reveal = (window as unknown as Record<string, unknown>).__revealPage;
-                if (typeof reveal === 'function') (reveal as () => void)();
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
