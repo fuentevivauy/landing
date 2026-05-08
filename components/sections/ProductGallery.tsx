@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product, ProductCategory } from '@/lib/types/product';
@@ -26,6 +26,13 @@ export function ProductGallery() {
     const [currentPage, setCurrentPage] = useState(Number.isFinite(pageFromUrl) && pageFromUrl > 0 ? pageFromUrl : 1);
     const gridRef = useRef<HTMLDivElement>(null);
 
+    // Deshabilitar scroll restoration automático del browser
+    useLayoutEffect(() => {
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+    }, []);
+
     // Sincroniza el estado interno cuando cambia la URL (ej: usuario presiona back)
     useEffect(() => {
         const urlPage = parseInt(searchParams.get('page') || '1', 10);
@@ -36,14 +43,16 @@ export function ProductGallery() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
-    // Cuando los productos terminan de cargar y hay page > 1 en la URL,
-    // scroll instantáneo al catálogo (evita el salto visible al volver atrás)
+    // Cuando los productos cargan, restaurar scroll guardado (para back navigation)
     useEffect(() => {
         if (!isLoading && dbProducts.length > 0) {
-            const urlPage = parseInt(searchParams.get('page') || '1', 10);
-            if (urlPage > 1) {
-                // Pequeño delay para que el grid se renderice antes del scroll
-                requestAnimationFrame(() => scrollToCatalog('instant'));
+            const savedScroll = sessionStorage.getItem('catalog_scroll_y');
+            if (savedScroll) {
+                // Esperar un frame para que el DOM esté listo con los productos renderizados
+                requestAnimationFrame(() => {
+                    window.scrollTo(0, parseInt(savedScroll, 10));
+                    sessionStorage.removeItem('catalog_scroll_y');
+                });
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,7 +170,7 @@ export function ProductGallery() {
                 </div>
 
                 {/* Product Grid */}
-                <div ref={gridRef} className="min-h-[400px] relative">
+                <div ref={gridRef} className="min-h-[80vh] relative">
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center py-32 text-stone-gray">
                             <Loader2 className="w-12 h-12 text-slate-blue animate-spin mb-4" />

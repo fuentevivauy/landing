@@ -35,6 +35,8 @@ export function ProductCard({ product }: ProductCardProps) {
     };
 
     const handleCardClick = () => {
+        // Guardar posición de scroll antes de navegar al producto
+        sessionStorage.setItem('catalog_scroll_y', String(window.scrollY));
         trackEvent('click', product.id, {
             name: product.name,
             source: 'product_card',

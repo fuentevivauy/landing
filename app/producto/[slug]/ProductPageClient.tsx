@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -42,8 +42,8 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
         }
     };
 
-    // Scroll to top inmediato al montar (evita que la página aparezca abajo)
-    useEffect(() => {
+    // Scroll to top ANTES del paint (useLayoutEffect se ejecuta sincrónicamente antes de pintar)
+    useLayoutEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
