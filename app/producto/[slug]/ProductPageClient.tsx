@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -41,11 +41,6 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             router.push('/#catalogo');
         }
     };
-
-    // Scroll to top ANTES del paint (useLayoutEffect se ejecuta sincrónicamente antes de pintar)
-    useLayoutEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
 
     // Track ViewContent al montar la página (Pixel + CAPI + Supabase)
     useEffect(() => {

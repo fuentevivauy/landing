@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product, ProductCategory } from '@/lib/types/product';
@@ -25,11 +25,13 @@ export function ProductGallery() {
     const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
     const [currentPage, setCurrentPage] = useState(Number.isFinite(pageFromUrl) && pageFromUrl > 0 ? pageFromUrl : 1);
     const gridRef = useRef<HTMLDivElement>(null);
+    const [restoring, setRestoring] = useState(false);
 
-    // Deshabilitar scroll restoration automático del browser
-    useLayoutEffect(() => {
-        if ('scrollRestoration' in history) {
-            history.scrollRestoration = 'manual';
+    // Al montar: si hay scroll guardado en sessionStorage, ocultar la sección
+    // hasta que los productos carguen y se pueda restaurar la posición exacta.
+    useEffect(() => {
+        if (sessionStorage.getItem('catalog_scroll_y')) {
+            setRestoring(true);
         }
     }, []);
 
@@ -48,11 +50,21 @@ export function ProductGallery() {
         if (!isLoading && dbProducts.length > 0) {
             const savedScroll = sessionStorage.getItem('catalog_scroll_y');
             if (savedScroll) {
-                // Esperar un frame para que el DOM esté listo con los productos renderizados
+                // Doble rAF: primero React pinta el grid, luego restauramos posición
                 requestAnimationFrame(() => {
-                    window.scrollTo(0, parseInt(savedScroll, 10));
-                    sessionStorage.removeItem('catalog_scroll_y');
+                    requestAnimationFrame(() => {
+                        window.scrollTo(0, parseInt(savedScroll, 10));
+                        sessionStorage.removeItem('catalog_scroll_y');
+                        setRestoring(false);
+                        // Revelar la página completa (Home la oculta durante restauración)
+                        const reveal = (window as unknown as Record<string, unknown>).__revealPage;
+                        if (typeof reveal === 'function') (reveal as () => void)();
+                    });
                 });
+            } else {
+                setRestoring(false);
+                const reveal = (window as unknown as Record<string, unknown>).__revealPage;
+                if (typeof reveal === 'function') (reveal as () => void)();
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
