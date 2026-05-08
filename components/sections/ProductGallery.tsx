@@ -36,6 +36,19 @@ export function ProductGallery() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
+    // Cuando los productos terminan de cargar y hay page > 1 en la URL,
+    // scroll instantáneo al catálogo (evita el salto visible al volver atrás)
+    useEffect(() => {
+        if (!isLoading && dbProducts.length > 0) {
+            const urlPage = parseInt(searchParams.get('page') || '1', 10);
+            if (urlPage > 1) {
+                // Pequeño delay para que el grid se renderice antes del scroll
+                requestAnimationFrame(() => scrollToCatalog('instant'));
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoading, dbProducts.length]);
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -87,10 +100,10 @@ export function ProductGallery() {
     const safePage = Math.min(currentPage, totalPages);
     const displayedProducts = filteredProducts.slice((safePage - 1) * ITEMS_PER_PAGE, safePage * ITEMS_PER_PAGE);
 
-    const scrollToCatalog = () => {
+    const scrollToCatalog = (behavior: ScrollBehavior = 'smooth') => {
         if (!gridRef.current) return;
         const top = gridRef.current.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: 'smooth' });
+        window.scrollTo({ top, behavior });
     };
 
     const goToPage = (page: number) => {
@@ -103,7 +116,7 @@ export function ProductGallery() {
             params.set('page', String(page));
         }
         const queryString = params.toString();
-        const url = queryString ? `${pathname}?${queryString}#catalogo` : `${pathname}#catalogo`;
+        const url = queryString ? `${pathname}?${queryString}` : pathname;
         router.push(url, { scroll: false });
         scrollToCatalog();
     };

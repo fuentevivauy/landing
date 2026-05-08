@@ -42,6 +42,11 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
         }
     };
 
+    // Scroll to top inmediato al montar (evita que la página aparezca abajo)
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     // Track ViewContent al montar la página (Pixel + CAPI + Supabase)
     useEffect(() => {
         trackEvent('view', product.id, {
