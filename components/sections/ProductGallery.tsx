@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product, ProductCategory } from '@/lib/types/product';
 import { Container } from '@/components/ui/Container';
@@ -14,11 +15,26 @@ const ITEMS_PER_PAGE = 6;
 
 export function ProductGallery() {
     const supabase = createClient();
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [dbProducts, setDbProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const [currentPage, setCurrentPage] = useState(1);
+    // Lee la página de la URL (?page=N), default 1
+    const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
+    const [currentPage, setCurrentPage] = useState(Number.isFinite(pageFromUrl) && pageFromUrl > 0 ? pageFromUrl : 1);
     const gridRef = useRef<HTMLDivElement>(null);
+
+    // Sincroniza el estado interno cuando cambia la URL (ej: usuario presiona back)
+    useEffect(() => {
+        const urlPage = parseInt(searchParams.get('page') || '1', 10);
+        const safePage = Number.isFinite(urlPage) && urlPage > 0 ? urlPage : 1;
+        if (safePage !== currentPage) {
+            setCurrentPage(safePage);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -79,6 +95,16 @@ export function ProductGallery() {
 
     const goToPage = (page: number) => {
         setCurrentPage(page);
+        // Actualiza la URL con el nuevo page (push para que back funcione entre páginas)
+        const params = new URLSearchParams(searchParams.toString());
+        if (page === 1) {
+            params.delete('page');
+        } else {
+            params.set('page', String(page));
+        }
+        const queryString = params.toString();
+        const url = queryString ? `${pathname}?${queryString}#catalogo` : `${pathname}#catalogo`;
+        router.push(url, { scroll: false });
         scrollToCatalog();
     };
 

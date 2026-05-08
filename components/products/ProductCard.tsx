@@ -9,6 +9,7 @@ import { Product } from '@/lib/types/product';
 import { trackEvent } from '@/lib/supabase/analytics';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { WhatsAppIcon } from '@/components/WhatsAppButton';
+import { supabaseImageLoader } from '@/lib/image-loader';
 
 interface ProductCardProps {
     product: Product;
@@ -64,6 +65,8 @@ export function ProductCard({ product }: ProductCardProps) {
                             fill
                             className="object-cover transition-all duration-700 group-hover:scale-110"
                             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 400px"
+                            loader={supabaseImageLoader}
+                            unoptimized
                             onError={() => setImageError(true)}
                         />
                     ) : (

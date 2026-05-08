@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, MessageCircle, Check, Package } from 'lucide-react';
 import { Product } from '@/lib/types/product';
@@ -12,6 +13,7 @@ import { trackEvent } from '@/lib/supabase/analytics';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { Footer } from '@/components/sections/Footer';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { supabaseImageLoader } from '@/lib/image-loader';
 
 function getVimeoId(url: string) {
     if (!url) return null;
@@ -26,7 +28,19 @@ interface ProductPageClientProps {
 
 export function ProductPageClient({ product }: ProductPageClientProps) {
     const { settings } = useSiteSettings();
+    const router = useRouter();
     const [imageError, setImageError] = useState(false);
+
+    // Volver al catálogo: si hay historial (usuario llegó haciendo click), router.back() preserva la página de paginación.
+    // Si entró por URL directa o desde un compartido, fallback a /#catalogo.
+    const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        if (typeof window !== 'undefined' && window.history.length > 1) {
+            router.back();
+        } else {
+            router.push('/#catalogo');
+        }
+    };
 
     // Track ViewContent al montar la página (Pixel + CAPI + Supabase)
     useEffect(() => {
@@ -56,6 +70,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                 <div className="max-w-6xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
                     <Link
                         href="/#catalogo"
+                        onClick={handleBack}
                         className="inline-flex items-center gap-2 text-slate-blue hover:text-slate-blue/70 transition-colors text-sm font-medium"
                     >
                         <ArrowLeft className="w-4 h-4" />
@@ -87,6 +102,8 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                                     className="object-contain p-6"
                                     sizes="(max-width: 1024px) 100vw, 600px"
                                     quality={95}
+                                    loader={supabaseImageLoader}
+                                    unoptimized
                                     priority
                                     onError={() => setImageError(true)}
                                 />
