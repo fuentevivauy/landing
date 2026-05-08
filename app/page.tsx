@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { ScrollExpandHero } from '@/components/ui/ScrollExpandHero';
 import { Philosophy } from '@/components/sections/Philosophy';
 import { ProductGallery } from '@/components/sections/ProductGallery';
@@ -10,45 +10,45 @@ import { Footer } from '@/components/sections/Footer';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 
 export default function Home() {
-    // Si hay un scroll guardado (volviendo de un producto), ocultar la página
-    // hasta que ProductGallery restaure la posición exacta.
-    const [pageReady, setPageReady] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return !sessionStorage.getItem('catalog_scroll_y');
+    // useLayoutEffect corre sincrónicamente ANTES del primer paint de React.
+    // Si hay scroll guardado (usuario volvió de un producto), ocultar la
+    // página entera antes de pintar, para que nunca se vea en posición incorrecta.
+    useLayoutEffect(() => {
+        if (sessionStorage.getItem('catalog_scroll_y')) {
+            document.documentElement.style.opacity = '0';
         }
-        return true;
-    });
+    }, []);
 
-    // Fallback: si después de 2s la página sigue oculta, mostrarla igual
+    // Fallback: si después de 2s sigue oculta (algo falló), mostrarla igual.
     useEffect(() => {
-        if (!pageReady) {
-            const timeout = setTimeout(() => setPageReady(true), 2000);
-            return () => clearTimeout(timeout);
-        }
-    }, [pageReady]);
+        const timeout = setTimeout(() => {
+            document.documentElement.style.opacity = '';
+        }, 2000);
+        return () => clearTimeout(timeout);
+    }, []);
 
-    // Exponer setter para que ProductGallery pueda revelarnos
+    // Exponer función para que ProductGallery revele la página tras restaurar scroll.
     useEffect(() => {
-        (window as unknown as Record<string, unknown>).__revealPage = () => setPageReady(true);
+        (window as unknown as Record<string, unknown>).__revealPage = () => {
+            document.documentElement.style.opacity = '';
+        };
         return () => {
             delete (window as unknown as Record<string, unknown>).__revealPage;
         };
     }, []);
 
     return (
-        <div style={!pageReady ? { opacity: 0 } : undefined}>
-            <ScrollExpandHero
-                videoSrc="https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-video.mp4"
-                bgImageSrc="/images/hero-fountain-new.jpg"
-                posterSrc="/images/hero-fountain-new.jpg"
-            >
-                <Philosophy />
-                <ProductGallery />
-                <FAQ />
-                <FinalCTA />
-                <Footer />
-                <WhatsAppButton />
-            </ScrollExpandHero>
-        </div>
+        <ScrollExpandHero
+            videoSrc="https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-video.mp4"
+            bgImageSrc="/images/hero-fountain-new.jpg"
+            posterSrc="/images/hero-fountain-new.jpg"
+        >
+            <Philosophy />
+            <ProductGallery />
+            <FAQ />
+            <FinalCTA />
+            <Footer />
+            <WhatsAppButton />
+        </ScrollExpandHero>
     );
 }
