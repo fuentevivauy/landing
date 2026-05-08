@@ -33,6 +33,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
         newCategory: '',
         in_stock: true,
         featured: false,
+        show_detail_image: true,
         display_order: 0,
         image_thumbnail: '',
         image_carousel: '',
@@ -61,6 +62,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 newCategory: '',
                 in_stock: product.in_stock,
                 featured: product.featured,
+                show_detail_image: product.show_detail_image ?? true,
                 display_order: product.display_order || 0,
                 image_thumbnail: product.image_thumbnail || '',
                 image_carousel: product.image_carousel || product.image_thumbnail || '',
@@ -87,6 +89,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 newCategory: '',
                 in_stock: true,
                 featured: false,
+                show_detail_image: true,
                 display_order: categories.length > 0 ? 0 : 0,
                 image_thumbnail: '',
                 image_carousel: '',
@@ -162,6 +165,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                 category: finalCategory,
                 in_stock: formData.in_stock,
                 featured: formData.featured,
+                show_detail_image: formData.show_detail_image,
                 display_order: parseInt(String(formData.display_order)) || 0,
                 image_thumbnail: formData.image_thumbnail,
                 image_carousel: formData.image_carousel || formData.image_thumbnail,
@@ -316,6 +320,21 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                     placeholder={'Ej. https://vimeo.com/834015797'}
                                 />
                             </div>
+
+                            <label className={'flex items-start gap-3 cursor-pointer mt-4 p-3 rounded-xl bg-sky-50 dark:bg-sky-500/5 border border-sky-100 dark:border-sky-500/20'}>
+                                <input
+                                    type={'checkbox'}
+                                    className={'w-5 h-5 mt-0.5 rounded border-slate-300 text-sky-500 focus:ring-sky-500'}
+                                    checked={formData.show_detail_image}
+                                    onChange={(e) => setFormData({ ...formData, show_detail_image: e.target.checked })}
+                                />
+                                <div>
+                                    <span className={'text-sm font-semibold text-slate-700 dark:text-slate-200 block'}>Mostrar imagen de detalle</span>
+                                    <span className={'text-xs text-slate-500 dark:text-slate-400'}>
+                                        Si está activado, aparece la imagen de detalle antes del video. Si está desactivado, el video se muestra primero.
+                                    </span>
+                                </div>
+                            </label>
                         </div>
 
                         <input

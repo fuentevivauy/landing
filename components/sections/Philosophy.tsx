@@ -69,7 +69,7 @@ export function Philosophy() {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-50px" }}
-                        className="font-serif text-[22px] leading-tight px-2 text-slate-blue mx-auto md:hidden"
+                        className="font-serif text-[22px] font-semibold leading-tight px-2 text-slate-blue mx-auto md:hidden"
                     >
                         <motion.span variants={lineVariants}>
                             Cada fuente es una <span className="italic text-sage-green">obra de arte</span> creada con detalle y pasión.
@@ -82,7 +82,7 @@ export function Philosophy() {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-50px" }}
-                        className="hidden md:block font-serif text-3xl lg:text-4xl text-slate-blue leading-tight max-w-3xl mx-auto"
+                        className="hidden md:block font-serif text-3xl lg:text-4xl font-semibold text-slate-blue leading-tight max-w-3xl mx-auto"
                     >
                         <motion.span variants={lineVariants}>
                             Cada fuente es una <span className="italic text-sage-green whitespace-nowrap">obra de arte</span> creada con detalle y pasión.
@@ -112,7 +112,7 @@ export function Philosophy() {
                             </h3>
 
                             {/* Description */}
-                            <p className="text-stone-gray text-sm leading-relaxed max-w-[240px] mx-auto">
+                            <p className="text-slate-blue/70 text-[15px] md:text-sm leading-relaxed max-w-[260px] mx-auto">
                                 {feature.description}
                             </p>
                         </motion.div>

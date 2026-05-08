@@ -19,6 +19,7 @@ export interface DBProduct {
     created_at: string;
     updated_at: string;
     video_url: string | null;
+    show_detail_image: boolean;
 }
 
 // ─── Analytics Event Types ───

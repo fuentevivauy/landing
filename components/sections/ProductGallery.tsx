@@ -1,33 +1,24 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Product, ProductCategory, PRODUCT_CATEGORIES } from '@/lib/types/product';
+import { Product, ProductCategory } from '@/lib/types/product';
 import { Container } from '@/components/ui/Container';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
 import { ProductCard } from '@/components/products/ProductCard';
-import { Search, Filter, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
-
-type FilterOption = 'Todos' | ProductCategory;
-type PriceFilter = 'Todos' | 'Hasta $10.000' | '$10.000 - $20.000' | 'Más de $20.000';
-
-interface ProductGalleryProps {
-    onProductClick: (product: Product) => void;
-}
+import { Search, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { DBProduct } from '@/lib/types/admin';
 
 const ITEMS_PER_PAGE = 6;
 
-export function ProductGallery({ onProductClick }: ProductGalleryProps) {
+export function ProductGallery() {
     const supabase = createClient();
     const [dbProducts, setDbProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const [currentPage, setCurrentPage] = useState(1);
     const gridRef = useRef<HTMLDivElement>(null);
-
-    const categoryOptions: FilterOption[] = ['Todos', ...PRODUCT_CATEGORIES];
-    const priceOptions: PriceFilter[] = ['Todos', 'Hasta $10.000', '$10.000 - $20.000', 'Más de $20.000'];
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -41,7 +32,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                 if (error) throw error;
 
                 if (data) {
-                    const formatted: Product[] = data.map((dbProd: any) => ({
+                    const formatted: Product[] = (data as DBProduct[]).map((dbProd) => ({
                         id: dbProd.id,
                         slug: dbProd.slug,
                         name: dbProd.name,
@@ -59,7 +50,8 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                         inStock: dbProd.in_stock,
                         featured: dbProd.featured,
                         display_order: dbProd.display_order,
-                        videoUrl: dbProd.video_url,
+                        videoUrl: dbProd.video_url ?? undefined,
+                        showDetailImage: dbProd.show_detail_image ?? true,
                     }));
                     setDbProducts(formatted);
                 }
@@ -92,7 +84,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
 
 
     return (
-        <section id="catalogo" className="py-4 md:py-8 bg-off-white overflow-hidden relative">
+        <section id="catalogo" className="pt-12 md:pt-20 pb-4 md:pb-8 bg-off-white overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-stone-gray/10 to-transparent" />
 
             <Container>
@@ -104,7 +96,7 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h2 className="font-serif text-3xl md:text-5xl font-bold text-slate-blue mb-2">
+                        <h2 className="font-serif text-4xl md:text-6xl font-bold text-slate-blue mb-3">
                             Nuestro Catálogo
                         </h2>
                         <div className="w-16 h-1 bg-sage-green mx-auto mb-3 rounded-full" />
@@ -164,7 +156,6 @@ export function ProductGallery({ onProductClick }: ProductGalleryProps) {
                                     <ProductCard
                                         key={product.id}
                                         product={product}
-                                        onClick={onProductClick}
                                     />
                                 ))}
                             </motion.div>

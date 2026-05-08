@@ -50,6 +50,7 @@ export interface Product {
     featured?: boolean;
     maintenance?: string;
     videoUrl?: string;
+    showDetailImage?: boolean;
 }
 
 // Constantes de categorías

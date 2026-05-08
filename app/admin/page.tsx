@@ -18,41 +18,86 @@ export default function AdminDashboard() {
     const supabase = createClient();
     const [isLoading, setIsLoading] = useState(true);
     
-    const [stats, setStats] = useState({
+    const [stats, setStats] = useState<{
+        views: number;
+        clicks: number;
+        whatsapp: number;
+        activeProducts: number;
+        viewsTrend: number | null;
+        clicksTrend: number | null;
+        whatsappTrend: number | null;
+        productsTrend: number | null;
+    }>({
         views: 0,
         clicks: 0,
         whatsapp: 0,
-        activeProducts: 0
+        activeProducts: 0,
+        viewsTrend: null,
+        clicksTrend: null,
+        whatsappTrend: null,
+        productsTrend: null,
     });
-    
+
     const [topProducts, setTopProducts] = useState<TopProductData[]>([]);
 
     useEffect(() => {
         async function fetchDashboardData() {
-            // 1. Fetch active products count
+            // 1. Fetch active products (con created_at para calcular tendencia)
             const { count: productCount, data: recentProducts } = await supabase
                 .from('products')
-                .select('id, name, category', { count: 'exact' })
+                .select('id, name, category, created_at', { count: 'exact' })
                 .eq('in_stock', true)
                 .order('created_at', { ascending: false });
-                
-            // 2. Fetch all analytics events
+
+            // 2. Fetch all analytics events con timestamps
             const { data: events } = await supabase
                 .from('analytics_events')
-                .select('product_id, event_type');
-                
+                .select('product_id, event_type, created_at');
+
             const safeEvents = events || [];
-            
-            // Calculate totals
-            const totalViews = safeEvents.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
+
+            // --- Cálculo de tendencias: últimos 30 días vs 30-60 días previos ---
+            const now = new Date();
+            const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+
+            const enriched = safeEvents.map(e => ({ ...e, dateObj: new Date(e.created_at) }));
+            const currentEvents = enriched.filter(e => e.dateObj >= thirtyDaysAgo);
+            const prevEvents = enriched.filter(e => e.dateObj >= sixtyDaysAgo && e.dateObj < thirtyDaysAgo);
+
+            const curV = currentEvents.filter(e => e.event_type === 'view').length;
+            const curC = currentEvents.filter(e => e.event_type === 'click').length;
+            const curW = currentEvents.filter(e => e.event_type === 'whatsapp_click').length;
+            const prevV = prevEvents.filter(e => e.event_type === 'view').length;
+            const prevC = prevEvents.filter(e => e.event_type === 'click').length;
+            const prevW = prevEvents.filter(e => e.event_type === 'whatsapp_click').length;
+
+            const calcTrend = (current: number, prev: number) => {
+                if (prev === 0) return null;
+                return Math.round(((current - prev) / prev) * 100);
+            };
+
+            // Tendencia de productos activos: comparamos creados últimos 30d vs 30-60d
+            const curProducts = (recentProducts || []).filter(p => new Date(p.created_at) >= thirtyDaysAgo).length;
+            const prevProducts = (recentProducts || []).filter(p => {
+                const d = new Date(p.created_at);
+                return d >= sixtyDaysAgo && d < thirtyDaysAgo;
+            }).length;
+
+            // Calculate totals (all-time)
+            const totalViews = safeEvents.filter(e => e.event_type === 'view').length;
             const totalClicks = safeEvents.filter(e => e.event_type === 'click').length;
             const totalWhatsapp = safeEvents.filter(e => e.event_type === 'whatsapp_click').length;
-            
+
             setStats({
                 views: totalViews,
                 clicks: totalClicks,
                 whatsapp: totalWhatsapp,
-                activeProducts: productCount || 0
+                activeProducts: productCount || 0,
+                viewsTrend: calcTrend(curV, prevV),
+                clicksTrend: calcTrend(curC, prevC),
+                whatsappTrend: calcTrend(curW, prevW),
+                productsTrend: calcTrend(curProducts, prevProducts),
             });
             
             // Calculate top products
@@ -66,7 +111,7 @@ export default function AdminDashboard() {
                     productStats[event.product_id] = { views: 0, whatsapp: 0 };
                 }
                 
-                if (event.event_type === 'view' || event.event_type === 'page_view') {
+                if (event.event_type === 'view') {
                     productStats[event.product_id].views += 1;
                 } else if (event.event_type === 'whatsapp_click') {
                     productStats[event.product_id].whatsapp += 1;
@@ -148,33 +193,33 @@ export default function AdminDashboard() {
                         <>
                             {/* Analytics Overview */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                                <AnalyticsCard 
-                                    title="Vistas de Productos" 
-                                    value={stats.views.toString()} 
-                                    trend={0} 
-                                    icon={<Eye className="w-6 h-6" />} 
-                                    trendLabel="Desde el lanzamiento"
+                                <AnalyticsCard
+                                    title="Vistas de Productos"
+                                    value={stats.views.toString()}
+                                    trend={stats.viewsTrend}
+                                    icon={<Eye className="w-6 h-6" />}
+                                    trendLabel="últimos 30 días vs 30 días previos"
                                 />
-                                <AnalyticsCard 
-                                    title="Clics en Catálogo" 
-                                    value={stats.clicks.toString()} 
-                                    trend={0} 
-                                    icon={<MousePointerClick className="w-6 h-6" />} 
-                                    trendLabel="Desde el lanzamiento"
+                                <AnalyticsCard
+                                    title="Clics en Catálogo"
+                                    value={stats.clicks.toString()}
+                                    trend={stats.clicksTrend}
+                                    icon={<MousePointerClick className="w-6 h-6" />}
+                                    trendLabel="últimos 30 días vs 30 días previos"
                                 />
-                                <AnalyticsCard 
-                                    title="Consultas a WhatsApp" 
-                                    value={stats.whatsapp.toString()} 
-                                    trend={0} 
-                                    icon={<MessageCircle className="w-6 h-6" />} 
-                                    trendLabel="Desde el lanzamiento"
+                                <AnalyticsCard
+                                    title="Consultas a WhatsApp"
+                                    value={stats.whatsapp.toString()}
+                                    trend={stats.whatsappTrend}
+                                    icon={<MessageCircle className="w-6 h-6" />}
+                                    trendLabel="últimos 30 días vs 30 días previos"
                                 />
-                                <AnalyticsCard 
-                                    title="Productos Activos" 
-                                    value={stats.activeProducts.toString()} 
-                                    trend={0} 
-                                    icon={<Package className="w-6 h-6" />} 
-                                    trendLabel="En stock hoy"
+                                <AnalyticsCard
+                                    title="Productos Activos"
+                                    value={stats.activeProducts.toString()}
+                                    trend={stats.productsTrend}
+                                    icon={<Package className="w-6 h-6" />}
+                                    trendLabel="nuevos últimos 30 días vs previos"
                                 />
                             </div>
 

@@ -1,44 +1,40 @@
 import { MetadataRoute } from 'next';
-
-
 import { createClient } from '@supabase/supabase-js';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://fuenteviva.uy';
+const BASE_URL = 'https://fuenteviva.uy';
 
-    // Páginas estáticas
-    const staticPages = [
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    const staticPages: MetadataRoute.Sitemap = [
         {
-            url: baseUrl,
+            url: BASE_URL,
             lastModified: new Date(),
-            changeFrequency: 'weekly' as const,
+            changeFrequency: 'weekly',
             priority: 1,
         },
     ];
 
     try {
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        if (!supabaseUrl || !supabaseKey) return staticPages;
+
         const supabase = createClient(supabaseUrl, supabaseKey);
-
-        const { data: dbProducts } = await supabase
+        const { data } = await supabase
             .from('products')
-            .select('slug')
-            .eq('in_stock', true);
-            
-        if (dbProducts) {
-            const productPages = dbProducts.map((product) => ({
-                url: `${baseUrl}?product=${product.slug}`,
-                lastModified: new Date(),
-                changeFrequency: 'monthly' as const,
-                priority: 0.8,
-            }));
-            
-            return [...staticPages, ...productPages];
-        }
-    } catch (e) {
-        console.error("Error generating sitemap", e);
-    }
+            .select('slug, updated_at')
+            .order('display_order', { ascending: true });
 
-    return staticPages;
+        if (!data) return staticPages;
+
+        const productPages: MetadataRoute.Sitemap = data.map((p) => ({
+            url: `${BASE_URL}/producto/${p.slug}`,
+            lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.8,
+        }));
+
+        return [...staticPages, ...productPages];
+    } catch {
+        return staticPages;
+    }
 }

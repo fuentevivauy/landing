@@ -1,6 +1,9 @@
 import React from 'react';
 import { ThemeProvider } from '@/components/admin/ThemeProvider';
 
+// Admin pages depend on auth + live data — no prerender
+export const dynamic = 'force-dynamic';
+
 export default function AdminLayout({
     children,
 }: {

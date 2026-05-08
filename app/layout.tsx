@@ -38,7 +38,7 @@ export const metadata: Metadata = {
       {
         url: '/images/og-fuente.jpg',
         width: 1200,
-        height: 1600,
+        height: 630,
         alt: 'Fuente de agua artesanal de tres niveles - Fuente Viva',
       }
     ],
@@ -66,8 +66,34 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': 'https://fuenteviva.uy/#business',
+    name: 'Fuente Viva',
+    description:
+      'Fuentes, bebederos y estatuas artesanales de hormigón premium para jardín. Más de 6 años creando piezas únicas en Uruguay.',
+    url: 'https://fuenteviva.uy',
+    image: 'https://fuenteviva.uy/images/og-fuente.jpg',
+    telephone: '+59894713998',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'El Pinar',
+      addressRegion: 'Canelones',
+      addressCountry: 'UY',
+    },
+    areaServed: ['Montevideo', 'Canelones', 'Maldonado', 'Uruguay'],
+    sameAs: [],
+  };
+
   return (
-    <html lang="es">
+    <html lang="es-UY">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={cn(
           "antialiased min-h-screen bg-off-white font-sans overflow-x-hidden",

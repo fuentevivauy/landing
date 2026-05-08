@@ -92,19 +92,19 @@ export default function AdminAnalytics() {
 
                     // --- Current Window (Last 30 days) ---
                     const currentEvents = enriched.filter(e => e.dateObj >= thirtyDaysAgo);
-                    const v = currentEvents.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
+                    const v = currentEvents.filter(e => e.event_type === 'view').length;
                     const c = currentEvents.filter(e => e.event_type === 'click').length;
                     const w = currentEvents.filter(e => e.event_type === 'whatsapp_click').length;
-                    // Conversión = Whatsapps / (Clicks al catálogo + vistas de producto directo)
-                    const totalInteractions = c + currentEvents.filter(e => e.event_type === 'view').length;
+                    // Conversión = Whatsapps / (Clicks + vistas de producto)
+                    const totalInteractions = c + v;
                     const conv = totalInteractions > 0 ? (w / totalInteractions) * 100 : 0;
 
                     // --- Previous Window (30 to 60 days ago) ---
                     const prevEvents = enriched.filter(e => e.dateObj >= sixtyDaysAgo && e.dateObj < thirtyDaysAgo);
-                    const prevV = prevEvents.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
+                    const prevV = prevEvents.filter(e => e.event_type === 'view').length;
                     const prevC = prevEvents.filter(e => e.event_type === 'click').length;
                     const prevW = prevEvents.filter(e => e.event_type === 'whatsapp_click').length;
-                    const prevTotalInteractions = prevC + prevEvents.filter(e => e.event_type === 'view').length;
+                    const prevTotalInteractions = prevC + prevV;
                     const prevConv = prevTotalInteractions > 0 ? (prevW / prevTotalInteractions) * 100 : 0;
 
                     // Calculate trends (percentage increase/decrease)
@@ -120,10 +120,10 @@ export default function AdminAnalytics() {
                     // and the trend looks at the last 30 vs prev 30. Better yet: main numbers = last 30 days.
                     // For this request, we will keep the main numbers as total-to-date, but use the all-time vs trend.
                     // Let's just make everything be ALL TIME for the big number, and the trend compares the velocity.
-                    const totalV = enriched.filter(e => e.event_type === 'view' || e.event_type === 'page_view').length;
+                    const totalV = enriched.filter(e => e.event_type === 'view').length;
                     const totalC = enriched.filter(e => e.event_type === 'click').length;
                     const totalW = enriched.filter(e => e.event_type === 'whatsapp_click').length;
-                    const allTimeInteractions = totalC + enriched.filter(e => e.event_type === 'view').length;
+                    const allTimeInteractions = totalC + totalV;
                     const totalConv = allTimeInteractions > 0 ? (totalW / allTimeInteractions) * 100 : 0;
 
                     setStats({
@@ -292,28 +292,28 @@ export default function AdminAnalytics() {
                                         value={stats.totalViews.toLocaleString()} 
                                         icon={<Eye className="w-6 h-6" />} 
                                         trend={stats.viewsTrend !== null ? parseFloat(stats.viewsTrend.toFixed(0)) : null} 
-                                        trendLabel="vs últimos 30 días"
+                                        trendLabel="últimos 30 días vs 30 días previos"
                                     />
                                     <AnalyticsCard 
                                         title="Interacciones" 
                                         value={stats.totalClicks.toLocaleString()} 
                                         icon={<MousePointerClick className="w-6 h-6" />} 
                                         trend={stats.clicksTrend !== null ? parseFloat(stats.clicksTrend.toFixed(0)) : null} 
-                                        trendLabel="vs últimos 30 días"
+                                        trendLabel="últimos 30 días vs 30 días previos"
                                     />
                                     <AnalyticsCard 
                                         title="Ventas Potenciales" 
                                         value={stats.totalWhatsapp.toLocaleString()} 
                                         icon={<MessageCircle className="w-6 h-6" />} 
                                         trend={stats.whatsappTrend !== null ? parseFloat(stats.whatsappTrend.toFixed(0)) : null} 
-                                        trendLabel="vs últimos 30 días"
+                                        trendLabel="últimos 30 días vs 30 días previos"
                                     />
                                     <AnalyticsCard 
                                         title="Eficiencia" 
                                         value={`${stats.globalConversion.toFixed(1)}%`} 
                                         icon={<ArrowUpRight className="w-6 h-6" />} 
                                         trend={stats.conversionTrend !== null ? parseFloat(stats.conversionTrend.toFixed(0)) : null} 
-                                        trendLabel="vs últimos 30 días"
+                                        trendLabel="últimos 30 días vs 30 días previos"
                                     />
                                 </div>
 

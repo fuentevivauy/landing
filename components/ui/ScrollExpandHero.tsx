@@ -6,6 +6,7 @@ import {
     ReactNode,
     useEffect,
 } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
@@ -91,10 +92,13 @@ export function ScrollExpandHero({
         <div style={{ overflowX: 'clip' }}>
             {/* Sticky hero — stays in place while content scrolls over it */}
             <div className="sticky top-0 z-0 h-[100dvh] overflow-hidden">
-                <img
+                <Image
                     src={bgImageSrc || posterSrc}
                     alt="Fuente Viva Hero"
-                    className="w-full h-full object-cover"
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="object-cover"
                 />
                 <div className="absolute inset-0 bg-black/50" />
 

@@ -35,7 +35,7 @@ export function FinalCTA() {
                         priority
                     />
                 </div>
-                <div className="absolute inset-0 bg-black/40" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/65" />
             </div>
 
             <Container className="relative z-10">
@@ -47,8 +47,8 @@ export function FinalCTA() {
                         transition={{ duration: 0.6 }}
                         className="mb-6 flex items-baseline justify-center gap-3"
                     >
-                        <span className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold italic text-off-white">Fuente</span>
-                        <span className="font-cormorant text-6xl md:text-7xl lg:text-8xl font-light text-sage-green translate-y-1">Viva</span>
+                        <span className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold italic text-off-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">Fuente</span>
+                        <span className="font-cormorant text-7xl md:text-8xl lg:text-9xl font-semibold text-sage-green translate-y-1 drop-shadow-[0_4px_18px_rgba(0,0,0,0.55)]">Viva</span>
                     </motion.h2>
 
                     <motion.p
@@ -56,7 +56,7 @@ export function FinalCTA() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-off-white/80 text-lg md:text-xl leading-relaxed mb-10"
+                        className="text-off-white text-lg md:text-xl leading-relaxed mb-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
                     >
                         Un rincón de calma donde la naturaleza se detiene a beber.
                         <br />
@@ -98,7 +98,7 @@ export function FinalCTA() {
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.4 }}
-                        className="mt-12 flex flex-wrap justify-center gap-8 text-off-white/60 text-sm"
+                        className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-3 text-off-white/90 text-sm font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]"
                     >
                         <span className="flex items-center gap-2">
                             <span className="w-2 h-2 bg-sage-green rounded-full" />
@@ -110,7 +110,7 @@ export function FinalCTA() {
                         </span>
                         <span className="flex items-center gap-2">
                             <span className="w-2 h-2 bg-sage-green rounded-full" />
-                            Envíos a todo Uruguay
+                            Atención personalizada
                         </span>
                     </motion.div>
                 </div>
