@@ -39,7 +39,7 @@ export function ScrollExpandHero({
         return (
             <div className="overflow-x-hidden">
                 {/* Mobile Hero: full-screen video */}
-                <section className="relative w-full h-[100dvh] overflow-hidden">
+                <section className="relative w-full h-[100svh] overflow-hidden">
                     <video
                         ref={videoRef}
                         src={videoSrc}
@@ -88,7 +88,7 @@ export function ScrollExpandHero({
     return (
         <div style={{ overflowX: 'clip' }}>
             {/* Sticky hero — stays in place while content scrolls over it */}
-            <div className="sticky top-0 z-0 h-[100dvh] overflow-hidden">
+            <div className="sticky top-0 z-0 h-[100svh] overflow-hidden">
                 <Image
                     src={bgImageSrc || posterSrc}
                     alt="Fuente Viva Hero"
