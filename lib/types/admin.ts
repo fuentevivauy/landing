@@ -23,7 +23,7 @@ export interface DBProduct {
 }
 
 // ─── Analytics Event Types ───
-export type AnalyticsEventType = 'view' | 'click' | 'whatsapp_click' | 'page_view';
+export type AnalyticsEventType = 'view' | 'click' | 'whatsapp_click' | 'contact_click' | 'page_view';
 
 export interface AnalyticsEvent {
     id: string;

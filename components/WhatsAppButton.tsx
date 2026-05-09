@@ -19,7 +19,7 @@ export function WhatsAppButton() {
     const whatsappLink = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(settings.whatsapp_message)}`;
 
     const handleTrack = () => {
-        trackEvent('whatsapp_click', null, { source: 'floating_button' });
+        trackEvent('contact_click', null, { source: 'floating_button' });
     };
 
     return (

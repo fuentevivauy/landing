@@ -26,18 +26,6 @@ export function ProductGallery() {
     const [currentPage, setCurrentPage] = useState(Number.isFinite(pageFromUrl) && pageFromUrl > 0 ? pageFromUrl : 1);
     const gridRef = useRef<HTMLDivElement>(null);
 
-    // Escuchar popstate (botón back del browser/teléfono): ocultar la página
-    // INMEDIATAMENTE antes de que React renderice nada, para evitar el flash del hero.
-    useEffect(() => {
-        const handlePopState = () => {
-            if (sessionStorage.getItem('catalog_scroll_y')) {
-                document.documentElement.style.opacity = '0';
-            }
-        };
-        window.addEventListener('popstate', handlePopState);
-        return () => window.removeEventListener('popstate', handlePopState);
-    }, []);
-
     // Sincroniza el estado interno cuando cambia la URL (ej: usuario presiona back)
     useEffect(() => {
         const urlPage = parseInt(searchParams.get('page') || '1', 10);
@@ -48,24 +36,16 @@ export function ProductGallery() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
-    // Cuando los productos cargan, restaurar scroll guardado y revelar la página
+    // Restaura scroll cuando los productos están listos (al volver desde producto).
     useEffect(() => {
-        if (!isLoading && dbProducts.length > 0) {
-            const savedScroll = sessionStorage.getItem('catalog_scroll_y');
-            if (savedScroll) {
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        document.documentElement.style.scrollBehavior = 'auto';
-                        window.scrollTo(0, parseInt(savedScroll, 10));
-                        document.documentElement.style.scrollBehavior = '';
-                        sessionStorage.removeItem('catalog_scroll_y');
-                        document.documentElement.style.opacity = '';
-                    });
-                });
-            }
+        if (isLoading) return;
+        const savedScroll = sessionStorage.getItem('catalog_scroll_y');
+        if (savedScroll) {
+            window.scrollTo(0, parseInt(savedScroll, 10));
+            sessionStorage.removeItem('catalog_scroll_y');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLoading, dbProducts.length]);
+    }, [isLoading]);
 
     useEffect(() => {
         const fetchProducts = async () => {

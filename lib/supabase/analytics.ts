@@ -39,9 +39,13 @@ export async function trackEvent(
                             content_type: 'product',
                         }, pixelOptions);
                     } else if (eventType === 'whatsapp_click') {
-                        fbq('track', 'Contact', {
+                        fbq('track', 'Lead', {
                             content_name: metadata.name || 'WhatsApp Contact',
                             content_category: metadata.category || 'Contact',
+                        }, pixelOptions);
+                    } else if (eventType === 'contact_click') {
+                        fbq('track', 'Contact', {
+                            content_name: metadata.source || 'WhatsApp',
                         }, pixelOptions);
                     } else if (eventType === 'click') {
                         fbq('trackCustom', 'GenericClick', {

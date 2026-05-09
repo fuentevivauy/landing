@@ -58,6 +58,7 @@ export const metadata: Metadata = {
 };
 
 import { Suspense } from "react";
+import { ViewTransitions } from "next-view-transitions";
 import { Analytics } from "@/components/Analytics";
 import FacebookPixel from "@/components/FacebookPixel";
 
@@ -87,28 +88,30 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="es-UY">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
-      <body
-        className={cn(
-          "antialiased min-h-screen bg-off-white font-sans overflow-x-hidden",
-          playfair.variable,
-          montserrat.variable,
-          cormorant.variable
-        )}
-      >
-        <FacebookPixel />
-        <Suspense fallback={null}>
-          <Analytics />
-        </Suspense>
-        {children}
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="es-UY">
+        <head>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        </head>
+        <body
+          className={cn(
+            "antialiased min-h-screen bg-off-white font-sans overflow-x-hidden",
+            playfair.variable,
+            montserrat.variable,
+            cormorant.variable
+          )}
+        >
+          <FacebookPixel />
+          <Suspense fallback={null}>
+            <Analytics />
+          </Suspense>
+          {children}
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }
 

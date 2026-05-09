@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Image as ImageIcon, Play } from 'lucide-react';
@@ -36,11 +36,6 @@ export function ProductCard({ product }: ProductCardProps) {
 
     const handleCardClick = () => {
         sessionStorage.setItem('catalog_scroll_y', String(window.scrollY));
-        // globals.css pone scroll-behavior: smooth en html, lo que hace que scrollTo
-        // sea animado y no haya terminado cuando Next.js navega. Forzamos 'auto'.
-        document.documentElement.style.scrollBehavior = 'auto';
-        window.scrollTo(0, 0);
-        document.documentElement.style.scrollBehavior = '';
         trackEvent('click', product.id, {
             name: product.name,
             source: 'product_card',
@@ -69,6 +64,7 @@ export function ProductCard({ product }: ProductCardProps) {
                             src={product.images.thumbnail || '/images/hero-fountain-new.jpg'}
                             alt={product.name}
                             fill
+                            style={{ viewTransitionName: `product-img-${product.id}` }}
                             className="object-cover transition-all duration-700 group-hover:scale-110"
                             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 400px"
                             loader={supabaseImageLoader}

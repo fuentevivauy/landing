@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -99,6 +99,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                                     }
                                     alt={product.name}
                                     fill
+                                    style={{ viewTransitionName: `product-img-${product.id}` }}
                                     className="object-contain p-6"
                                     sizes="(max-width: 1024px) 100vw, 600px"
                                     quality={95}
