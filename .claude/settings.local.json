@@ -19,7 +19,14 @@
       "Bash(curl -s -L -A \"Mozilla/5.0\" \"https://fuenteviva.uy/_next/static/chunks/6afd5b3cc5bb297e.js\")",
       "Bash(grep -o '.\\\\{0,200\\\\}fbevents.\\\\{0,200\\\\}')",
       "Bash(grep -o '.\\\\{0,400\\\\}1566846.\\\\{0,400\\\\}')",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(Get-ChildItem -Path \"D:\\\\2_Agencia\\\\Ramarketing\\\\Antigravity\\\\Fuente viva\\\\.claude\\\\worktrees\\\\nice-vaughan-327a04\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(Format-Table -AutoSize)",
+      "WebFetch(domain:www.tododeia.com)",
+      "Bash(gh repo *)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }

@@ -75,7 +75,7 @@ export function FinalCTA() {
                             href={whatsappLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={() => trackEvent('whatsapp_click', null, { source: 'final_cta' })}
+                            onClick={() => trackEvent('contact_click', null, { source: 'final_cta' })}
                             className="inline-flex items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-5 rounded-full font-bold text-xl transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-emerald-900/20 animate-pulse-glow"
                         >
                             <WhatsAppIcon className="w-7 h-7" />

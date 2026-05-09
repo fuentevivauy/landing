@@ -143,12 +143,6 @@ export default async function ProductPage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
             />
-            {/* Script inline: se ejecuta ANTES de React hydrate, evita el flash de scroll */}
-            <script
-                dangerouslySetInnerHTML={{
-                    __html: `window.scrollTo(0,0);`,
-                }}
-            />
             <ProductPageClient product={product} />
         </>
     );
