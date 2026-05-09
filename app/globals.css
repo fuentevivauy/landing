@@ -30,6 +30,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Evita reposicionamiento del scroll cuando cambia contenido arriba del viewport */
+  overflow-anchor: none;
 }
 
 /* View Transitions API: fade suave entre páginas + morph de imagen producto */

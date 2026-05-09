@@ -24,18 +24,15 @@ export function ScrollExpandHero({
     children,
 }: ScrollExpandHeroProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isMounted, setIsMounted] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(() =>
+        typeof window !== 'undefined' ? window.innerWidth < 768 : false
+    );
 
     useEffect(() => {
-        setIsMounted(true);
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
-
-    if (!isMounted) return null;
 
     // === MOBILE VERSION ===
     if (isMobile) {
