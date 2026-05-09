@@ -18,6 +18,12 @@ export function WhatsAppButton() {
     const { settings } = useSiteSettings();
     const whatsappLink = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(settings.whatsapp_message)}`;
 
+    // Solo anima la primera vez en la sesión
+    const hasAnimated = typeof window !== 'undefined' && sessionStorage.getItem('wa_btn_shown');
+    if (typeof window !== 'undefined' && !hasAnimated) {
+        sessionStorage.setItem('wa_btn_shown', '1');
+    }
+
     const handleTrack = () => {
         trackEvent('contact_click', null, { source: 'floating_button' });
     };
@@ -28,9 +34,9 @@ export function WhatsAppButton() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleTrack}
-            initial={{ scale: 0, opacity: 0 }}
+            initial={hasAnimated ? false : { scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 1, type: 'spring', stiffness: 200 }}
+            transition={{ delay: hasAnimated ? 0 : 1, type: 'spring', stiffness: 200 }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             className="fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-[#25D366] rounded-full shadow-lg hover:shadow-xl transition-shadow group cursor-pointer animate-pulse-glow"
