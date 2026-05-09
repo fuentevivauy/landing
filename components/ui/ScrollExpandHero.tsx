@@ -34,12 +34,29 @@ export function ScrollExpandHero({
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
+    const [vh, setVh] = useState('100vh');
+
+    useEffect(() => {
+        const updateHeight = () => {
+            // Use window.innerHeight to get the actual visible height once
+            // and keep it stable to prevent jumping when address bar hides/shows
+            setVh(`${window.innerHeight}px`);
+        };
+        
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+        return () => window.removeEventListener('resize', updateHeight);
+    }, []);
+
     // === MOBILE VERSION ===
     if (isMobile) {
         return (
             <div className="overflow-x-hidden">
-                {/* Mobile Hero: full-screen video */}
-                <section className="relative w-full h-[100svh] overflow-hidden">
+                {/* Mobile Hero: full-screen video with stable height */}
+                <section 
+                    className="relative w-full overflow-hidden" 
+                    style={{ height: vh }}
+                >
                     <video
                         ref={videoRef}
                         src={videoSrc}

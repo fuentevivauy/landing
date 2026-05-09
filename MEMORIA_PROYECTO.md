@@ -76,3 +76,23 @@ SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 
 ---
 *Última actualización: 14 de Abril, 2026 (Meta Pixel, CAPI y Corrección de Server Actions)*
+
+## 6. Mantenimiento y Solución de Problemas (Troubleshooting) 🛠️
+
+### A. Problemas de Respuesta de la IA (Congelamiento)
+Se identificó un problema recurrente donde el agente (Antigravity/Claude) deja de responder al entrar en la carpeta del proyecto.
+*   **Causa:** Saturación de procesos de Node.exe y conflictos con múltiples "worktrees" de Claude (`.claude/worktrees`). El sistema intentaba indexar o ejecutar múltiples servidores en paralelo, consumiendo más de 1GB de RAM por instancia.
+*   **Solución:** Se implementó un script de limpieza para forzar el cierre de procesos huérfanos.
+
+### B. Script de Inicio Limpio (`REINICIO_LIMPIO.bat`)
+Para evitar conflictos de puertos o bloqueos de memoria, se debe utilizar este script para arrancar el entorno de desarrollo:
+1.  Cierra todos los procesos de Node.exe previos.
+2.  Inicia `npm run dev`.
+3.  Abre el navegador en `localhost:3000`.
+
+### C. Gestión de Memoria del Agente
+*   Mantener siempre **un solo worktree activo** en la carpeta `.claude/worktrees`.
+*   Si el chat no responde, cerrar todas las ventanas del agente y ejecutar el script de limpieza antes de reabrir una única instancia.
+
+---
+*Última actualización: 08 de Mayo, 2026 (Optimización de procesos y script de reinicio)*
