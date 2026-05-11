@@ -55,6 +55,11 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    other: {
+      'facebook-domain-verification': ['fs0nvp0o6yq7jgmq8q4rqx47hbsev8'],
+    },
+  },
 };
 
 import { Suspense } from "react";

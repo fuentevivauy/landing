@@ -37,6 +37,8 @@ export async function trackEvent(
                             content_category: metadata.category || 'General',
                             content_ids: productId ? [productId] : [],
                             content_type: 'product',
+                            value: metadata.value || 0,
+                            currency: (metadata.currency as string) || 'UYU',
                         }, pixelOptions);
                     } else if (eventType === 'whatsapp_click') {
                         fbq('track', 'Lead', {

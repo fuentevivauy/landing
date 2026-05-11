@@ -48,8 +48,10 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             name: product.name,
             category: product.category,
             source: 'product_page',
+            value: product.price,
+            currency: 'UYU',
         });
-    }, [product.id, product.name, product.category]);
+    }, [product.id, product.name, product.category, product.price]);
 
     const whatsAppLink = getWhatsAppLink(product, settings?.whatsapp_number);
 
