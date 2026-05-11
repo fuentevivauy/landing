@@ -68,7 +68,7 @@ export function ProductCard({ product }: ProductCardProps) {
                             className="object-cover transition-all duration-700 group-hover:scale-110"
                             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 400px"
                             loader={supabaseImageLoader}
-                            unoptimized
+                            quality={75}
                             onError={() => setImageError(true)}
                         />
                     ) : (
