@@ -158,8 +158,9 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                                     data-video-state={isVideoPlaying ? 'playing' : 'loading'}
                                     aria-hidden="true"
                                     className={`absolute inset-0 z-10 bg-stone-gray/10 transition-opacity duration-500 ${
-                                        isVideoPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                                        isVideoPlaying ? 'pointer-events-none' : ''
                                     }`}
+                                    style={{ opacity: isVideoPlaying ? 0 : 1 }}
                                 >
                                     <Image
                                         src={product.images.thumbnail || '/images/hero-fountain-new.jpg'}
