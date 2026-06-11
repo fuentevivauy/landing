@@ -7,6 +7,7 @@ import ProductModal from '@/components/admin/ProductModal';
 import { Package, Plus, Search, Edit2, Trash2, Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DBProduct } from '@/lib/types/admin';
+import { formatProductPrice } from '@/lib/products/price';
 
 type Feedback = { type: 'success' | 'error'; text: string } | null;
 
@@ -189,7 +190,7 @@ export default function AdminProducts() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">{product.category}</td>
-                                            <td className="px-6 py-4 text-sm font-semibold text-slate-800 dark:text-slate-200">${Number(product.price).toFixed(2)}</td>
+                                            <td className="px-6 py-4 text-sm font-semibold text-slate-800 dark:text-slate-200">{formatProductPrice(product.price)}</td>
                                             <td className="px-6 py-4">
                                                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${
                                                     product.in_stock 

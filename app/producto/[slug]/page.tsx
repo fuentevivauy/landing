@@ -4,6 +4,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { DBProduct } from '@/lib/types/admin';
 import { Product, ProductCategory } from '@/lib/types/product';
 import { ProductPageClient } from './ProductPageClient';
+import { formatProductPrice, hasProductPrice } from '@/lib/products/price';
 
 const BASE_URL = 'https://fuenteviva.uy';
 
@@ -24,9 +25,7 @@ async function fetchProduct(slug: string): Promise<Product | null> {
         name: dbProd.name,
         category: dbProd.category as ProductCategory,
         price: dbProd.price,
-        priceFormatted: dbProd.price
-            ? `$${dbProd.price.toLocaleString('es-UY')}`
-            : dbProd.price_formatted,
+        priceFormatted: formatProductPrice(dbProd.price),
         description: dbProd.description,
         benefits: dbProd.benefits || [],
         specs: dbProd.specs || {},
@@ -120,7 +119,7 @@ export default async function ProductPage({
             name: 'Fuente Viva',
         },
         sku: product.slug,
-        ...(product.price && {
+        ...(hasProductPrice(product.price) && {
             offers: {
                 '@type': 'Offer',
                 url: `${BASE_URL}/producto/${product.slug}`,

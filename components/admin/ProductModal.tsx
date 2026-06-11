@@ -161,7 +161,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
             const productData = {
                 name: formData.name,
                 description: formData.description,
-                price: parseFloat(formData.price),
+                price: formData.price.trim() === '' ? null : parseFloat(formData.price),
                 category: finalCategory,
                 in_stock: formData.in_stock,
                 featured: formData.featured,
@@ -358,16 +358,15 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
                                 />
                             </div>
                             <div>
-                                <label className={'block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2'}>Precio ($) *</label>
+                                <label className={'block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2'}>Precio ($)</label>
                                 <input
                                     type={'number'}
-                                    required
                                     min={0}
                                     step={1}
                                     value={formData.price}
                                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                     className={'w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500/50 outline-none transition-all'}
-                                    placeholder={'0'}
+                                    placeholder={'Vacío o 0 = requiere cotización'}
                                 />
                             </div>
                         </div>

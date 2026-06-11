@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Player from '@vimeo/player';
 import { ArrowLeft, MessageCircle, Check, Package } from 'lucide-react';
 import { Product } from '@/lib/types/product';
 import { getWhatsAppLink } from '@/lib/data/products';
@@ -14,6 +15,7 @@ import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { Footer } from '@/components/sections/Footer';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { supabaseImageLoader } from '@/lib/image-loader';
+import { hasProductPrice } from '@/lib/products/price';
 
 function getVimeoId(url: string) {
     if (!url) return null;
@@ -30,6 +32,8 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
     const { settings } = useSiteSettings();
     const router = useRouter();
     const [imageError, setImageError] = useState(false);
+    const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+    const videoRef = useRef<HTMLIFrameElement>(null);
 
     // Volver al catálogo: si hay historial (usuario llegó haciendo click), router.back() preserva la página de paginación.
     // Si entró por URL directa o desde un compartido, fallback a /#catalogo.
@@ -64,6 +68,26 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
     };
 
     const vimeoId = product.videoUrl ? getVimeoId(product.videoUrl) : null;
+
+    useEffect(() => {
+        if (!vimeoId || !videoRef.current) return;
+
+        const player = new Player(videoRef.current);
+        let isActive = true;
+        const revealVideo = () => setIsVideoPlaying(true);
+
+        player.on('playing', revealVideo);
+        player.ready().then(() => {
+            if (isActive) revealVideo();
+        }).catch(() => {
+            // Keep the thumbnail visible if Vimeo cannot initialize.
+        });
+
+        return () => {
+            isActive = false;
+            player.off('playing', revealVideo);
+        };
+    }, [vimeoId]);
 
     return (
         <div className="min-h-screen bg-off-white">
@@ -121,13 +145,33 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                         {vimeoId && (
                             <div className={`${product.showDetailImage !== false ? 'mt-6' : ''} w-full aspect-[9/16] max-w-md mx-auto bg-black rounded-3xl overflow-hidden relative`}>
                                 <iframe
+                                    ref={videoRef}
                                     src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&background=1&muted=1`}
-                                    className="absolute top-0 left-0 w-full h-full"
+                                    className="absolute inset-0 w-full h-full"
                                     allow="autoplay; fullscreen; picture-in-picture"
                                     allowFullScreen
+                                    title={`Video de ${product.name}`}
                                 />
+                                <div
+                                    data-testid="video-poster"
+                                    data-video-state={isVideoPlaying ? 'playing' : 'loading'}
+                                    aria-hidden="true"
+                                    className={`absolute inset-0 z-10 bg-stone-gray/10 transition-opacity duration-500 ${
+                                        isVideoPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                                    }`}
+                                >
+                                    <Image
+                                        src={product.images.thumbnail || '/images/hero-fountain-new.jpg'}
+                                        alt=""
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 100vw, 448px"
+                                        quality={75}
+                                        loader={supabaseImageLoader}
+                                    />
+                                </div>
                                 {product.showDetailImage === false && (
-                                    <div className="absolute top-4 left-4 z-10">
+                                    <div className="absolute top-4 left-4 z-20">
                                         <span className="px-4 py-2 text-sm font-medium bg-slate-blue text-off-white rounded-full">
                                             {product.category}
                                         </span>
@@ -155,7 +199,9 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                             <span className="text-4xl font-bold text-slate-blue">
                                 {product.priceFormatted}
                             </span>
-                            <span className="text-stone-gray ml-2">UYU</span>
+                            {hasProductPrice(product.price) && (
+                                <span className="text-stone-gray ml-2">UYU</span>
+                            )}
                         </div>
 
                         {/* Specs */}

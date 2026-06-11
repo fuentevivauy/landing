@@ -10,6 +10,7 @@ import { createClient } from '@/lib/supabase/client';
 import { ProductCard } from '@/components/products/ProductCard';
 import { Search, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { DBProduct } from '@/lib/types/admin';
+import { formatProductPrice } from '@/lib/products/price';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -65,7 +66,7 @@ export function ProductGallery() {
                         name: dbProd.name,
                         category: dbProd.category as ProductCategory,
                         price: dbProd.price,
-                        priceFormatted: dbProd.price ? `$${dbProd.price.toLocaleString('es-UY')}` : dbProd.price_formatted,
+                        priceFormatted: formatProductPrice(dbProd.price),
                         description: dbProd.description,
                         benefits: dbProd.benefits || [],
                         specs: dbProd.specs || {},
