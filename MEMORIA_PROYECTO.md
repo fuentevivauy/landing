@@ -11,7 +11,8 @@ El proyecto ha sido migrado exitosamente de las cuentas de desarrollo a la infra
 *   **Base de Datos (Supabase):** Proyecto del cliente con las siguientes credenciales configuradas en Vercel (Environment Variables):
     *   `NEXT_PUBLIC_SUPABASE_URL`
     *   `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-*   **Almacenamiento (Supabase Storage):** Bucket `product-images`. Contiene todas las fotos de productos y el video del Hero, eliminando la dependencia de Cloudinary.
+*   **Almacenamiento (Cloudflare R2):** Bucket `fuente-viva-assets`. Contiene las imágenes de productos, el video del Hero y los recursos visuales estáticos. La aplicación usa la URL pública R2 y un Worker autenticado para nuevas subidas desde el administrador.
+*   **Supabase Free:** Se conserva para base de datos y autenticación. Las fichas de productos ya no dependen de Supabase Storage.
 
 ## 2. Estado de la Base de Datos
 
@@ -31,7 +32,7 @@ Se perfeccionó la experiencia visual del Hero tras la migración, logrando la f
 *   **Lógica de Expansión**: Se implementó una lógica de "scroll-jacking" controlada para desktop que permite la expansión fluida del video modal antes de liberar el scroll de la página.
 
 ### B. Gestión de Slugs y Assets
-*   **Migración de Assets**: El video y la imagen principal del Hero fueron migrados de Cloudinary a Supabase Storage (`product-images/hero/`), eliminando dependencias externas.
+*   **Migración de Assets**: Todos los archivos propios fueron migrados desde Supabase Storage y Cloudinary hacia Cloudflare R2. Las nuevas imágenes se suben mediante el Worker `fuente-viva-assets-upload`.
 *   **Slugs Únicos**: Se actualizó la lógica en `ProductModal.tsx` para generar slugs con sufijos aleatorios, evitando errores de duplicación en la base de datos.
 
 ### C. Panel de Analíticas (`app/admin/analytics/page.tsx`)

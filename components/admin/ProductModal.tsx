@@ -120,21 +120,24 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
         try {
             setUploadingField(uploadTarget);
             setFeedback(null);
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-            const filePath = `products/${fileName}`;
+            const uploadUrl = process.env.NEXT_PUBLIC_R2_UPLOAD_URL || 'https://assets-upload.fuenteviva.uy/upload';
 
-            const { error: uploadError } = await supabase.storage
-                .from('product-images')
-                .upload(filePath, file);
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('La sesión de administrador expiró.');
 
-            if (uploadError) throw uploadError;
+            const response = await fetch(uploadUrl, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                    'Content-Type': file.type,
+                    'X-Filename': file.name,
+                },
+                body: file,
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'No se pudo subir la imagen a R2.');
 
-            const { data: { publicUrl } } = supabase.storage
-                .from('product-images')
-                .getPublicUrl(filePath);
-
-            setFormData(prev => ({ ...prev, [uploadTarget === 'thumbnail' ? 'image_thumbnail' : 'image_carousel']: publicUrl }));
+            setFormData(prev => ({ ...prev, [uploadTarget === 'thumbnail' ? 'image_thumbnail' : 'image_carousel']: result.publicUrl }));
         } catch (error: any) {
             setFeedback({ type: 'error', text: 'Error al subir la imagen: ' + (error.message || 'intente de nuevo.') });
         } finally {

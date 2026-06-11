@@ -8,6 +8,7 @@ import { Container } from '@/components/ui/Container';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { trackEvent } from '@/lib/supabase/analytics';
 import { WhatsAppIcon } from '@/components/WhatsAppButton';
+import { PUBLIC_ASSETS } from '@/lib/assets';
 
 export function FinalCTA() {
     const { settings } = useSiteSettings();
@@ -19,7 +20,7 @@ export function FinalCTA() {
             <div className="absolute inset-0 z-0 select-none">
                 <div className="relative w-full h-full md:hidden">
                     <Image
-                        src="https://res.cloudinary.com/doyde4ron/image/upload/v1770408575/final_cta_mobile_birds_azmtti.jpg"
+                        src={PUBLIC_ASSETS.finalCtaMobile}
                         alt="Bebedero con pájaros"
                         fill
                         className="object-cover"
@@ -28,7 +29,7 @@ export function FinalCTA() {
                 </div>
                 <div className="hidden md:block relative w-full h-full">
                     <Image
-                        src="https://res.cloudinary.com/doyde4ron/image/upload/v1770408607/final_cta_desktop_birds_uh8qyg.png"
+                        src={PUBLIC_ASSETS.finalCtaDesktop}
                         alt="Bebedero con pájaros"
                         fill
                         className="object-cover object-top"

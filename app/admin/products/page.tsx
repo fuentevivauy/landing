@@ -8,6 +8,7 @@ import { Package, Plus, Search, Edit2, Trash2, Loader2, CheckCircle, XCircle } f
 import { motion, AnimatePresence } from 'framer-motion';
 import { DBProduct } from '@/lib/types/admin';
 import { formatProductPrice } from '@/lib/products/price';
+import { PUBLIC_ASSETS } from '@/lib/assets';
 
 type Feedback = { type: 'success' | 'error'; text: string } | null;
 
@@ -179,7 +180,7 @@ export default function AdminProducts() {
                                                                 alt={product.name} 
                                                                 className="w-full h-full object-cover"
                                                                 onError={(e) => {
-                                                                    (e.target as HTMLImageElement).src = 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg';
+                                                                    (e.target as HTMLImageElement).src = PUBLIC_ASSETS.heroFallback;
                                                                 }}
                                                             />
                                                         ) : (

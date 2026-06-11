@@ -16,6 +16,7 @@ import { Footer } from '@/components/sections/Footer';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { supabaseImageLoader } from '@/lib/image-loader';
 import { hasProductPrice } from '@/lib/products/price';
+import { PUBLIC_ASSETS } from '@/lib/assets';
 
 function getVimeoId(url: string) {
     if (!url) return null;
@@ -120,7 +121,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                                 <Image
                                     src={
                                         imageError
-                                            ? 'https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-fountain-new.jpg'
+                                            ? PUBLIC_ASSETS.heroFallback
                                             : product.images.carousel || product.images.gallery[0] || product.images.thumbnail
                                     }
                                     alt={product.name}

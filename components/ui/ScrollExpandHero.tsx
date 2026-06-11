@@ -7,6 +7,7 @@ import {
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { PUBLIC_ASSETS } from '@/lib/assets';
 
 interface ScrollExpandHeroProps {
     videoSrc?: string;
@@ -16,7 +17,7 @@ interface ScrollExpandHeroProps {
 }
 
 export function ScrollExpandHero({
-    videoSrc = "https://ixzkuosmzqescxalkmbr.supabase.co/storage/v1/object/public/product-images/hero/hero-video.mp4",
+    videoSrc = PUBLIC_ASSETS.heroVideo,
     bgImageSrc = "/images/hero-bg.jpg",
     posterSrc = "/images/hero-fountain-new.jpg",
     children,

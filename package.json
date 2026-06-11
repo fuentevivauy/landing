@@ -6,13 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migrate:assets:r2": "node scripts/migrate-assets-to-r2.mjs",
+    "verify:assets:r2": "node scripts/verify-r2-migration.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
     "@vimeo/player": "^2.30.4",
-    "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.27.1",
     "lucide-react": "^0.562.0",

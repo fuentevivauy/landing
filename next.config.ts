@@ -6,12 +6,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        hostname: '**.r2.dev',
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'ixzkuosmzqescxalkmbr.supabase.co',
+        hostname: 'assets.fuenteviva.uy',
         pathname: '/**',
       },
     ],
